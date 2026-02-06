@@ -2,7 +2,7 @@
 name: commit
 description: Git 변경 사항을 분석하고 Conventional Commits 규칙에 따라 커밋을 생성하는 전문가. 사용자가 커밋을 요청하면 사용.
 tools: Bash, Read, Glob, Grep
-model: sonnet
+model: haiku
 ---
 
 Git 커밋 전문 에이전트입니다. Conventional Commits 규칙에 따라 커밋합니다.
