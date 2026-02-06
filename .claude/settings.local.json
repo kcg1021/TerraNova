@@ -16,7 +16,6 @@
       "Bash(npm ls:*)",
       "Bash(npm init:*)",
       "WebFetch(domain:www.youtube.com)",
-      "Bash(ls -la \"d:\\\\TerraNova\\\\agents\"\" 2>nul || echo \"agents 디렉토리 없음 또는 비어있음 \")",
       "Bash(if not exist \"d:\\\\TerraNova\\\\.claude\\\\agents\" mkdir \"d:\\\\TerraNova\\\\.claude\\\\agents\")",
       "Bash(git add:*)",
       "Bash(git commit -m \"$\\(cat <<''EOF''\nchore: 프로젝트 초기 구조 및 Docker Compose 환경 설정\n\n- Frontend\\(React + Vite + TypeScript + TailwindCSS\\) 초기 구조\n- Backend\\(Spring Boot 3.5 + Java 21 + Gradle\\) 초기 구조\n- PostgreSQL/Oracle Docker Compose 설정\n- 환경변수 예시 파일 및 .gitignore 업데이트\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",

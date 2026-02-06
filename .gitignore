@@ -33,4 +33,6 @@ agents/node_modules/
 
 # Claude
 CLAUDE.md
+settings.local.json
+settings.json
 nul
