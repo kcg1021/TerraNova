@@ -1,0 +1,41 @@
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+  backend:
+    build: ./backend
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: postgresql
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: terranova
+      DB_USERNAME: terranova
+      DB_PASSWORD: ${DB_PASSWORD:-terranova}
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:17-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: terranova
+      POSTGRES_USER: terranova
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-terranova}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U terranova"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  db-data:

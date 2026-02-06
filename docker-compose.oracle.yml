@@ -1,0 +1,28 @@
+services:
+  backend:
+    environment:
+      SPRING_PROFILES_ACTIVE: oracle
+      DB_HOST: db
+      DB_PORT: 1521
+      DB_NAME: FREEPDB1
+      DB_USERNAME: terranova
+      DB_PASSWORD: ${DB_PASSWORD:-terranova}
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: gvenzl/oracle-free:23-slim
+    ports:
+      - "1521:1521"
+    environment:
+      ORACLE_PASSWORD: ${DB_PASSWORD:-terranova}
+      APP_USER: terranova
+      APP_USER_PASSWORD: ${DB_PASSWORD:-terranova}
+    volumes:
+      - db-data:/opt/oracle/oradata
+    healthcheck:
+      test: ["CMD-SHELL", "healthcheck.sh"]
+      interval: 10s
+      timeout: 10s
+      retries: 10

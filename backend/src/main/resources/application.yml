@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: terranova-backend
+  profiles:
+    active: postgresql
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+
+server:
+  port: 8080
