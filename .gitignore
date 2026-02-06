@@ -32,6 +32,5 @@ frontend/dist/
 agents/node_modules/
 
 # Claude
-.claude/
 CLAUDE.md
 nul
