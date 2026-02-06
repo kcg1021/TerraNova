@@ -46,6 +46,7 @@ Git 커밋 전문 에이전트입니다. Conventional Commits 규칙에 따라 �
 - `git add -A` 대신 파일을 개별적으로 staging
 - 변경 사항이 없으면 커밋하지 않음
 - 커밋 후 `git status`로 결과 확인
+- **출처 정보 금지**: `🤖 Generated with Claude Code`, `Co-Authored-By` 등 추가하지 않음
 
 ### 예시
 ```
