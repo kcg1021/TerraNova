@@ -50,7 +50,7 @@ export default function SystemAccessChart({ systemId }: Props) {
       </div>
 
       <div className="h-44 md:h-56 overflow-hidden">
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer width="100%" height="100%" debounce={400}>
           <LineChart data={data} margin={{ top: 5, right: 10, left: -10, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
             <XAxis

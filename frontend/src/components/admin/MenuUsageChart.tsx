@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import {
   BarChart,
   Bar,
@@ -9,7 +10,9 @@ import {
   Cell,
 } from 'recharts'
 import { useTheme } from '../../contexts/ThemeContext'
-import { mockMenuUsage, mockAdminSystems } from '../../mocks/adminData'
+import { mockMenuUsage } from '../../mocks/adminData'
+
+type TopN = 5 | 10 | 15
 
 interface Props {
   systemId?: string
@@ -18,18 +21,12 @@ interface Props {
 export default function MenuUsageChart({ systemId }: Props) {
   const { resolvedTheme } = useTheme()
   const isDark = resolvedTheme === 'dark'
+  const [topN, setTopN] = useState<TopN>(5)
 
-  const data = systemId && systemId !== 'integrated'
+  const allData = systemId && systemId !== 'integrated'
     ? mockMenuUsage.filter(m => m.systemId === systemId)
     : mockMenuUsage
-
-  const systemName = systemId && systemId !== 'integrated'
-    ? mockAdminSystems.find(s => s.id === systemId)?.name
-    : null
-
-  const subtitle = systemName
-    ? `${systemName} · 상위 ${data.length}개`
-    : `전체 시스템 · 상위 ${data.length}개`
+  const data = allData.slice(0, topN)
 
   const gridColor = isDark ? '#374151' : '#e5e7eb'
   const textColor = isDark ? '#9ca3af' : '#6b7280'
@@ -38,11 +35,19 @@ export default function MenuUsageChart({ systemId }: Props) {
     <div className="bg-white dark:bg-gray-900 border border-gray-200/80 dark:border-gray-800 rounded-2xl shadow-sm p-4 md:p-6">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-sm font-semibold text-gray-900 dark:text-white">메뉴이용현황</h3>
-        <span className="text-xs text-gray-400 dark:text-gray-500">{subtitle}</span>
+        <select
+          value={topN}
+          onChange={e => setTopN(Number(e.target.value) as TopN)}
+          className="text-xs px-2 py-1 rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 cursor-pointer focus:outline-none focus:ring-1 focus:ring-emerald-500"
+        >
+          <option value={5}>상위 5개</option>
+          <option value={10}>상위 10개</option>
+          <option value={15}>상위 15개</option>
+        </select>
       </div>
 
       <div className="h-64 md:h-72 overflow-hidden">
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer width="100%" height="100%" debounce={400}>
           <BarChart
             data={data}
             layout="vertical"

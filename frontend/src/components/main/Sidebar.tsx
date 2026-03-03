@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useAuth } from '../../contexts/AuthContext'
+import { useCollapsible } from '../../hooks/useCollapsible'
 import type { SystemMenu } from '../../types/board'
 
 interface SidebarProps {
@@ -8,7 +9,7 @@ interface SidebarProps {
 
 export default function Sidebar({ systems }: SidebarProps) {
   const { user } = useAuth()
-  const [collapsed, setCollapsed] = useState(false)
+  const { collapsed, showCollapsed, animating, toggle, handleTransitionEnd } = useCollapsible()
   const [hoveredId, setHoveredId] = useState<string | null>(null)
 
   const accessibleSystems = systems.filter(
@@ -21,19 +22,20 @@ export default function Sidebar({ systems }: SidebarProps) {
     <>
       {/* 데스크탑 사이드바 */}
       <aside
-        className={`hidden md:flex flex-col flex-shrink-0 bg-white dark:bg-gray-900 border-r border-gray-200/80 dark:border-gray-800 transition-all duration-300 ease-in-out ${
-          collapsed ? 'w-12 overflow-visible' : 'w-56'
-        }`}
+        onTransitionEnd={handleTransitionEnd}
+        className={`hidden md:flex flex-col flex-shrink-0 bg-white dark:bg-gray-900 border-r border-gray-200/80 dark:border-gray-800 transition-[width] duration-300 ease-in-out ${
+          collapsed ? 'w-12' : 'w-56'
+        } ${animating ? 'overflow-hidden' : collapsed ? 'overflow-visible' : ''}`}
       >
         {/* 헤더 */}
-        <div className={`flex items-center h-10 border-b border-gray-100 dark:border-gray-800 ${collapsed ? 'justify-center' : 'justify-between pl-4 pr-2'}`}>
-          {!collapsed && (
-            <span className="text-[11px] font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-widest">
+        <div className={`flex items-center h-10 border-b border-gray-100 dark:border-gray-800 ${showCollapsed ? 'justify-center' : 'justify-between pl-4 pr-2'}`}>
+          {!showCollapsed && (
+            <span className="text-[11px] font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-widest whitespace-nowrap">
               시스템 목록
             </span>
           )}
           <button
-            onClick={() => setCollapsed(prev => !prev)}
+            onClick={toggle}
             className="p-1 rounded text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer"
             title={collapsed ? '메뉴 펼치기' : '메뉴 접기'}
           >
@@ -44,18 +46,18 @@ export default function Sidebar({ systems }: SidebarProps) {
         </div>
 
         {/* 시스템 목록 */}
-        <nav className={`flex-1 py-1.5 ${collapsed ? 'overflow-visible' : 'overflow-y-auto'}`}>
+        <nav className={`flex-1 py-1.5 ${showCollapsed ? 'overflow-visible' : 'overflow-y-auto'}`}>
           {accessibleSystems.map(sys => (
             <div
               key={sys.id}
               className="relative"
-              onMouseEnter={() => collapsed && setHoveredId(sys.id)}
+              onMouseEnter={() => showCollapsed && setHoveredId(sys.id)}
               onMouseLeave={() => setHoveredId(null)}
             >
               <a
                 href={sys.url}
                 className={`group flex items-center gap-2.5 transition-colors duration-150 ${
-                  collapsed
+                  showCollapsed
                     ? 'justify-center py-2.5 mx-1 rounded-md hover:bg-emerald-50 dark:hover:bg-emerald-950/30'
                     : 'px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-800/50'
                 }`}
@@ -65,7 +67,7 @@ export default function Sidebar({ systems }: SidebarProps) {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
                   </svg>
                 </span>
-                {!collapsed && (
+                {!showCollapsed && (
                   <div className="min-w-0 flex-1">
                     <div className="text-sm font-medium text-gray-700 dark:text-gray-200 group-hover:text-emerald-700 dark:group-hover:text-emerald-300 truncate transition-colors">
                       {sys.name}
@@ -78,7 +80,7 @@ export default function Sidebar({ systems }: SidebarProps) {
               </a>
 
               {/* 접힘 상태 호버 팝업 */}
-              {collapsed && hoveredId === sys.id && (
+              {showCollapsed && hoveredId === sys.id && (
                 <div className="absolute left-full top-1/2 -translate-y-1/2 ml-2 z-50 pointer-events-none">
                   <div className="relative bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg shadow-gray-200/50 dark:shadow-black/30 px-3 py-2 w-48">
                     {/* 화살표 */}

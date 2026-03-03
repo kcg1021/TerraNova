@@ -49,19 +49,6 @@ function generateDailyAccess(): DailyAccessSummary[] {
 
 export const mockDailyAccess: DailyAccessSummary[] = generateDailyAccess()
 
-export const mockMenuUsage: MenuUsageRankItem[] = [
-  { menuName: '근태현황 조회', systemId: 'hr', systemName: '인사관리', count: 1842, color: SYSTEM_COLORS.hr },
-  { menuName: '결재함', systemId: 'approval', systemName: '전자결재', count: 1567, color: SYSTEM_COLORS.approval },
-  { menuName: '급여명세서', systemId: 'hr', systemName: '인사관리', count: 1230, color: SYSTEM_COLORS.hr },
-  { menuName: '예산집행현황', systemId: 'budget', systemName: '예산회계', count: 1105, color: SYSTEM_COLORS.budget },
-  { menuName: '민원접수목록', systemId: 'civil', systemName: '민원처리', count: 980, color: SYSTEM_COLORS.civil },
-  { menuName: '기안작성', systemId: 'approval', systemName: '전자결재', count: 876, color: SYSTEM_COLORS.approval },
-  { menuName: '자산현황', systemId: 'asset', systemName: '자산관리', count: 754, color: SYSTEM_COLORS.asset },
-  { menuName: '세입세출현황', systemId: 'budget', systemName: '예산회계', count: 698, color: SYSTEM_COLORS.budget },
-  { menuName: '시스템로그', systemId: 'monitor', systemName: '모니터링', count: 543, color: SYSTEM_COLORS.monitor },
-  { menuName: '인사발령', systemId: 'hr', systemName: '인사관리', count: 421, color: SYSTEM_COLORS.hr },
-]
-
 // 시스템별 30일간 일별 접속 데이터
 function generateSystemDailyAccess(): Record<string, DailyAccessSummary[]> {
   const systemBases: Record<string, number> = {
@@ -146,6 +133,26 @@ export const mockSystemMenus: SystemMenu[] = [
   { id: 'audit-log', systemId: 'integrated', name: '감사 로그', description: '시스템 감사 로그 조회' },
   { id: 'notice-mgmt', systemId: 'integrated', name: '공지사항 관리', description: '공지사항 등록 및 관리' },
 ]
+
+// mockSystemMenus 기반 메뉴이용현황 자동 생성 (integrated 제외)
+function generateMenuUsage(): MenuUsageRankItem[] {
+  const items: MenuUsageRankItem[] = []
+  for (const menu of mockSystemMenus) {
+    if (menu.systemId === 'integrated') continue
+    const sys = mockAdminSystems.find(s => s.id === menu.systemId)
+    if (!sys) continue
+    items.push({
+      menuName: menu.name,
+      systemId: menu.systemId,
+      systemName: sys.name,
+      count: Math.floor(Math.random() * 1800) + 200,
+      color: SYSTEM_COLORS[menu.systemId] || '#6b7280',
+    })
+  }
+  return items.sort((a, b) => b.count - a.count)
+}
+
+export const mockMenuUsage: MenuUsageRankItem[] = generateMenuUsage()
 
 export const mockAdminNotifications: AdminNotification[] = [
   { id: '1', type: 'permission_request', systemId: 'hr', systemName: '인사관리', count: 2, message: '인사관리 시스템 권한신청 2건이 있습니다' },
