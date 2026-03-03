@@ -25,7 +25,7 @@ export default function MainPage() {
   // 비로그인: 로그인 폼 + 공지사항
   if (!user) {
     return (
-      <div className="h-[calc(100vh-3rem)] md:h-[calc(100vh-3.5rem)] flex items-center justify-center p-4 md:p-6">
+      <div className="flex-1 flex items-center justify-center p-4 md:p-6">
         <div className="w-full max-w-5xl">
           {/* 환영 섹션 */}
           <div className="flex flex-col items-center mb-6 md:mb-8">
@@ -75,7 +75,7 @@ export default function MainPage() {
 
   // 로그인: 사이드바 + 게시판 탭
   return (
-    <div className="flex h-[calc(100vh-3rem)] md:h-[calc(100vh-3.5rem)]">
+    <div className="flex flex-1 min-h-0">
       <Sidebar systems={mockSystems} />
 
       <div className="flex-1 min-w-0 p-4 md:p-6 pb-16 md:pb-6 flex flex-col">

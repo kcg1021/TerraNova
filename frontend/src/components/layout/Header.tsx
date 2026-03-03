@@ -1,15 +1,17 @@
 import { useState, useEffect, useRef } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
 import { useSiteConfig } from '../../contexts/SiteConfigContext'
 import { useTheme } from '../../contexts/ThemeContext'
 import Logo from './Logo'
+import NotificationBell from './NotificationBell'
 
 export default function Header() {
   const { user, sessionExpiry, logout, extendSession } = useAuth()
   const { config } = useSiteConfig()
   const { theme, setTheme } = useTheme()
   const navigate = useNavigate()
+  const location = useLocation()
   const [userMenuOpen, setUserMenuOpen] = useState(false)
   const [themeMenuOpen, setThemeMenuOpen] = useState(false)
   const [remainingTime, setRemainingTime] = useState('')
@@ -104,6 +106,9 @@ export default function Header() {
 
       {/* 우측 */}
       <div className="flex items-center gap-1 md:gap-2">
+        {/* 알림 벨 (관리자 허브에서만) */}
+        {location.pathname.startsWith('/admin') && <NotificationBell />}
+
         {/* 테마 선택 */}
         <div className="relative" ref={themeMenuRef}>
           <button

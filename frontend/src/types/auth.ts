@@ -1,6 +1,7 @@
 export type UserRole = 'SUPER_ADMIN' | 'SYSTEM_ADMIN' | 'USER'
 
 export interface User {
+  id: string
   name: string
   role: UserRole
 }

@@ -26,7 +26,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!account) {
       return { success: false, error: '아이디 또는 비밀번호가 일치하지 않습니다.' }
     }
-    setUser({ name: account.name, role: account.role })
+    setUser({ id: account.id, name: account.name, role: account.role })
     setSessionExpiry(new Date(Date.now() + SESSION_DURATION_MS))
     return { success: true }
   }, [])
