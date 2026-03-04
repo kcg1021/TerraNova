@@ -1,10 +1,22 @@
 <!doctype html>
 <html lang="ko">
   <head>
+    <script>
+      // FOUC 방지: React 로드 전에 테마 적용
+      (function() {
+        const stored = localStorage.getItem('terranova-theme');
+        const theme = stored || 'system';
+        const isDark = theme === 'dark' ||
+          (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        if (isDark) document.documentElement.classList.add('dark');
+      })();
+    </script>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TerraNova</title>
+    <!-- Font: Pretendard -->
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
   </head>
   <body>
     <div id="root"></div>
