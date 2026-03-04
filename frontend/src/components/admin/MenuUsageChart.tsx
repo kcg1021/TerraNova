@@ -14,17 +14,19 @@ import { mockMenuUsage } from '../../mocks/adminData'
 
 type TopN = 5 | 10 | 15
 
+const ALL_COUNT = 7
+
 interface Props {
-  systemId?: string
+  systemIds?: string[]
 }
 
-export default function MenuUsageChart({ systemId }: Props) {
+export default function MenuUsageChart({ systemIds }: Props) {
   const { resolvedTheme } = useTheme()
   const isDark = resolvedTheme === 'dark'
   const [topN, setTopN] = useState<TopN>(5)
 
-  const allData = systemId && systemId !== 'integrated'
-    ? mockMenuUsage.filter(m => m.systemId === systemId)
+  const allData = systemIds && systemIds.length < ALL_COUNT
+    ? mockMenuUsage.filter(m => systemIds.includes(m.systemId))
     : mockMenuUsage
   const data = allData.slice(0, topN)
 
@@ -32,7 +34,7 @@ export default function MenuUsageChart({ systemId }: Props) {
   const textColor = isDark ? '#9ca3af' : '#6b7280'
 
   return (
-    <div className="bg-white dark:bg-gray-900 border border-gray-200/80 dark:border-gray-800 rounded-2xl shadow-sm p-4 md:p-6">
+    <div className="flex-1 min-h-0 flex flex-col bg-white dark:bg-gray-900 border border-gray-200/80 dark:border-gray-800 rounded-2xl shadow-sm p-4 md:p-6">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-sm font-semibold text-gray-900 dark:text-white">메뉴이용현황</h3>
         <select
@@ -46,7 +48,7 @@ export default function MenuUsageChart({ systemId }: Props) {
         </select>
       </div>
 
-      <div className="h-64 md:h-72 overflow-hidden">
+      <div className="flex-1 min-h-0">
         <ResponsiveContainer width="100%" height="100%" debounce={400}>
           <BarChart
             data={data}

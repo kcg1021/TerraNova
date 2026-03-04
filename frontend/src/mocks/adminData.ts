@@ -14,6 +14,7 @@ export const SYSTEM_COLORS: Record<string, string> = {
   approval: '#8b5cf6', // violet-500
   asset: '#ec4899',    // pink-500
   monitor: '#6b7280',  // gray-500
+  integrated: '#14b8a6', // teal-500
 }
 
 export const mockAdminSystems: AdminSystem[] = [
@@ -29,26 +30,6 @@ export const mockSystemAdminPermissions: SystemAdminPermission[] = [
   { userId: 'admin', systemIds: ['hr', 'budget', 'approval'] },
 ]
 
-// 30일간 일별 전체 시스템 접속 합계
-function generateDailyAccess(): DailyAccessSummary[] {
-  const data: DailyAccessSummary[] = []
-  const now = new Date()
-  for (let i = 29; i >= 0; i--) {
-    const d = new Date(now)
-    d.setDate(d.getDate() - i)
-    const isWeekend = d.getDay() === 0 || d.getDay() === 6
-    const base = isWeekend ? 120 : 350
-    const variance = Math.floor(Math.random() * 100) - 50
-    data.push({
-      date: `${d.getMonth() + 1}/${d.getDate()}`,
-      count: Math.max(50, base + variance),
-    })
-  }
-  return data
-}
-
-export const mockDailyAccess: DailyAccessSummary[] = generateDailyAccess()
-
 // 시스템별 30일간 일별 접속 데이터
 function generateSystemDailyAccess(): Record<string, DailyAccessSummary[]> {
   const systemBases: Record<string, number> = {
@@ -58,6 +39,7 @@ function generateSystemDailyAccess(): Record<string, DailyAccessSummary[]> {
     approval: 300,
     asset: 120,
     monitor: 80,
+    integrated: 60,
   }
   const result: Record<string, DailyAccessSummary[]> = {}
   const now = new Date()
@@ -81,6 +63,13 @@ function generateSystemDailyAccess(): Record<string, DailyAccessSummary[]> {
 }
 
 export const mockSystemDailyAccess: Record<string, DailyAccessSummary[]> = generateSystemDailyAccess()
+
+// 전체 접속 합계 = 모든 시스템의 날짜별 합산
+const systemIds = Object.keys(mockSystemDailyAccess)
+export const mockDailyAccess: DailyAccessSummary[] = mockSystemDailyAccess[systemIds[0]].map((_, i) => ({
+  date: mockSystemDailyAccess[systemIds[0]][i].date,
+  count: Object.values(mockSystemDailyAccess).reduce((sum, data) => sum + data[i].count, 0),
+}))
 
 // 시스템별 관리 메뉴
 export const mockSystemMenus: SystemMenu[] = [
@@ -134,18 +123,22 @@ export const mockSystemMenus: SystemMenu[] = [
   { id: 'notice-mgmt', systemId: 'integrated', name: '공지사항 관리', description: '공지사항 등록 및 관리' },
 ]
 
-// mockSystemMenus 기반 메뉴이용현황 자동 생성 (integrated 제외)
+// mockSystemMenus 기반 메뉴이용현황 자동 생성
 function generateMenuUsage(): MenuUsageRankItem[] {
   const items: MenuUsageRankItem[] = []
   for (const menu of mockSystemMenus) {
-    if (menu.systemId === 'integrated') continue
-    const sys = mockAdminSystems.find(s => s.id === menu.systemId)
+    const sys = menu.systemId === 'integrated'
+      ? { id: 'integrated', name: '통합관리' }
+      : mockAdminSystems.find(s => s.id === menu.systemId)
     if (!sys) continue
+    const count = menu.systemId === 'integrated'
+      ? Math.floor(Math.random() * 300) + 50
+      : Math.floor(Math.random() * 1800) + 200
     items.push({
       menuName: menu.name,
       systemId: menu.systemId,
       systemName: sys.name,
-      count: Math.floor(Math.random() * 1800) + 200,
+      count,
       color: SYSTEM_COLORS[menu.systemId] || '#6b7280',
     })
   }
