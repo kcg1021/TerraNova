@@ -6,17 +6,18 @@ TerraNova 프론트엔드에서 사용하는 재사용 가능한 UI 컴포넌트
 
 ```
 frontend/src/components/ui-kit/
-├── Input.tsx      # 입력 필드
-├── Button.tsx     # 버튼
-├── Alert.tsx      # 알림 메시지
-├── IconBadge.tsx  # 아이콘 배지
-└── index.ts       # 배럴 export
+├── Input.tsx         # 입력 필드 (아이콘 지원)
+├── FloatingInput.tsx # 입력 필드 (플로팅 라벨)
+├── Button.tsx        # 버튼
+├── Alert.tsx         # 알림 메시지
+├── IconBadge.tsx     # 아이콘 배지
+└── index.ts          # 배럴 export
 ```
 
 ## Import 방법
 
 ```tsx
-import { Input, Button, Alert, IconBadge, Icons } from '../components/ui-kit'
+import { Input, FloatingInput, Button, Alert, IconBadge, Icons } from '../components/ui-kit'
 ```
 
 ---
@@ -73,6 +74,65 @@ import { Input, Button, Alert, IconBadge, Icons } from '../components/ui-kit'
 
 ---
 
+## FloatingInput
+
+플로팅 라벨과 언더라인 스타일의 미니멀한 입력 필드입니다.
+회원가입 등 폼이 많은 페이지에 적합합니다.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `label` | `string` | - | 플로팅 라벨 텍스트 (필수) |
+| `error` | `string` | - | 에러 메시지 (하단 표시) |
+
+> 기본 `<input>` 태그의 모든 속성(placeholder, type, value, onChange 등)을 지원합니다.
+
+### 특징
+
+- **플로팅 라벨**: 입력 시 라벨이 위로 올라가는 애니메이션
+- **언더라인 스타일**: border-bottom만 사용하는 미니멀 디자인
+- **포커스 상태**: 라벨과 언더라인 색상 변경
+
+### 사용 예시
+
+```tsx
+// 기본 사용
+<FloatingInput
+  label="아이디"
+  type="text"
+  value={id}
+  onChange={e => setId(e.target.value)}
+/>
+
+// placeholder 포함
+<FloatingInput
+  label="이메일"
+  type="email"
+  value={email}
+  onChange={e => setEmail(e.target.value)}
+  placeholder="example@email.com"
+/>
+
+// 에러 표시
+<FloatingInput
+  label="비밀번호"
+  type="password"
+  value={password}
+  onChange={e => setPassword(e.target.value)}
+  error="비밀번호는 8자 이상이어야 합니다."
+/>
+
+// 회원가입 폼 예시
+<form className="space-y-8">
+  <FloatingInput label="아이디" value={form.id} onChange={...} error={errors.id} />
+  <FloatingInput label="비밀번호" type="password" value={form.password} onChange={...} />
+  <FloatingInput label="이메일" type="email" value={form.email} onChange={...} />
+</form>
+```
+
+---
+
 ## Button
 
 다양한 스타일과 로딩 상태를 지원하는 버튼 컴포넌트입니다.
@@ -91,7 +151,7 @@ import { Input, Button, Alert, IconBadge, Icons } from '../components/ui-kit'
 
 ### Variant 스타일
 
-- **primary**: 그라데이션 배경, 흰색 텍스트, 그림자 효과
+- **primary**: 단색 배경, 흰색 텍스트, 그림자 효과
 - **secondary**: 회색 배경, 호버 시 색상 변경
 - **ghost**: 투명 배경, 호버 시 배경색 표시
 

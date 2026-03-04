@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { useSiteConfig } from '../contexts/SiteConfigContext'
 import Sidebar from '../components/main/Sidebar'
@@ -12,6 +13,8 @@ import type { BoardPost } from '../types/board'
 export default function MainPage() {
   const { user } = useAuth()
   const { config } = useSiteConfig()
+  const [searchParams] = useSearchParams()
+  const initialBoardId = searchParams.get('board')
 
   // 모달 상태
   const [selectedPost, setSelectedPost] = useState<BoardPost | null>(null)
@@ -91,7 +94,7 @@ export default function MainPage() {
               </h2>
               <button
                 onClick={handleViewAllClick}
-                className="text-sm text-gray-500 dark:text-gray-400 hover:text-[var(--color-primary)] dark:hover:text-[var(--color-primary)] cursor-pointer transition-colors flex items-center gap-1"
+                className="text-sm text-gray-500 dark:text-gray-400 hover:text-[var(--color-primary)] dark:hover:text-sky-400 cursor-pointer transition-colors flex items-center gap-1"
               >
                 전체보기
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -110,11 +113,11 @@ export default function MainPage() {
                 >
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1 min-w-0">
-                      <h3 className="text-sm font-medium text-gray-900 dark:text-white truncate group-hover:text-[var(--color-primary)] transition-colors">
+                      <h3 className="text-sm font-medium text-gray-900 dark:text-white truncate group-hover:text-[var(--color-primary)] dark:group-hover:text-sky-400 transition-colors">
                         {post.title}
                         {post.isNew && (
-                          <span className="ml-2 inline-block px-1.5 py-0.5 text-[10px] font-bold text-white bg-gradient-to-r from-red-500 to-rose-500 rounded">
-                            NEW
+                          <span className="ml-2 inline-block px-1.5 py-0.5 text-[10px] font-bold text-white bg-red-500 rounded">
+                            N
                           </span>
                         )}
                       </h3>
@@ -122,7 +125,7 @@ export default function MainPage() {
                         {post.author} · {post.createdAt}
                       </p>
                     </div>
-                    <svg className="w-4 h-4 text-gray-300 dark:text-gray-600 group-hover:text-[var(--color-primary)] group-hover:translate-x-1 transition-all flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <svg className="w-4 h-4 text-gray-300 dark:text-gray-600 group-hover:text-[var(--color-primary)] dark:group-hover:text-sky-400 group-hover:translate-x-1 transition-all flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                     </svg>
                   </div>
@@ -150,20 +153,15 @@ export default function MainPage() {
     )
   }
 
-  // 로그인 후: 사이드바 + 게시판
+  // 로그인 후: 대시보드 레이아웃
   return (
-    <div className="flex flex-1 min-h-0">
+    <div className="flex-1 flex bg-gray-50 dark:bg-gray-950">
       <Sidebar systems={mockSystems} />
 
-      <div className="flex-1 min-w-0 p-4 md:p-6 pb-16 md:pb-6 flex flex-col">
-        <div className="mb-4">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-            안녕하세요, {user.name}님
-          </h2>
-        </div>
-
+      <div className="flex-1 min-w-0 pb-16 md:pb-0 overflow-y-auto flex flex-col p-6 lg:p-12">
+        {/* 게시판 섹션 */}
         <div className="flex-1 min-h-0">
-          <BoardSection boards={visibleBoards} posts={mockPosts} />
+          <BoardSection boards={visibleBoards} posts={mockPosts} initialBoardId={initialBoardId} />
         </div>
       </div>
     </div>

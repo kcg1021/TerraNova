@@ -129,7 +129,7 @@ export default function NoticeListModal({ isOpen, onClose, posts, onSelectPost }
                       {/* 내용 */}
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
-                          <h3 className="text-sm font-medium text-slate-800 dark:text-white truncate group-hover:text-[var(--color-primary)] transition-colors">
+                          <h3 className="text-sm font-medium text-slate-800 dark:text-white truncate group-hover:text-[var(--color-primary)] dark:group-hover:text-sky-400 transition-colors">
                             {post.title}
                           </h3>
                           {post.isNew && (
@@ -153,7 +153,7 @@ export default function NoticeListModal({ isOpen, onClose, posts, onSelectPost }
                       </div>
 
                       {/* 화살표 */}
-                      <svg className="w-5 h-5 text-slate-300 dark:text-slate-600 group-hover:text-[var(--color-primary)] group-hover:translate-x-1 transition-all flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <svg className="w-5 h-5 text-slate-300 dark:text-slate-600 group-hover:text-[var(--color-primary)] dark:group-hover:text-sky-400 group-hover:translate-x-1 transition-all flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                       </svg>
                     </div>

@@ -1,5 +1,6 @@
 import { useState, useMemo, useCallback } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { FloatingInput, Button, IconBadge, Icons } from '../components/ui-kit'
 
 // Mock: 실제로는 API에서 약관 목록을 가져옴
 interface Term {
@@ -60,7 +61,6 @@ export default function SignupPage() {
     phone: '',
   })
   const [errors, setErrors] = useState<Record<string, string>>({})
-  const [focusedField, setFocusedField] = useState<string | null>(null)
 
   // 모든 필수 약관에 동의했는지 확인
   const allRequiredAgreed = useMemo(() => {
@@ -189,78 +189,18 @@ export default function SignupPage() {
     setStep('success')
   }
 
-  // 입력 필드 컴포넌트
-  const renderField = (
-    field: keyof typeof form,
-    label: string,
-    type: string = 'text',
-    placeholder: string = ''
-  ) => {
-    const isFocused = focusedField === field
-    const hasError = !!errors[field]
-    const hasValue = !!form[field]
-
-    return (
-      <div className="relative">
-        <label
-          className={`
-            absolute left-0 transition-all duration-200 pointer-events-none
-            ${isFocused || hasValue ? '-top-6 text-xs' : 'top-3 text-sm'}
-            ${hasError
-              ? 'text-red-500 dark:text-red-400'
-              : isFocused
-                ? 'text-gray-900 dark:text-white'
-                : 'text-gray-400 dark:text-gray-500'
-            }
-          `}
-        >
-          {label}
-        </label>
-        <input
-          type={type}
-          value={form[field]}
-          onChange={e => handleChange(field, e.target.value)}
-          onFocus={() => setFocusedField(field)}
-          onBlur={() => setFocusedField(null)}
-          placeholder={isFocused ? placeholder : ''}
-          className={`
-            w-full py-3 bg-transparent border-b-2 text-sm
-            text-gray-900 dark:text-white
-            placeholder-gray-300 dark:placeholder-gray-600
-            focus:outline-none transition-colors
-            ${hasError
-              ? 'border-red-300 dark:border-red-500'
-              : isFocused
-                ? 'border-gray-900 dark:border-white'
-                : 'border-gray-200 dark:border-gray-700'
-            }
-          `}
-        />
-        {hasError && (
-          <p className="absolute -bottom-5 left-0 text-xs text-red-500 dark:text-red-400">
-            {errors[field]}
-          </p>
-        )}
-      </div>
-    )
-  }
 
   // 성공 화면
   if (step === 'success') {
     return (
       <div className="flex-1 flex items-center justify-center bg-gray-50 dark:bg-gray-950 p-6">
         <div className="w-full max-w-lg">
-          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 overflow-hidden">
-            <div className="h-1 bg-gray-900 dark:bg-white" />
+          <div className="bg-white dark:bg-gray-900 border border-t-0 border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden shadow-lg">
+            <div className="h-1 bg-[var(--color-primary)]" />
 
             <div className="p-12 text-center">
-              <div className="relative inline-flex items-center justify-center mb-8">
-                <div className="absolute w-20 h-20 bg-gray-100 dark:bg-gray-800 rounded-full" />
-                <div className="relative w-12 h-12 flex items-center justify-center">
-                  <svg className="w-8 h-8 text-gray-900 dark:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
+              <div className="flex justify-center mb-6">
+                <IconBadge icon={Icons.check} color="emerald" animate />
               </div>
 
               <h1 className="text-2xl font-semibold text-gray-900 dark:text-white tracking-tight">
@@ -271,7 +211,7 @@ export default function SignupPage() {
                 지금 바로 로그인하여 서비스를 이용해보세요.
               </p>
 
-              <div className="mt-8 p-4 bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-800 text-left">
+              <div className="mt-8 p-4 bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-xl text-left">
                 <div className="flex justify-between py-2 border-b border-gray-100 dark:border-gray-700">
                   <span className="text-sm text-gray-500 dark:text-gray-400">아이디</span>
                   <span className="text-sm font-medium text-gray-900 dark:text-white">{form.id}</span>
@@ -282,12 +222,11 @@ export default function SignupPage() {
                 </div>
               </div>
 
-              <button
-                onClick={() => navigate('/')}
-                className="mt-8 w-full py-3.5 text-sm font-medium text-white bg-gray-900 dark:bg-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors cursor-pointer"
-              >
-                로그인하러 가기
-              </button>
+              <div className="mt-8">
+                <Button onClick={() => navigate('/')} fullWidth>
+                  로그인하러 가기
+                </Button>
+              </div>
             </div>
           </div>
         </div>
@@ -445,25 +384,18 @@ export default function SignupPage() {
 
               {/* 버튼 */}
               <div className="pt-2 flex gap-3">
-                <Link
-                  to="/"
-                  className="flex-1 py-3.5 text-sm font-medium text-center text-gray-600 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors"
-                >
-                  취소
+                <Link to="/" className="flex-1">
+                  <Button variant="secondary" fullWidth>
+                    취소
+                  </Button>
                 </Link>
-                <button
+                <Button
                   onClick={() => setStep('form')}
                   disabled={!allRequiredAgreed}
-                  className={`
-                    flex-1 py-3.5 text-sm font-medium transition-colors
-                    ${allRequiredAgreed
-                      ? 'text-white bg-gray-900 dark:bg-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-100 cursor-pointer'
-                      : 'text-gray-400 dark:text-gray-500 bg-gray-200 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 cursor-not-allowed'
-                    }
-                  `}
+                  className="flex-1"
                 >
                   다음
-                </button>
+                </Button>
               </div>
             </div>
           ) : (
@@ -475,9 +407,29 @@ export default function SignupPage() {
                   계정 정보
                 </h2>
                 <div className="space-y-8">
-                  {renderField('id', '아이디', 'text', '4자 이상')}
-                  {renderField('password', '비밀번호', 'password', '8자 이상')}
-                  {renderField('passwordConfirm', '비밀번호 확인', 'password')}
+                  <FloatingInput
+                    label="아이디"
+                    type="text"
+                    value={form.id}
+                    onChange={e => handleChange('id', e.target.value)}
+                    placeholder="4자 이상"
+                    error={errors.id}
+                  />
+                  <FloatingInput
+                    label="비밀번호"
+                    type="password"
+                    value={form.password}
+                    onChange={e => handleChange('password', e.target.value)}
+                    placeholder="8자 이상"
+                    error={errors.password}
+                  />
+                  <FloatingInput
+                    label="비밀번호 확인"
+                    type="password"
+                    value={form.passwordConfirm}
+                    onChange={e => handleChange('passwordConfirm', e.target.value)}
+                    error={errors.passwordConfirm}
+                  />
                 </div>
               </div>
 
@@ -487,27 +439,45 @@ export default function SignupPage() {
                   개인 정보
                 </h2>
                 <div className="space-y-8">
-                  {renderField('name', '이름', 'text')}
-                  {renderField('email', '이메일', 'email', 'example@email.com')}
-                  {renderField('phone', '연락처', 'tel', '010-0000-0000')}
+                  <FloatingInput
+                    label="이름"
+                    type="text"
+                    value={form.name}
+                    onChange={e => handleChange('name', e.target.value)}
+                    error={errors.name}
+                  />
+                  <FloatingInput
+                    label="이메일"
+                    type="email"
+                    value={form.email}
+                    onChange={e => handleChange('email', e.target.value)}
+                    placeholder="example@email.com"
+                    error={errors.email}
+                  />
+                  <FloatingInput
+                    label="연락처"
+                    type="tel"
+                    value={form.phone}
+                    onChange={e => handleChange('phone', e.target.value)}
+                    placeholder="010-0000-0000"
+                    error={errors.phone}
+                  />
                 </div>
               </div>
 
               {/* 버튼 */}
               <div className="pt-4 flex gap-3">
-                <button
+                <Button
                   type="button"
+                  variant="secondary"
                   onClick={() => setStep('terms')}
-                  className="flex-1 py-3.5 text-sm font-medium text-center text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:text-gray-900 dark:hover:text-white transition-colors cursor-pointer"
+                  className="flex-1"
                 >
                   이전
-                </button>
-                <button
-                  type="submit"
-                  className="flex-1 py-3.5 text-sm font-medium text-white bg-gray-900 dark:bg-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors cursor-pointer"
-                >
+                </Button>
+                <Button type="submit" className="flex-1">
                   가입하기
-                </button>
+                </Button>
               </div>
             </form>
           )}
@@ -539,19 +509,19 @@ export default function SignupPage() {
             <div className="text-center">
               <div className={`w-8 h-8 rounded-full text-xs font-medium flex items-center justify-center mb-2 ${
                 step === 'terms'
-                  ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900'
+                  ? 'bg-[var(--color-primary)] text-white'
                   : 'border border-gray-300 dark:border-gray-600 text-gray-400 dark:text-gray-500'
               }`}>1</div>
-              <span className={`text-xs ${step === 'terms' ? 'text-gray-900 dark:text-white' : 'text-gray-400 dark:text-gray-500'}`}>약관 동의</span>
+              <span className={`text-xs ${step === 'terms' ? 'text-[var(--color-primary)] dark:text-sky-400' : 'text-gray-400 dark:text-gray-500'}`}>약관 동의</span>
             </div>
             <div className="w-6 h-px bg-gray-300 dark:bg-gray-600" />
             <div className="text-center">
               <div className={`w-8 h-8 rounded-full text-xs font-medium flex items-center justify-center mb-2 ${
                 step === 'form'
-                  ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900'
+                  ? 'bg-[var(--color-primary)] text-white'
                   : 'border border-gray-300 dark:border-gray-600 text-gray-400 dark:text-gray-500'
               }`}>2</div>
-              <span className={`text-xs ${step === 'form' ? 'text-gray-900 dark:text-white' : 'text-gray-400 dark:text-gray-500'}`}>정보 입력</span>
+              <span className={`text-xs ${step === 'form' ? 'text-[var(--color-primary)] dark:text-sky-400' : 'text-gray-400 dark:text-gray-500'}`}>정보 입력</span>
             </div>
             <div className="w-6 h-px bg-gray-300 dark:bg-gray-600" />
             <div className="text-center">

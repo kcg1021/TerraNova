@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
 import type { Board, BoardPost } from '../../types/board'
@@ -8,13 +8,28 @@ interface BoardSectionProps {
   boards: Board[]
   posts: BoardPost[]
   maxPosts?: number
+  initialBoardId?: string | null
 }
 
-export default function BoardSection({ boards, posts, maxPosts }: BoardSectionProps) {
+export default function BoardSection({ boards, posts, maxPosts, initialBoardId }: BoardSectionProps) {
   const navigate = useNavigate()
   const { user } = useAuth()
-  const [activeTab, setActiveTab] = useState(boards[0]?.id ?? 'notice')
+
+  // initialBoardId가 유효한 게시판인지 확인
+  const validInitialBoard = initialBoardId && boards.some(b => b.id === initialBoardId)
+    ? initialBoardId
+    : boards[0]?.id ?? 'notice'
+
+  const [activeTab, setActiveTab] = useState(validInitialBoard)
   const [expanded, setExpanded] = useState(false)
+
+  // URL 파라미터로 게시판이 지정된 경우 탭 변경
+  useEffect(() => {
+    if (initialBoardId && boards.some(b => b.id === initialBoardId)) {
+      setActiveTab(initialBoardId)
+      setExpanded(false)
+    }
+  }, [initialBoardId, boards])
   const [showToast, setShowToast] = useState(false)
 
   const allActivePosts = posts
@@ -48,148 +63,91 @@ export default function BoardSection({ boards, posts, maxPosts }: BoardSectionPr
 
   const showLock = (post: BoardPost) => !user && !post.isPublic
 
+  const activeBoard = boards.find(b => b.id === activeTab)
+
   return (
     <>
-      <div className="bg-white dark:bg-gray-900 border border-gray-200/80 dark:border-gray-800 rounded-2xl shadow-sm overflow-hidden flex flex-col h-full">
-        {/* 탭 바 */}
-        <div className="flex items-center border-b border-gray-200 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-900/50 overflow-x-auto flex-shrink-0">
-          {boards.map(board => {
-            const isActive = activeTab === board.id
-            const count = posts.filter(p => p.boardId === board.id).length
-            return (
-              <button
-                key={board.id}
-                onClick={() => handleTabChange(board.id)}
-                className={`relative flex-shrink-0 px-5 py-3.5 text-sm font-medium transition-colors duration-150 cursor-pointer whitespace-nowrap ${
-                  isActive
-                    ? 'text-emerald-600 dark:text-emerald-400 bg-white dark:bg-gray-900'
-                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-white/50 dark:hover:bg-gray-800/50'
-                }`}
-              >
-                <span className="flex items-center gap-2">
-                  {board.name}
-                  <span className={`text-[11px] px-1.5 py-0.5 rounded-full font-normal ${
-                    isActive
-                      ? 'bg-emerald-100 dark:bg-emerald-900/60 text-emerald-600 dark:text-emerald-400'
-                      : 'bg-gray-200/70 dark:bg-gray-700 text-gray-400 dark:text-gray-500'
-                  }`}>
-                    {count}
-                  </span>
-                </span>
-                {isActive && (
-                  <span className="absolute bottom-0 left-3 right-3 h-0.5 bg-emerald-500 dark:bg-emerald-400 rounded-t-full" />
-                )}
-              </button>
-            )
-          })}
+      <div className="flex flex-col h-full">
+        {/* 헤더: 게시판 이름 + 탭 */}
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+            {activeBoard?.name || '게시판'}
+          </h2>
+          {boards.length > 1 && (
+            <div className="flex items-center gap-1">
+              {boards.map(board => {
+                const isActive = activeTab === board.id
+                return (
+                  <button
+                    key={board.id}
+                    onClick={() => handleTabChange(board.id)}
+                    className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-colors cursor-pointer ${
+                      isActive
+                        ? 'text-[var(--color-primary)] dark:text-sky-400 bg-[var(--color-primary)]/10 dark:bg-sky-400/10'
+                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'
+                    }`}
+                  >
+                    {board.name}
+                  </button>
+                )
+              })}
+            </div>
+          )}
         </div>
 
-        {/* 게시물 목록 */}
-        <div className="flex-1 overflow-y-auto scrollbar-thin">
+        {/* 게시물 카드 리스트 */}
+        <div className="flex-1 space-y-3 overflow-y-auto">
           {activePosts.length === 0 ? (
             <div className="flex items-center justify-center py-20">
               <div className="text-center">
-                <svg className="w-10 h-10 mx-auto text-gray-200 dark:text-gray-700 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
+                <svg className="w-10 h-10 mx-auto text-gray-300 dark:text-gray-700 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                 </svg>
                 <p className="text-sm text-gray-400 dark:text-gray-500">등록된 게시물이 없습니다.</p>
               </div>
             </div>
           ) : (
-            <>
-              {/* PC: 테이블 */}
-              <table className="w-full hidden sm:table">
-                <thead className="sticky top-0 z-10 bg-white dark:bg-gray-900">
-                  <tr className="border-b border-gray-100 dark:border-gray-800 text-[11px] text-gray-400 dark:text-gray-500 uppercase tracking-wider">
-                    <th className="px-5 py-2.5 text-left font-medium w-16">번호</th>
-                    <th className="px-5 py-2.5 text-left font-medium">제목</th>
-                    <th className="px-5 py-2.5 text-left font-medium w-24">작성자</th>
-                    <th className="px-5 py-2.5 text-left font-medium w-28">작성일</th>
-                    <th className="px-5 py-2.5 text-right font-medium w-20">조회</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {activePosts.map(post => (
-                    <tr
-                      key={post.id}
-                      onClick={() => handlePostClick(post)}
-                      className="border-b border-gray-50 dark:border-gray-800/50 hover:bg-gray-50/70 dark:hover:bg-gray-800/30 transition-colors duration-100 cursor-pointer group"
-                    >
-                      <td className="px-5 py-3 text-xs text-gray-400 dark:text-gray-500">
-                        {post.id}
-                      </td>
-                      <td className="px-5 py-3">
-                        <span className="text-sm text-gray-800 dark:text-gray-200 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
-                          {post.title}
+            activePosts.map(post => (
+              <div
+                key={post.id}
+                onClick={() => handlePostClick(post)}
+                className="group p-4 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg hover:border-[var(--color-primary)]/40 dark:hover:border-[var(--color-primary)]/40 hover:shadow-md hover:shadow-[var(--color-primary)]/5 cursor-pointer transition-all duration-200"
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-sm font-medium text-gray-900 dark:text-white truncate group-hover:text-[var(--color-primary)] dark:group-hover:text-sky-400 transition-colors">
+                      {post.title}
+                      {post.isNew && (
+                        <span className="ml-2 inline-block px-1.5 py-0.5 text-[10px] font-bold text-white bg-red-500 rounded">
+                          N
                         </span>
-                        {post.isNew && (
-                          <span className="ml-2 inline-flex items-center px-1.5 py-0.5 text-[10px] font-bold text-red-500 bg-red-50 dark:bg-red-950/50 rounded">
-                            N
-                          </span>
-                        )}
-                        {post.hasAttachment && (
-                          <svg className="inline-block ml-1.5 w-3.5 h-3.5 text-gray-300 dark:text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13" />
-                          </svg>
-                        )}
-                        {showLock(post) && <LockIcon />}
-                      </td>
-                      <td className="px-5 py-3 text-xs text-gray-500 dark:text-gray-400">
-                        {post.author}
-                      </td>
-                      <td className="px-5 py-3 text-xs text-gray-400 dark:text-gray-500">
-                        {post.createdAt}
-                      </td>
-                      <td className="px-5 py-3 text-xs text-gray-400 dark:text-gray-500 text-right">
-                        {post.views.toLocaleString()}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-
-              {/* 모바일: 카드 리스트 */}
-              <div className="sm:hidden divide-y divide-gray-100 dark:divide-gray-800">
-                {activePosts.map(post => (
-                  <div
-                    key={post.id}
-                    onClick={() => handlePostClick(post)}
-                    className="px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors cursor-pointer"
-                  >
-                    <div className="flex items-start gap-2">
-                      <span className="text-sm text-gray-800 dark:text-gray-200 leading-snug flex-1">
-                        {post.title}
-                        {post.isNew && (
-                          <span className="ml-1.5 inline-flex items-center px-1 py-0.5 text-[10px] font-bold text-red-500 bg-red-50 dark:bg-red-950/50 rounded">
-                            N
-                          </span>
-                        )}
-                        {post.hasAttachment && (
-                          <svg className="inline-block ml-1 w-3 h-3 text-gray-300 dark:text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13" />
-                          </svg>
-                        )}
-                        {showLock(post) && <LockIcon />}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-3 mt-1.5 text-[11px] text-gray-400 dark:text-gray-500">
-                      <span>{post.author}</span>
-                      <span>{post.createdAt}</span>
-                      <span>조회 {post.views}</span>
-                    </div>
+                      )}
+                      {post.hasAttachment && (
+                        <svg className="inline-block ml-1.5 w-3.5 h-3.5 text-gray-300 dark:text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13" />
+                        </svg>
+                      )}
+                      {showLock(post) && <LockIcon />}
+                    </h3>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                      {post.author} · {post.createdAt}
+                    </p>
                   </div>
-                ))}
+                  <svg className="w-4 h-4 text-gray-300 dark:text-gray-600 group-hover:text-[var(--color-primary)] dark:group-hover:text-sky-400 group-hover:translate-x-1 transition-all flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
               </div>
-            </>
+            ))
           )}
         </div>
 
         {/* 더보기 / 접기 */}
         {canExpand && (
-          <div className="flex-shrink-0 border-t border-gray-100 dark:border-gray-800">
+          <div className="mt-4">
             <button
               onClick={() => setExpanded(prev => !prev)}
-              className="w-full py-2.5 text-xs text-gray-400 dark:text-gray-500 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors cursor-pointer flex items-center justify-center gap-1"
+              className="w-full py-2.5 text-xs text-gray-400 dark:text-gray-500 hover:text-[var(--color-primary)] dark:hover:text-sky-400 transition-colors cursor-pointer flex items-center justify-center gap-1"
             >
               {expanded ? (
                 <>

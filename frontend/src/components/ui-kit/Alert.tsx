@@ -40,7 +40,7 @@ const typeClasses = {
   },
   info: {
     container: 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800/50',
-    icon: 'text-[var(--color-primary)]',
+    icon: 'text-[var(--color-primary)] dark:text-sky-400',
     title: 'text-blue-700 dark:text-blue-400',
     text: 'text-slate-600 dark:text-slate-300',
   },

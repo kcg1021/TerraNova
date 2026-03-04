@@ -98,7 +98,7 @@ export default function Header() {
             {config.title}
           </span>
         ) : config.slogan ? (
-          <span className="text-xs md:text-sm font-medium text-emerald-600 dark:text-emerald-400 truncate">
+          <span className="text-xs md:text-sm font-medium text-[var(--color-primary)] dark:text-sky-400 truncate">
             {config.slogan}
           </span>
         ) : null}
@@ -120,7 +120,7 @@ export default function Header() {
           </button>
 
           {themeMenuOpen && (
-            <div className="absolute right-0 top-full mt-2 w-44 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg shadow-gray-200/50 dark:shadow-black/30 z-50 py-1.5 animate-in fade-in slide-in-from-top-1">
+            <div className="absolute right-0 top-full mt-2 w-40 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg shadow-lg shadow-black/5 dark:shadow-black/30 z-50 py-1 overflow-hidden">
               {themeOptions.map(option => {
                 const isActive = theme === option.value
                 return (
@@ -131,16 +131,16 @@ export default function Header() {
                       setTheme(option.value)
                       setThemeMenuOpen(false)
                     }}
-                    className={`w-full flex items-center gap-2.5 px-3.5 py-2 text-sm transition-colors duration-150 cursor-pointer ${
+                    className={`w-full flex items-center gap-2.5 px-3 py-2 text-sm transition-colors duration-150 cursor-pointer ${
                       isActive
-                        ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/50 font-medium cursor-default'
-                        : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50'
+                        ? 'text-[var(--color-primary)] dark:text-sky-400 bg-[var(--color-primary)]/5 dark:bg-sky-400/5 font-medium cursor-default'
+                        : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800'
                     }`}
                   >
                     {option.icon}
                     <span>{option.label}</span>
                     {isActive && (
-                      <svg className="w-3.5 h-3.5 ml-auto text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
+                      <svg className="w-3.5 h-3.5 ml-auto text-[var(--color-primary)] dark:text-sky-400" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
                     )}
@@ -158,34 +158,41 @@ export default function Header() {
           <div className="relative" ref={menuRef}>
             <button
               onClick={() => setUserMenuOpen(prev => !prev)}
-              className="inline-flex items-center gap-1 md:gap-1.5 px-2 py-1 md:px-3 md:py-1.5 text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-150 cursor-pointer"
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg border transition-all duration-150 cursor-pointer ${
+                userMenuOpen
+                  ? 'text-[var(--color-primary)] dark:text-white bg-[var(--color-primary)]/5 dark:bg-white/10 border-[var(--color-primary)]/30 dark:border-white/30'
+                  : 'text-gray-700 dark:text-gray-200 bg-transparent border-gray-200 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500 hover:text-gray-900 dark:hover:text-white'
+              }`}
             >
+              <svg className="w-4 h-4 opacity-60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+              </svg>
               {user.name}님
-              <svg className={`w-3 h-3 md:w-3.5 md:h-3.5 text-gray-400 transition-transform duration-200 ${userMenuOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <svg className={`w-3.5 h-3.5 opacity-50 transition-transform duration-200 ${userMenuOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
               </svg>
             </button>
 
             {userMenuOpen && (
-              <div className="absolute right-0 top-full mt-2 w-60 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg shadow-gray-200/50 dark:shadow-black/30 z-50 overflow-hidden">
+              <div className="absolute right-0 top-full mt-2 w-56 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg shadow-black/5 dark:shadow-black/40 z-50 overflow-hidden">
                 {/* 사용자 정보 헤더 */}
-                <div className="px-4 py-3 bg-gray-50 dark:bg-gray-800/50 border-b border-gray-100 dark:border-gray-700">
+                <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-700">
                   <div className="text-sm font-semibold text-gray-900 dark:text-white">{user.name}</div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                  <div className="text-xs text-gray-500 dark:text-gray-300 mt-0.5">
                     {user.role === 'SUPER_ADMIN' ? '슈퍼 관리자' : user.role === 'SYSTEM_ADMIN' ? '시스템 관리자' : '일반 사용자'}
                   </div>
                 </div>
 
                 {/* 세션 시간 */}
-                <div className="px-4 py-2.5 border-b border-gray-100 dark:border-gray-700">
+                <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/50">
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="text-xs text-gray-400 dark:text-gray-500">세션 남은 시간</div>
-                      <div className="text-sm font-medium text-gray-900 dark:text-white">{remainingTime}</div>
+                      <div className="text-[11px] text-gray-400 dark:text-gray-400 uppercase tracking-wide">세션 남은 시간</div>
+                      <div className="text-sm font-semibold text-gray-900 dark:text-white mt-0.5 tabular-nums">{remainingTime}</div>
                     </div>
                     <button
                       onClick={extendSession}
-                      className="text-xs px-2.5 py-1 font-medium text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 rounded-md hover:bg-emerald-100 dark:hover:bg-emerald-900/50 transition-colors duration-150 cursor-pointer"
+                      className="text-xs px-2.5 py-1.5 font-medium text-[var(--color-primary)] dark:text-white bg-[var(--color-primary)]/10 dark:bg-white/10 rounded-md hover:bg-[var(--color-primary)]/20 dark:hover:bg-white/20 transition-colors duration-150 cursor-pointer"
                     >
                       연장
                     </button>
@@ -193,7 +200,7 @@ export default function Header() {
                 </div>
 
                 {/* 메뉴 항목들 */}
-                <div className="py-1.5">
+                <div className="py-1">
                   {isAdmin && (
                     <>
                       <button
@@ -201,7 +208,7 @@ export default function Header() {
                           navigate('/admin')
                           setUserMenuOpen(false)
                         }}
-                        className="w-full flex items-center gap-2.5 text-left px-4 py-2 text-sm text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 transition-colors duration-150 cursor-pointer"
+                        className="w-full flex items-center gap-2.5 text-left px-4 py-2.5 text-sm text-[var(--color-primary)] dark:text-sky-400 hover:bg-[var(--color-primary)]/5 dark:hover:bg-sky-400/10 transition-colors duration-150 cursor-pointer"
                       >
                         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
@@ -209,30 +216,30 @@ export default function Header() {
                         </svg>
                         관리자 페이지
                       </button>
-                      <div className="my-1 border-t border-gray-100 dark:border-gray-700" />
+                      <div className="mx-3 border-t border-gray-100 dark:border-gray-700" />
                     </>
                   )}
                   {!isSuperAdmin && (
-                    <button className="w-full flex items-center gap-2.5 text-left px-4 py-2 text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-150 cursor-pointer">
-                      <svg className="w-4 h-4 text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <button className="w-full flex items-center gap-2.5 text-left px-4 py-2.5 text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-150 cursor-pointer">
+                      <svg className="w-4 h-4 text-gray-400 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                       </svg>
                       권한 신청
                     </button>
                   )}
-                  <button className="w-full flex items-center gap-2.5 text-left px-4 py-2 text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-150 cursor-pointer">
-                    <svg className="w-4 h-4 text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <button className="w-full flex items-center gap-2.5 text-left px-4 py-2.5 text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-150 cursor-pointer">
+                    <svg className="w-4 h-4 text-gray-400 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                     </svg>
                     회원정보 수정
                   </button>
-                  <div className="my-1 border-t border-gray-100 dark:border-gray-700" />
+                  <div className="mx-3 border-t border-gray-100 dark:border-gray-700" />
                   <button
                     onClick={() => {
                       logout()
                       setUserMenuOpen(false)
                     }}
-                    className="w-full flex items-center gap-2.5 text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/50 transition-colors duration-150 cursor-pointer"
+                    className="w-full flex items-center gap-2.5 text-left px-4 py-2.5 text-sm text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors duration-150 cursor-pointer"
                   >
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />

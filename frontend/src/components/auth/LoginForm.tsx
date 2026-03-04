@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
+import { Input, Button, Alert, Icons } from '../ui-kit'
 import FindIdModal from './FindIdModal'
 import FindPasswordModal from './FindPasswordModal'
 
@@ -31,42 +32,31 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
 
   return (
     <form onSubmit={handleLogin} className="space-y-4">
-      <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-          아이디
-        </label>
-        <input
-          type="text"
-          value={id}
-          onChange={e => { setId(e.target.value); setError('') }}
-          className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent transition-shadow"
-          placeholder="아이디를 입력하세요"
-        />
-      </div>
+      <Input
+        label="아이디"
+        type="text"
+        value={id}
+        onChange={e => { setId(e.target.value); setError('') }}
+        placeholder="아이디를 입력하세요"
+        icon={Icons.user}
+        variant="default"
+      />
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-          비밀번호
-        </label>
-        <input
-          type="password"
-          value={password}
-          onChange={e => { setPassword(e.target.value); setError('') }}
-          className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent transition-shadow"
-          placeholder="비밀번호를 입력하세요"
-        />
-      </div>
+      <Input
+        label="비밀번호"
+        type="password"
+        value={password}
+        onChange={e => { setPassword(e.target.value); setError('') }}
+        placeholder="비밀번호를 입력하세요"
+        icon={Icons.lock}
+        variant="default"
+      />
 
-      {error && (
-        <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
-      )}
+      {error && <Alert type="error">{error}</Alert>}
 
-      <button
-        type="submit"
-        className="w-full py-2.5 text-sm font-medium text-white bg-gray-900 dark:bg-white dark:text-gray-900 rounded-md hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors cursor-pointer"
-      >
+      <Button type="submit" color="gray" fullWidth>
         로그인
-      </button>
+      </Button>
 
       {/* 하단 링크 */}
       <div className="flex items-center justify-center gap-4 text-sm text-gray-500 dark:text-gray-400 pt-2">

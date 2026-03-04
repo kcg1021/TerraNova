@@ -69,7 +69,7 @@ export default function FindIdModal({ isOpen, onClose }: FindIdModalProps) {
           {/* 아이디 표시 박스 */}
           <div className="relative mb-6">
             <div className="py-4 px-6 bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700">
-              <span className="text-2xl font-bold text-[var(--color-primary)] tracking-wide">
+              <span className="text-2xl font-bold text-[var(--color-primary)] dark:text-sky-400 tracking-wide">
                 {result}
               </span>
             </div>
