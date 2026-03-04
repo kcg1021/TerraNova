@@ -19,5 +19,12 @@
    - subject는 한국어로 작성
    - subject는 50자 이내
    - subject 끝에 마침표 금지
-   - 변경이 복잡한 경우 body에 이유 설명
+   - **body 작성 금지** (상세 설명 불필요)
+   - **Co-Authored-By 추가 금지**
 5. 커밋 메시지를 작성하고 바로 커밋 실행
+
+## 예시
+
+```bash
+git commit -m "feat: 다크모드 가독성 개선"
+```
