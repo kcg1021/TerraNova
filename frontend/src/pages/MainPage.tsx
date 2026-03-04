@@ -11,7 +11,7 @@ import { mockBoards, mockPosts, mockSystems } from '../mocks/mainPageData'
 import type { BoardPost } from '../types/board'
 
 export default function MainPage() {
-  const { user } = useAuth()
+  const { user, login } = useAuth()
   const { config } = useSiteConfig()
   const [searchParams] = useSearchParams()
   const initialBoardId = searchParams.get('board')
@@ -76,6 +76,15 @@ export default function MainPage() {
 
             {/* 로그인 폼 */}
             <LoginForm />
+
+            {/* 빠른 로그인 */}
+            <div className="mt-4 flex items-center justify-center gap-1 text-xs text-gray-400 dark:text-gray-500">
+              <button onClick={() => login('super', 'super1234')} className="hover:text-[var(--color-primary)] cursor-pointer transition-colors">Super</button>
+              <span>·</span>
+              <button onClick={() => login('admin', 'admin1234')} className="hover:text-[var(--color-primary)] cursor-pointer transition-colors">Admin</button>
+              <span>·</span>
+              <button onClick={() => login('user', 'user1234')} className="hover:text-[var(--color-primary)] cursor-pointer transition-colors">User</button>
+            </div>
 
             {/* 푸터 */}
             <div className="mt-12 pt-6 border-t border-gray-100 dark:border-gray-800 text-xs text-gray-400 dark:text-gray-600">

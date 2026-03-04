@@ -25,7 +25,18 @@ export default function AdminHubPage() {
   return (
     <main className="flex-1 overflow-y-auto p-4 md:p-6">
       <div className="max-w-5xl mx-auto">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-5">관리자 허브</h2>
+        <div className="flex items-center gap-2 mb-5">
+          <button
+            onClick={() => navigate('/')}
+            className="p-1.5 rounded-lg text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            aria-label="메인페이지로 이동"
+          >
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+            </svg>
+          </button>
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">관리자 허브</h2>
+        </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {/* SUPER_ADMIN: 통합관리 카드 */}
