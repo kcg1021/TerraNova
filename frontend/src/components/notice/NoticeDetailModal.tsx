@@ -96,10 +96,10 @@ export default function NoticeDetailModal({ isOpen, onClose, post, onViewList }:
             조회 {post.views.toLocaleString()}
           </div>
 
-          {/* NEW 배지 */}
+          {/* N 배지 */}
           {post.isNew && (
-            <span className="ml-auto px-2 py-0.5 text-xs font-semibold text-white bg-red-500 rounded-full">
-              NEW
+            <span className="ml-auto px-1.5 py-0.5 text-[10px] font-bold text-white bg-red-500 rounded">
+              N
             </span>
           )}
         </div>

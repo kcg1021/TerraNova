@@ -8,36 +8,36 @@ import type {
 } from '../types/admin'
 
 export const SYSTEM_COLORS: Record<string, string> = {
-  hr: '#10b981',       // emerald-500
-  budget: '#3b82f6',   // blue-500
-  civil: '#f59e0b',    // amber-500
-  approval: '#8b5cf6', // violet-500
-  asset: '#ec4899',    // pink-500
-  monitor: '#6b7280',  // gray-500
-  integrated: '#14b8a6', // teal-500
+  water: '#3b82f6',      // blue-500 (상수도)
+  sewage: '#10b981',     // emerald-500 (하수도)
+  gis: '#8b5cf6',        // violet-500 (공간정보)
+  facility: '#f59e0b',   // amber-500 (시설물)
+  road: '#ec4899',       // pink-500 (도로관리)
+  monitor: '#6b7280',    // gray-500 (모니터링)
+  integrated: '#14b8a6', // teal-500 (통합관리)
 }
 
 export const mockAdminSystems: AdminSystem[] = [
-  { id: 'hr', name: '인사관리', description: '인사·급여·근태 관리', color: SYSTEM_COLORS.hr },
-  { id: 'budget', name: '예산회계', description: '예산 편성·집행·결산', color: SYSTEM_COLORS.budget },
-  { id: 'civil', name: '민원처리', description: '민원 접수·처리·통계', color: SYSTEM_COLORS.civil },
-  { id: 'approval', name: '전자결재', description: '기안·결재·문서관리', color: SYSTEM_COLORS.approval },
-  { id: 'asset', name: '자산관리', description: '자산 등록·이력·폐기', color: SYSTEM_COLORS.asset },
+  { id: 'water', name: '상수도', description: '상수도 시설·관망 관리', color: SYSTEM_COLORS.water },
+  { id: 'sewage', name: '하수도', description: '하수도 시설·관거 관리', color: SYSTEM_COLORS.sewage },
+  { id: 'gis', name: '공간정보', description: 'GIS 데이터·지도 관리', color: SYSTEM_COLORS.gis },
+  { id: 'facility', name: '시설물', description: '공공시설물 현황·점검', color: SYSTEM_COLORS.facility },
+  { id: 'road', name: '도로관리', description: '도로 시설·포장 관리', color: SYSTEM_COLORS.road },
   { id: 'monitor', name: '모니터링', description: '시스템 상태·로그 관리', color: SYSTEM_COLORS.monitor },
 ]
 
 export const mockSystemAdminPermissions: SystemAdminPermission[] = [
-  { userId: 'admin', systemIds: ['hr', 'budget', 'approval'] },
+  { userId: 'admin', systemIds: ['water', 'sewage', 'gis'] },
 ]
 
 // 시스템별 30일간 일별 접속 데이터
 function generateSystemDailyAccess(): Record<string, DailyAccessSummary[]> {
   const systemBases: Record<string, number> = {
-    hr: 250,
-    budget: 180,
-    civil: 220,
-    approval: 300,
-    asset: 120,
+    water: 280,
+    sewage: 220,
+    gis: 350,
+    facility: 180,
+    road: 150,
     monitor: 80,
     integrated: 60,
   }
@@ -73,40 +73,40 @@ export const mockDailyAccess: DailyAccessSummary[] = mockSystemDailyAccess[syste
 
 // 시스템별 관리 메뉴
 export const mockSystemMenus: SystemMenu[] = [
-  // 인사관리
-  { id: 'employee', systemId: 'hr', name: '직원 관리', description: '직원 정보 등록 및 관리' },
-  { id: 'attendance', systemId: 'hr', name: '근태 관리', description: '출퇴근 및 근무시간 관리' },
-  { id: 'salary', systemId: 'hr', name: '급여 관리', description: '급여 계산 및 명세서 관리' },
-  { id: 'appointment', systemId: 'hr', name: '인사 발령', description: '인사이동 및 발령 관리' },
-  { id: 'leave', systemId: 'hr', name: '휴가 관리', description: '연차 및 휴가 신청 관리' },
+  // 상수도 관리
+  { id: 'water-pipe', systemId: 'water', name: '관로 관리', description: '상수관로 현황 및 정보 관리' },
+  { id: 'water-meter', systemId: 'water', name: '계량기 관리', description: '수도계량기 현황 관리' },
+  { id: 'water-facility', systemId: 'water', name: '시설물 관리', description: '정수장, 배수지 등 시설 관리' },
+  { id: 'water-quality', systemId: 'water', name: '수질 관리', description: '수질 검사 및 이력 관리' },
+  { id: 'water-leak', systemId: 'water', name: '누수 관리', description: '누수 탐사 및 복구 이력' },
 
-  // 예산회계
-  { id: 'planning', systemId: 'budget', name: '예산 편성', description: '연간 예산 편성 및 조정' },
-  { id: 'execution', systemId: 'budget', name: '예산 집행', description: '예산 집행 현황 관리' },
-  { id: 'settlement', systemId: 'budget', name: '결산 관리', description: '회계 결산 처리' },
-  { id: 'revenue', systemId: 'budget', name: '세입 관리', description: '세입 현황 관리' },
-  { id: 'expenditure', systemId: 'budget', name: '세출 관리', description: '세출 현황 관리' },
+  // 하수도 관리
+  { id: 'sewer-pipe', systemId: 'sewage', name: '관거 관리', description: '하수관거 현황 및 정보 관리' },
+  { id: 'sewer-manhole', systemId: 'sewage', name: '맨홀 관리', description: '맨홀 현황 및 점검 관리' },
+  { id: 'sewer-pump', systemId: 'sewage', name: '펌프장 관리', description: '하수펌프장 시설 관리' },
+  { id: 'sewer-treatment', systemId: 'sewage', name: '처리장 관리', description: '하수처리장 운영 관리' },
+  { id: 'sewer-cctv', systemId: 'sewage', name: 'CCTV 조사', description: '관거 CCTV 조사 이력' },
 
-  // 민원처리
-  { id: 'reception', systemId: 'civil', name: '민원 접수', description: '민원 접수 및 등록' },
-  { id: 'processing', systemId: 'civil', name: '민원 처리', description: '민원 처리 현황 관리' },
-  { id: 'civil-stats', systemId: 'civil', name: '민원 통계', description: '민원 처리 통계 분석' },
-  { id: 'civil-type', systemId: 'civil', name: '민원 유형 관리', description: '민원 유형 분류 관리' },
-  { id: 'template', systemId: 'civil', name: '답변 템플릿', description: '민원 답변 템플릿 관리' },
+  // 공간정보 관리
+  { id: 'gis-map', systemId: 'gis', name: '지도 관리', description: '배경지도 및 레이어 관리' },
+  { id: 'gis-layer', systemId: 'gis', name: '레이어 설정', description: 'GIS 레이어 구성 관리' },
+  { id: 'gis-data', systemId: 'gis', name: '데이터 관리', description: '공간 데이터 등록 및 편집' },
+  { id: 'gis-analysis', systemId: 'gis', name: '공간 분석', description: '버퍼, 중첩 분석 등' },
+  { id: 'gis-print', systemId: 'gis', name: '출력 관리', description: '지도 출력 템플릿 관리' },
 
-  // 전자결재
-  { id: 'approval-line', systemId: 'approval', name: '결재선 관리', description: '결재선 설정 및 관리' },
-  { id: 'doc-form', systemId: 'approval', name: '문서 양식', description: '결재 문서 양식 관리' },
-  { id: 'delegation', systemId: 'approval', name: '위임 설정', description: '결재 위임 설정' },
-  { id: 'approval-history', systemId: 'approval', name: '결재 이력', description: '결재 처리 이력 조회' },
-  { id: 'doc-box', systemId: 'approval', name: '문서함 관리', description: '문서함 분류 및 관리' },
+  // 시설물 관리
+  { id: 'facility-register', systemId: 'facility', name: '시설물 등록', description: '공공시설물 등록 관리' },
+  { id: 'facility-inspect', systemId: 'facility', name: '점검 관리', description: '시설물 정기점검 관리' },
+  { id: 'facility-repair', systemId: 'facility', name: '보수 이력', description: '시설물 보수 이력 관리' },
+  { id: 'facility-safety', systemId: 'facility', name: '안전 진단', description: '시설물 안전진단 관리' },
+  { id: 'facility-stats', systemId: 'facility', name: '현황 통계', description: '시설물 현황 통계 분석' },
 
-  // 자산관리
-  { id: 'asset-register', systemId: 'asset', name: '자산 등록', description: '자산 등록 및 정보 관리' },
-  { id: 'asset-history', systemId: 'asset', name: '자산 이력', description: '자산 변동 이력 관리' },
-  { id: 'depreciation', systemId: 'asset', name: '감가상각', description: '감가상각 계산 및 관리' },
-  { id: 'asset-inspect', systemId: 'asset', name: '자산 점검', description: '자산 실사 점검' },
-  { id: 'disposal', systemId: 'asset', name: '폐기 관리', description: '자산 폐기 처리' },
+  // 도로관리
+  { id: 'road-pavement', systemId: 'road', name: '포장 관리', description: '도로 포장 현황 관리' },
+  { id: 'road-sign', systemId: 'road', name: '표지판 관리', description: '도로표지판 현황 관리' },
+  { id: 'road-light', systemId: 'road', name: '가로등 관리', description: '가로등 시설 관리' },
+  { id: 'road-repair', systemId: 'road', name: '보수 관리', description: '도로 보수 이력 관리' },
+  { id: 'road-pothole', systemId: 'road', name: '포트홀 관리', description: '포트홀 신고 및 처리' },
 
   // 모니터링
   { id: 'server-status', systemId: 'monitor', name: '서버 상태', description: '서버 상태 모니터링' },
@@ -148,8 +148,8 @@ function generateMenuUsage(): MenuUsageRankItem[] {
 export const mockMenuUsage: MenuUsageRankItem[] = generateMenuUsage()
 
 export const mockAdminNotifications: AdminNotification[] = [
-  { id: '1', type: 'permission_request', systemId: 'hr', systemName: '인사관리', count: 2, message: '인사관리 시스템 권한신청 2건이 있습니다' },
-  { id: '2', type: 'permission_request', systemId: 'budget', systemName: '예산회계', count: 1, message: '예산회계 시스템 권한신청 1건이 있습니다' },
-  { id: '3', type: 'permission_request', systemId: 'approval', systemName: '전자결재', count: 3, message: '전자결재 시스템 권한신청 3건이 있습니다' },
-  { id: '4', type: 'permission_request', systemId: 'civil', systemName: '민원처리', count: 1, message: '민원처리 시스템 권한신청 1건이 있습니다' },
+  { id: '1', type: 'permission_request', systemId: 'water', systemName: '상수도', count: 2, message: '상수도 시스템 권한신청 2건이 있습니다' },
+  { id: '2', type: 'permission_request', systemId: 'sewage', systemName: '하수도', count: 1, message: '하수도 시스템 권한신청 1건이 있습니다' },
+  { id: '3', type: 'permission_request', systemId: 'gis', systemName: '공간정보', count: 3, message: '공간정보 시스템 권한신청 3건이 있습니다' },
+  { id: '4', type: 'permission_request', systemId: 'facility', systemName: '시설물', count: 1, message: '시설물 시스템 권한신청 1건이 있습니다' },
 ]

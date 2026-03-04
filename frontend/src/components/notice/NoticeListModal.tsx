@@ -134,7 +134,7 @@ export default function NoticeListModal({ isOpen, onClose, posts, onSelectPost }
                           </h3>
                           {post.isNew && (
                             <span className="flex-shrink-0 px-1.5 py-0.5 text-[10px] font-bold text-white bg-red-500 rounded">
-                              NEW
+                              N
                             </span>
                           )}
                           {post.hasAttachment && (
