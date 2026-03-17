@@ -100,8 +100,6 @@ export default function FindIdModal({ isOpen, onClose }: FindIdModalProps) {
         <IconBadge
           icon={Icons.user}
           color="blue"
-          badge={Icons.search}
-          badgeColor="white"
         />
       }
     >

@@ -50,10 +50,7 @@ export default function Modal({ isOpen, onClose, title, subtitle, icon, children
         className="relative w-full max-w-md overflow-hidden modal-content"
       >
         {/* 글래스모피즘 효과의 모달 본체 */}
-        <div className="relative bg-white dark:bg-slate-900 rounded-2xl shadow-2xl shadow-slate-900/20 dark:shadow-black/40 border border-t-0 border-slate-200/50 dark:border-slate-700/50 overflow-hidden">
-
-          {/* 상단 장식 바 */}
-          <div className="h-1 bg-[var(--color-primary)]" />
+        <div className="relative bg-white dark:bg-slate-900 rounded-2xl shadow-2xl shadow-slate-900/20 dark:shadow-black/40 border border-slate-200/50 dark:border-slate-700/50 overflow-hidden">
 
           {/* 닫기 버튼 */}
           <button
@@ -62,7 +59,7 @@ export default function Modal({ isOpen, onClose, title, subtitle, icon, children
             aria-label="닫기"
           >
             <svg
-              className="w-5 h-5 transition-transform duration-200 group-hover:rotate-90"
+              className="w-5 h-5"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"

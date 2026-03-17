@@ -61,18 +61,15 @@ export default function NoticeListModal({ isOpen, onClose, posts, onSelectPost }
 
       {/* 모달 컨테이너 */}
       <div className="relative w-full max-w-2xl overflow-hidden modal-content">
-        <div className="relative bg-white dark:bg-slate-900 rounded-2xl shadow-2xl shadow-slate-900/20 dark:shadow-black/40 border border-t-0 border-slate-200/50 dark:border-slate-700/50 overflow-hidden">
-
-          {/* 상단 장식 바 */}
-          <div className="h-1 bg-[var(--color-primary)]" />
+        <div className="relative bg-white dark:bg-slate-900 rounded-2xl shadow-2xl shadow-slate-900/20 dark:shadow-black/40 border border-slate-200/50 dark:border-slate-700/50 overflow-hidden">
 
           {/* 닫기 버튼 */}
           <button
             onClick={handleClose}
-            className="absolute top-4 right-4 z-10 p-2 rounded-full text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-200 cursor-pointer group"
+            className="absolute top-4 right-4 z-10 p-2 rounded-full text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-200 cursor-pointer"
           >
             <svg
-              className="w-5 h-5 transition-transform duration-200 group-hover:rotate-90"
+              className="w-5 h-5"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -119,13 +116,6 @@ export default function NoticeListModal({ isOpen, onClose, posts, onSelectPost }
                     style={{ animationDelay: `${index * 50}ms` }}
                   >
                     <div className="flex items-start gap-4">
-                      {/* 번호 */}
-                      <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 flex items-center justify-center">
-                        <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">
-                          {post.id}
-                        </span>
-                      </div>
-
                       {/* 내용 */}
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">

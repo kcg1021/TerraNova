@@ -55,8 +55,6 @@ export default function FindPasswordModal({ isOpen, onClose }: FindPasswordModal
           <IconBadge
             icon={Icons.email}
             color="blue"
-            badge={Icons.check}
-            badgeColor="emerald"
             animate
           />
         }
@@ -103,8 +101,6 @@ export default function FindPasswordModal({ isOpen, onClose }: FindPasswordModal
         <IconBadge
           icon={Icons.lock}
           color="amber"
-          badge={Icons.key}
-          badgeColor="white"
         />
       }
     >

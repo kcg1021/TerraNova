@@ -195,9 +195,7 @@ export default function SignupPage() {
     return (
       <div className="flex-1 flex items-center justify-center bg-gray-50 dark:bg-gray-950 p-6">
         <div className="w-full max-w-lg">
-          <div className="bg-white dark:bg-gray-900 border border-t-0 border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden shadow-lg">
-            <div className="h-1 bg-[var(--color-primary)]" />
-
+          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden shadow-lg">
             <div className="p-12 text-center">
               <div className="flex justify-center mb-6">
                 <IconBadge icon={Icons.check} color="emerald" animate />
@@ -236,8 +234,8 @@ export default function SignupPage() {
 
   return (
     <div className="flex-1 flex bg-gray-50 dark:bg-gray-950">
-      {/* 좌측: 폼 영역 */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 lg:p-12 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800">
+      {/* 폼 영역 */}
+      <div className="w-full flex items-center justify-center p-6 lg:p-12 bg-white dark:bg-gray-900">
         <div className="w-full max-w-md">
           {/* 헤더 */}
           <div className="mb-12">
@@ -481,54 +479,6 @@ export default function SignupPage() {
               </div>
             </form>
           )}
-        </div>
-      </div>
-
-      {/* 우측: 장식 영역 */}
-      <div className="hidden lg:flex flex-1 items-center justify-center bg-gray-100 dark:bg-gray-900 border-l border-gray-200 dark:border-gray-800">
-        <div className="max-w-sm text-center px-12">
-          {/* 장식 요소 */}
-          <div className="mb-8 flex justify-center">
-            <div className="relative">
-              <div className="w-24 h-24 border-2 border-gray-300 dark:border-gray-600 rounded-full" />
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 border-2 border-gray-400 dark:border-gray-500 rounded-full" />
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-gray-900 dark:bg-white rounded-full" />
-            </div>
-          </div>
-
-          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-3">
-            간편한 가입 절차
-          </h3>
-          <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
-            약관 동의 후 필수 정보만 입력하면<br />
-            바로 서비스를 이용하실 수 있습니다.
-          </p>
-
-          {/* 단계 표시 */}
-          <div className="mt-10 flex items-center justify-center gap-6">
-            <div className="text-center">
-              <div className={`w-8 h-8 rounded-full text-xs font-medium flex items-center justify-center mb-2 ${
-                step === 'terms'
-                  ? 'bg-[var(--color-primary)] text-white'
-                  : 'border border-gray-300 dark:border-gray-600 text-gray-400 dark:text-gray-500'
-              }`}>1</div>
-              <span className={`text-xs ${step === 'terms' ? 'text-[var(--color-primary)] dark:text-sky-400' : 'text-gray-400 dark:text-gray-500'}`}>약관 동의</span>
-            </div>
-            <div className="w-6 h-px bg-gray-300 dark:bg-gray-600" />
-            <div className="text-center">
-              <div className={`w-8 h-8 rounded-full text-xs font-medium flex items-center justify-center mb-2 ${
-                step === 'form'
-                  ? 'bg-[var(--color-primary)] text-white'
-                  : 'border border-gray-300 dark:border-gray-600 text-gray-400 dark:text-gray-500'
-              }`}>2</div>
-              <span className={`text-xs ${step === 'form' ? 'text-[var(--color-primary)] dark:text-sky-400' : 'text-gray-400 dark:text-gray-500'}`}>정보 입력</span>
-            </div>
-            <div className="w-6 h-px bg-gray-300 dark:bg-gray-600" />
-            <div className="text-center">
-              <div className="w-8 h-8 rounded-full border border-gray-300 dark:border-gray-600 text-gray-400 dark:text-gray-500 text-xs font-medium flex items-center justify-center mb-2">3</div>
-              <span className="text-xs text-gray-400 dark:text-gray-500">가입 완료</span>
-            </div>
-          </div>
         </div>
       </div>
     </div>

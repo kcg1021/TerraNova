@@ -10,6 +10,39 @@
   --color-primary-light: #e8f1fb;
 }
 
+/*
+ * 뉴트럴 색상 팔레트
+ * 라이트: 크림/오프화이트 톤 (눈이 편안한)
+ * 다크: 차콜그레이 톤 (라이트와 연속성 유지)
+ */
+@theme {
+  /* 라이트모드 - 확실한 크림/오프화이트 톤 */
+  --color-gray-50: #f8f6f3;
+  --color-gray-100: #f2eeea;
+  --color-gray-200: #e8e4df;
+  --color-gray-300: #d9d4ce;
+  --color-gray-400: #a8a198;
+  --color-gray-500: #7a756c;
+  --color-gray-600: #5c574f;
+  --color-gray-700: #46423b;
+  --color-gray-800: #2b2824;
+  --color-gray-900: #1d1b18;
+  --color-gray-950: #0e0d0b;
+
+  /* 슬레이트 계열도 웜톤으로 조정 */
+  --color-slate-50: #f7f5f2;
+  --color-slate-100: #f0ede9;
+  --color-slate-200: #e5e1dc;
+  --color-slate-300: #d5d0c9;
+  --color-slate-400: #9e9890;
+  --color-slate-500: #706b62;
+  --color-slate-600: #55514a;
+  --color-slate-700: #3f3c36;
+  --color-slate-800: #292723;
+  --color-slate-900: #1c1a17;
+  --color-slate-950: #0d0c0a;
+}
+
 body {
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
