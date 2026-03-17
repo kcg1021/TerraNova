@@ -1,4 +1,5 @@
 import type { UserRole } from './auth'
+import type { Attachment } from './attachment'
 
 export interface Board {
   id: string
@@ -15,7 +16,7 @@ export interface BoardPost {
   createdAt: string
   views: number
   isNew?: boolean
-  hasAttachment?: boolean
+  attachments?: Attachment[]
   isPublic?: boolean
   content?: string
 }
