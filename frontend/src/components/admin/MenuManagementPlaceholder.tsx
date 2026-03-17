@@ -1,4 +1,4 @@
-import { mockSystemMenus } from '../../mocks/adminData'
+import { useSystemMenus } from '../../hooks/queries'
 
 interface Props {
   systemId: string
@@ -6,7 +6,8 @@ interface Props {
 }
 
 export default function MenuManagementPlaceholder({ systemId, menuId }: Props) {
-  const menu = mockSystemMenus.find(m => m.id === menuId && m.systemId === systemId)
+  const { data: systemMenus = [] } = useSystemMenus(systemId)
+  const menu = systemMenus.find(m => m.id === menuId)
 
   if (!menu) {
     return (

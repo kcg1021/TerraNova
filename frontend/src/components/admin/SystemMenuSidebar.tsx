@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useCollapsible } from '../../hooks/useCollapsible'
-import { mockSystemMenus, mockAdminSystems } from '../../mocks/adminData'
+import { useSystemMenus, useAdminSystems } from '../../hooks/queries'
 
 interface Props {
   systemId: string
@@ -12,12 +12,12 @@ export default function SystemMenuSidebar({ systemId }: Props) {
   const { menuId } = useParams<{ menuId?: string }>()
   const { collapsed, showCollapsed, animating, toggle, handleTransitionEnd } = useCollapsible()
   const [hoveredId, setHoveredId] = useState<string | null>(null)
+  const { data: adminSystems = [] } = useAdminSystems()
+  const { data: menus = [] } = useSystemMenus(systemId)
 
   const system = systemId === 'integrated'
     ? { name: '통합관리', color: '#10b981' }
-    : mockAdminSystems.find(s => s.id === systemId)
-
-  const menus = mockSystemMenus.filter(m => m.systemId === systemId)
+    : adminSystems.find(s => s.id === systemId)
 
   const isDashboard = !menuId
 

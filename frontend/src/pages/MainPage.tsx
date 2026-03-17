@@ -2,12 +2,12 @@ import { useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { useSiteConfig } from '../contexts/SiteConfigContext'
+import { useBoards, usePosts, useSystems } from '../hooks/queries'
 import Sidebar from '../components/main/Sidebar'
 import BoardSection from '../components/main/BoardSection'
 import LoginForm from '../components/auth/LoginForm'
 import NoticeDetailModal from '../components/notice/NoticeDetailModal'
 import NoticeListModal from '../components/notice/NoticeListModal'
-import { mockBoards, mockPosts, mockSystems } from '../mocks/mainPageData'
 import type { BoardPost } from '../types/board'
 
 export default function MainPage() {
@@ -16,27 +16,31 @@ export default function MainPage() {
   const [searchParams] = useSearchParams()
   const initialBoardId = searchParams.get('board')
 
+  const { data: boards = [] } = useBoards()
+  const { data: posts = [] } = usePosts()
+  const { data: systems = [] } = useSystems()
+
   // 모달 상태
   const [selectedPost, setSelectedPost] = useState<BoardPost | null>(null)
   const [showDetailModal, setShowDetailModal] = useState(false)
   const [showListModal, setShowListModal] = useState(false)
 
   const visibleBoards = useMemo(() => {
-    const notice = mockBoards.filter(b => b.type === 'notice')
+    const notice = boards.filter(b => b.type === 'notice')
     if (!user) return notice
 
-    const extra = mockBoards.filter(
+    const extra = boards.filter(
       b => b.type === 'board' && config.displayBoards.includes(b.id)
     )
     return [...notice, ...extra]
-  }, [user, config.displayBoards])
+  }, [user, config.displayBoards, boards])
 
   const noticePreview = useMemo(() => {
-    return mockPosts
+    return posts
       .filter(p => p.boardId === 'notice')
       .sort((a, b) => b.id - a.id)
       .slice(0, 6)
-  }, [])
+  }, [posts])
 
   // 공지사항 클릭 핸들러
   const handlePostClick = (post: BoardPost) => {
@@ -97,6 +101,11 @@ export default function MainPage() {
                             N
                           </span>
                         )}
+                        {post.attachments && post.attachments.length > 0 && (
+                          <svg className="inline-block ml-1.5 w-3.5 h-3.5 text-gray-300 dark:text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13" />
+                          </svg>
+                        )}
                       </h3>
                       <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                         {post.author} · {post.createdAt}
@@ -155,7 +164,7 @@ export default function MainPage() {
         <NoticeListModal
           isOpen={showListModal}
           onClose={() => setShowListModal(false)}
-          posts={mockPosts}
+          posts={posts}
           onSelectPost={handlePostClick}
         />
       </div>
@@ -165,12 +174,12 @@ export default function MainPage() {
   // 로그인 후: 대시보드 레이아웃
   return (
     <div className="flex-1 flex bg-gray-50 dark:bg-gray-950">
-      <Sidebar systems={mockSystems} />
+      <Sidebar systems={systems} />
 
       <div className="flex-1 min-w-0 pb-16 md:pb-0 overflow-y-auto flex flex-col p-6 lg:p-12">
         {/* 게시판 섹션 */}
         <div className="flex-1 min-h-0">
-          <BoardSection boards={visibleBoards} posts={mockPosts} initialBoardId={initialBoardId} />
+          <BoardSection boards={visibleBoards} posts={posts} initialBoardId={initialBoardId} />
         </div>
       </div>
     </div>

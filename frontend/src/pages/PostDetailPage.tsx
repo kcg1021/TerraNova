@@ -1,14 +1,24 @@
 import { useParams, useNavigate, Navigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
-import { mockPosts, mockBoards } from '../mocks/mainPageData'
+import { usePost, useBoards } from '../hooks/queries'
+import { FileList } from '../components/ui-kit'
 
 export default function PostDetailPage() {
   const { boardId, postId } = useParams<{ boardId: string; postId: string }>()
   const navigate = useNavigate()
   const { user } = useAuth()
 
-  const post = mockPosts.find(p => p.boardId === boardId && p.id === Number(postId))
-  const board = mockBoards.find(b => b.id === boardId)
+  const { data: post, isPending: postLoading } = usePost(boardId, postId ? Number(postId) : undefined)
+  const { data: boards = [] } = useBoards()
+  const board = boards.find(b => b.id === boardId)
+
+  if (postLoading) {
+    return (
+      <div className="flex items-center justify-center h-[calc(100vh-3rem)] md:h-[calc(100vh-3.5rem)]">
+        <div className="text-sm text-gray-400 dark:text-gray-500">불러오는 중...</div>
+      </div>
+    )
+  }
 
   // 게시글 없음
   if (!post || !board) {
@@ -69,12 +79,12 @@ export default function PostDetailPage() {
               <span>{post.author}</span>
               <span>{post.createdAt}</span>
               <span>조회 {post.views.toLocaleString()}</span>
-              {post.hasAttachment && (
+              {post.attachments && post.attachments.length > 0 && (
                 <span className="flex items-center gap-1">
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13" />
                   </svg>
-                  첨부파일
+                  첨부파일 {post.attachments.length}개
                 </span>
               )}
             </div>
@@ -86,6 +96,13 @@ export default function PostDetailPage() {
               {post.content ?? '본문 내용이 없습니다.'}
             </div>
           </div>
+
+          {/* 첨부파일 */}
+          {post.attachments && post.attachments.length > 0 && (
+            <div className="px-5 sm:px-6 pb-6">
+              <FileList attachments={post.attachments} />
+            </div>
+          )}
         </article>
       </div>
     </div>

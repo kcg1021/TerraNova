@@ -10,7 +10,7 @@ import {
   Cell,
 } from 'recharts'
 import { useTheme } from '../../contexts/ThemeContext'
-import { mockMenuUsage } from '../../mocks/adminData'
+import { useMenuUsage } from '../../hooks/queries'
 
 type TopN = 5 | 10 | 15
 
@@ -24,10 +24,11 @@ export default function MenuUsageChart({ systemIds }: Props) {
   const { resolvedTheme } = useTheme()
   const isDark = resolvedTheme === 'dark'
   const [topN, setTopN] = useState<TopN>(5)
+  const { data: menuUsage = [] } = useMenuUsage()
 
   const allData = systemIds && systemIds.length < ALL_COUNT
-    ? mockMenuUsage.filter(m => systemIds.includes(m.systemId))
-    : mockMenuUsage
+    ? menuUsage.filter(m => systemIds.includes(m.systemId))
+    : menuUsage
   const data = allData.slice(0, topN)
 
   const gridColor = isDark ? '#374151' : '#e5e7eb'
