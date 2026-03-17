@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Modal from '../common/Modal'
 import { Input, Button, Alert, IconBadge, Icons } from '../ui-kit'
+import { useFormModal } from '../../hooks/useFormModal'
 
 interface FindPasswordModalProps {
   isOpen: boolean
@@ -10,38 +11,26 @@ interface FindPasswordModalProps {
 export default function FindPasswordModal({ isOpen, onClose }: FindPasswordModalProps) {
   const [id, setId] = useState('')
   const [email, setEmail] = useState('')
-  const [sent, setSent] = useState(false)
-  const [error, setError] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
+  const { result: sent, error, isLoading, setError, handleClose, submit } = useFormModal<boolean>(() => {
+    setId('')
+    setEmail('')
+    onClose()
+  })
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (!id.trim() || !email.trim()) {
       setError('모든 항목을 입력해주세요.')
       return
     }
 
-    setIsLoading(true)
-    setError('')
-
-    // Mock API 호출 시뮬레이션
-    await new Promise(resolve => setTimeout(resolve, 1000))
-
-    if ((id === 'admin' && email === 'admin@test.com') || (id === 'user' && email === 'user@test.com')) {
-      setSent(true)
-    } else {
-      setError('일치하는 정보를 찾을 수 없습니다.')
-    }
-    setIsLoading(false)
-  }
-
-  const handleClose = () => {
-    setId('')
-    setEmail('')
-    setSent(false)
-    setError('')
-    setIsLoading(false)
-    onClose()
+    submit(async () => {
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      if ((id === 'admin' && email === 'admin@test.com') || (id === 'user' && email === 'user@test.com')) {
+        return true
+      }
+      throw new Error('일치하는 정보를 찾을 수 없습니다.')
+    })
   }
 
   // 이메일 발송 완료 화면
@@ -51,16 +40,9 @@ export default function FindPasswordModal({ isOpen, onClose }: FindPasswordModal
         isOpen={isOpen}
         onClose={handleClose}
         title="이메일이 발송되었습니다"
-        icon={
-          <IconBadge
-            icon={Icons.email}
-            color="blue"
-            animate
-          />
-        }
+        icon={<IconBadge icon={Icons.email} color="blue" animate />}
       >
         <div className="text-center">
-          {/* 이메일 주소 표시 */}
           <div className="relative mb-6">
             <div className="py-4 px-6 bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700">
               <p className="text-sm text-slate-500 dark:text-slate-400 mb-1">발송된 주소</p>
@@ -70,7 +52,6 @@ export default function FindPasswordModal({ isOpen, onClose }: FindPasswordModal
             </div>
           </div>
 
-          {/* 안내 메시지 */}
           <Alert type="info" title="이메일을 확인해주세요" className="mb-6 text-left">
             <p className="text-xs">
               비밀번호 재설정 링크가 포함된 이메일을 발송했습니다.
@@ -97,14 +78,9 @@ export default function FindPasswordModal({ isOpen, onClose }: FindPasswordModal
       onClose={handleClose}
       title="비밀번호 찾기"
       subtitle="비밀번호 재설정 링크를 이메일로 보내드립니다"
-      icon={
-        <IconBadge
-          icon={Icons.lock}
-          color="amber"
-        />
-      }
+      icon={<IconBadge icon={Icons.lock} color="amber" />}
     >
-      <form onSubmit={handleSubmit} className="space-y-5">
+      <form onSubmit={handleFormSubmit} className="space-y-5">
         <Input
           label="아이디"
           type="text"

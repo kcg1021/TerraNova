@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Modal from '../common/Modal'
 import { Input, Button, Alert, IconBadge, Icons } from '../ui-kit'
+import { useFormModal } from '../../hooks/useFormModal'
 
 interface FindIdModalProps {
   isOpen: boolean
@@ -10,40 +11,25 @@ interface FindIdModalProps {
 export default function FindIdModal({ isOpen, onClose }: FindIdModalProps) {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
-  const [result, setResult] = useState<string | null>(null)
-  const [error, setError] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
+  const { result, error, isLoading, setError, handleClose, submit } = useFormModal<string>(() => {
+    setName('')
+    setEmail('')
+    onClose()
+  })
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (!name.trim() || !email.trim()) {
       setError('모든 항목을 입력해주세요.')
       return
     }
 
-    setIsLoading(true)
-    setError('')
-
-    // Mock API 호출 시뮬레이션
-    await new Promise(resolve => setTimeout(resolve, 800))
-
-    if (email === 'admin@test.com' && name === '관리자') {
-      setResult('admin')
-    } else if (email === 'user@test.com' && name === '홍길동') {
-      setResult('user')
-    } else {
-      setError('일치하는 정보를 찾을 수 없습니다.')
-    }
-    setIsLoading(false)
-  }
-
-  const handleClose = () => {
-    setName('')
-    setEmail('')
-    setResult(null)
-    setError('')
-    setIsLoading(false)
-    onClose()
+    submit(async () => {
+      await new Promise(resolve => setTimeout(resolve, 800))
+      if (email === 'admin@test.com' && name === '관리자') return 'admin'
+      if (email === 'user@test.com' && name === '홍길동') return 'user'
+      throw new Error('일치하는 정보를 찾을 수 없습니다.')
+    })
   }
 
   // 결과 화면
@@ -53,20 +39,13 @@ export default function FindIdModal({ isOpen, onClose }: FindIdModalProps) {
         isOpen={isOpen}
         onClose={handleClose}
         title="아이디를 찾았습니다"
-        icon={
-          <IconBadge
-            icon={Icons.check}
-            color="emerald"
-            animate
-          />
-        }
+        icon={<IconBadge icon={Icons.check} color="emerald" animate />}
       >
         <div className="text-center">
           <p className="text-sm text-slate-500 dark:text-slate-400 mb-3">
             회원님의 아이디는
           </p>
 
-          {/* 아이디 표시 박스 */}
           <div className="relative mb-6">
             <div className="py-4 px-6 bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700">
               <span className="text-2xl font-bold text-[var(--color-primary)] dark:text-sky-400 tracking-wide">
@@ -96,14 +75,9 @@ export default function FindIdModal({ isOpen, onClose }: FindIdModalProps) {
       onClose={handleClose}
       title="아이디 찾기"
       subtitle="가입 시 등록한 정보를 입력해주세요"
-      icon={
-        <IconBadge
-          icon={Icons.user}
-          color="blue"
-        />
-      }
+      icon={<IconBadge icon={Icons.user} color="blue" />}
     >
-      <form onSubmit={handleSubmit} className="space-y-5">
+      <form onSubmit={handleFormSubmit} className="space-y-5">
         <Input
           label="이름"
           type="text"

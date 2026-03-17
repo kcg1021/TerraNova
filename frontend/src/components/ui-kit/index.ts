@@ -3,3 +3,6 @@ export { default as FloatingInput, type FloatingInputProps } from './FloatingInp
 export { default as Button, type ButtonProps } from './Button'
 export { default as Alert, type AlertProps } from './Alert'
 export { default as IconBadge, Icons, type IconBadgeProps } from './IconBadge'
+export { default as Pagination, type PaginationProps } from './Pagination'
+export { default as FileList, type FileListProps } from './FileList'
+export { default as FileUpload, type FileUploadProps } from './FileUpload'
