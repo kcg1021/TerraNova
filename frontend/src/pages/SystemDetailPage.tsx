@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { Navigate, useParams } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
-import { mockAdminSystems, mockSystemAdminPermissions } from '../mocks/adminData'
+import { isAdminRole, isSuperAdminRole } from '../utils/auth'
+import { useAdminSystems, useAdminPermissions } from '../hooks/queries'
 import SystemMenuSidebar from '../components/admin/SystemMenuSidebar'
 import SystemAccessChart from '../components/admin/SystemAccessChart'
 import MenuUsageChart from '../components/admin/MenuUsageChart'
@@ -14,8 +15,11 @@ export default function SystemDetailPage() {
   const { user } = useAuth()
   const { systemId, menuId } = useParams<{ systemId: string; menuId?: string }>()
   const [selectedSystems, setSelectedSystems] = useState<string[]>(ALL_SYSTEM_IDS)
+  const isAdmin = user ? isAdminRole(user.role) : false
+  const { data: adminSystems, isPending: systemsLoading } = useAdminSystems()
+  const { data: permissions, isPending: permsLoading } = useAdminPermissions()
 
-  if (!user || user.role === 'USER') {
+  if (!user || !isAdmin) {
     return <Navigate to="/" replace />
   }
 
@@ -23,24 +27,33 @@ export default function SystemDetailPage() {
     return <Navigate to="/admin" replace />
   }
 
+  // 데이터 로딩 중이면 대기
+  if (systemsLoading || permsLoading) {
+    return (
+      <div className="flex-1 flex items-center justify-center">
+        <div className="text-sm text-gray-400 dark:text-gray-500">불러오는 중...</div>
+      </div>
+    )
+  }
+
   // systemId 유효성 검증
   const isIntegrated = systemId === 'integrated'
   const system = isIntegrated
     ? { id: 'integrated', name: '통합관리', description: '전체 시스템 통합 관리', color: '#10b981' }
-    : mockAdminSystems.find(s => s.id === systemId)
+    : adminSystems?.find(s => s.id === systemId)
 
   if (!system) {
     return <Navigate to="/admin" replace />
   }
 
   // 통합관리는 SUPER_ADMIN만 접근 가능
-  if (isIntegrated && user.role !== 'SUPER_ADMIN') {
+  if (isIntegrated && !isSuperAdminRole(user.role)) {
     return <Navigate to="/admin" replace />
   }
 
   // SYSTEM_ADMIN 권한 검증
-  if (user.role === 'SYSTEM_ADMIN' && !isIntegrated) {
-    const perm = mockSystemAdminPermissions.find(p => p.userId === user.id)
+  if (!isSuperAdminRole(user.role) && !isIntegrated) {
+    const perm = permissions?.find(p => p.userId === user.id)
     const allowedIds = perm?.systemIds ?? []
     if (!allowedIds.includes(systemId)) {
       return <Navigate to="/admin" replace />

@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
-import { mockAdminNotifications, mockSystemAdminPermissions } from '../../mocks/adminData'
+import { isAdminRole, isSuperAdminRole } from '../../utils/auth'
+import { useAdminNotifications, useAdminPermissions } from '../../hooks/queries'
 
 export default function NotificationBell() {
   const { user } = useAuth()
@@ -9,8 +10,11 @@ export default function NotificationBell() {
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
 
-  const isAdmin = user?.role === 'SUPER_ADMIN' || user?.role === 'SYSTEM_ADMIN'
-  const isSuperAdmin = user?.role === 'SUPER_ADMIN'
+  const isAdmin = isAdminRole(user?.role)
+  const isSuperAdmin = isSuperAdminRole(user?.role)
+
+  const { data: allNotifications = [] } = useAdminNotifications({ enabled: isAdmin })
+  const { data: permissions = [] } = useAdminPermissions({ enabled: isAdmin })
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -26,11 +30,11 @@ export default function NotificationBell() {
 
   // SYSTEM_ADMIN은 할당된 시스템의 알림만
   const notifications = isSuperAdmin
-    ? mockAdminNotifications
+    ? allNotifications
     : (() => {
-        const perm = mockSystemAdminPermissions.find(p => p.userId === user.id)
+        const perm = permissions.find(p => p.userId === user.id)
         if (!perm) return []
-        return mockAdminNotifications.filter(n => perm.systemIds.includes(n.systemId))
+        return allNotifications.filter(n => perm.systemIds.includes(n.systemId))
       })()
 
   const totalCount = notifications.reduce((sum, n) => sum + n.count, 0)

@@ -9,7 +9,8 @@ import {
   ResponsiveContainer,
 } from 'recharts'
 import { useTheme } from '../../contexts/ThemeContext'
-import { mockDailyAccess, mockSystemDailyAccess, SYSTEM_COLORS } from '../../mocks/adminData'
+import { useDailyAccess, useSystemDailyAccess } from '../../hooks/queries'
+import { SYSTEM_COLORS } from '../../constants/systems'
 
 type Period = 7 | 14 | 30
 
@@ -34,24 +35,26 @@ export default function SystemAccessChart({ systemIds }: Props) {
   const [period, setPeriod] = useState<Period>(7)
   const [sumOnly, setSumOnly] = useState(false)
   const isDark = resolvedTheme === 'dark'
+  const { data: dailyAccess = [] } = useDailyAccess()
+  const { data: systemDailyAccess = {} } = useSystemDailyAccess()
 
   const ids = systemIds ?? ALL_IDS
 
   const { data, mode } = useMemo(() => {
     // 단일 시스템
     if (ids.length === 1) {
-      const src = mockSystemDailyAccess[ids[0]] ?? mockDailyAccess
+      const src = systemDailyAccess[ids[0]] ?? dailyAccess
       return { data: src.slice(-period), mode: 'single' as const }
     }
     // 복수 시스템 → 항상 멀티라인 + 합산
-    const firstData = mockSystemDailyAccess[ids[0]]
-    if (!firstData) return { data: mockDailyAccess.slice(-period), mode: 'single' as const }
+    const firstData = systemDailyAccess[ids[0]]
+    if (!firstData) return { data: dailyAccess.slice(-period), mode: 'single' as const }
 
     const merged = firstData.map((_, i) => {
       const entry: Record<string, number | string> = { date: firstData[i].date }
       let sum = 0
       for (const sid of ids) {
-        const val = mockSystemDailyAccess[sid]?.[i]?.count ?? 0
+        const val = systemDailyAccess[sid]?.[i]?.count ?? 0
         entry[sid] = val
         sum += val
       }
@@ -59,7 +62,7 @@ export default function SystemAccessChart({ systemIds }: Props) {
       return entry
     })
     return { data: merged.slice(-period), mode: 'multi' as const }
-  }, [ids, period])
+  }, [ids, period, dailyAccess, systemDailyAccess])
 
   const singleColor = ids.length === 1 && SYSTEM_COLORS[ids[0]]
     ? SYSTEM_COLORS[ids[0]]

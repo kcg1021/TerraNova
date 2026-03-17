@@ -1,6 +1,7 @@
 import type { BoardPost } from '../../types/board'
+import { formatDate } from '../../utils/format'
 import Modal from '../common/Modal'
-import { Button, IconBadge, Icons } from '../ui-kit'
+import { Button, IconBadge, Icons, FileList } from '../ui-kit'
 
 interface NoticeDetailModalProps {
   isOpen: boolean
@@ -11,16 +12,6 @@ interface NoticeDetailModalProps {
 
 export default function NoticeDetailModal({ isOpen, onClose, post, onViewList }: NoticeDetailModalProps) {
   if (!post) return null
-
-  // 날짜 포맷팅
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr)
-    return date.toLocaleDateString('ko-KR', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    })
-  }
 
   // 콘텐츠를 줄바꿈 기준으로 단락 처리
   const renderContent = (content: string) => {
@@ -115,30 +106,9 @@ export default function NoticeDetailModal({ isOpen, onClose, post, onViewList }:
           </div>
         </div>
 
-        {/* 첨부파일 (있는 경우) */}
-        {post.hasAttachment && (
-          <div className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700">
-            <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
-              <svg className="w-5 h-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13" />
-              </svg>
-              <span className="font-medium">첨부파일</span>
-            </div>
-            <div className="mt-2 flex items-center gap-2 p-2 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
-              <svg className="w-8 h-8 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-              </svg>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-slate-700 dark:text-slate-300 truncate">
-                  첨부파일.pdf
-                </p>
-                <p className="text-xs text-slate-400">128 KB</p>
-              </div>
-              <svg className="w-5 h-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-              </svg>
-            </div>
-          </div>
+        {/* 첨부파일 */}
+        {post.attachments && post.attachments.length > 0 && (
+          <FileList attachments={post.attachments} />
         )}
 
         {/* 버튼 그룹 */}

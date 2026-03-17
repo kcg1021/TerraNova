@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { SYSTEM_COLORS } from '../../mocks/adminData'
+import { SYSTEM_COLORS } from '../../constants/systems'
 
 const ALL_SYSTEMS = [
   { id: 'integrated', name: '통합관리' },

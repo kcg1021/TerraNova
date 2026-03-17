@@ -1,25 +1,36 @@
 import { Navigate, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
-import { mockAdminSystems, mockSystemAdminPermissions } from '../mocks/adminData'
+import { isAdminRole, isSuperAdminRole } from '../utils/auth'
+import { useAdminSystems, useAdminPermissions } from '../hooks/queries'
 import type { AdminSystem } from '../types/admin'
 
 export default function AdminHubPage() {
   const { user } = useAuth()
   const navigate = useNavigate()
+  const { data: adminSystems, isPending: systemsLoading } = useAdminSystems()
+  const { data: permissions, isPending: permsLoading } = useAdminPermissions()
 
-  if (!user || user.role === 'USER') {
+  if (!user || !isAdminRole(user.role)) {
     return <Navigate to="/" replace />
   }
 
-  const isSuperAdmin = user.role === 'SUPER_ADMIN'
+  if (systemsLoading || permsLoading) {
+    return (
+      <main className="flex-1 flex items-center justify-center">
+        <div className="text-sm text-gray-400 dark:text-gray-500">불러오는 중...</div>
+      </main>
+    )
+  }
+
+  const isSuperAdmin = isSuperAdminRole(user.role)
 
   let systems: AdminSystem[]
   if (isSuperAdmin) {
-    systems = mockAdminSystems
+    systems = adminSystems ?? []
   } else {
-    const perm = mockSystemAdminPermissions.find(p => p.userId === user.id)
+    const perm = permissions?.find(p => p.userId === user.id)
     const allowedIds = perm?.systemIds ?? []
-    systems = mockAdminSystems.filter(s => allowedIds.includes(s.id))
+    systems = (adminSystems ?? []).filter(s => allowedIds.includes(s.id))
   }
 
   return (

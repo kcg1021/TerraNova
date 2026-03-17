@@ -32,7 +32,7 @@ export interface AdminNotification {
   message: string
 }
 
-export interface SystemMenu {
+export interface AdminMenu {
   id: string
   systemId: string
   name: string

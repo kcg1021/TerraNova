@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
 import { useSiteConfig } from '../../contexts/SiteConfigContext'
 import { useTheme } from '../../contexts/ThemeContext'
+import { isAdminRole, isSuperAdminRole, getRoleLabel } from '../../utils/auth'
 import Logo from './Logo'
 import NotificationBell from './NotificationBell'
 
@@ -18,8 +19,8 @@ export default function Header() {
   const menuRef = useRef<HTMLDivElement>(null)
   const themeMenuRef = useRef<HTMLDivElement>(null)
 
-  const isAdmin = user?.role === 'SUPER_ADMIN' || user?.role === 'SYSTEM_ADMIN'
-  const isSuperAdmin = user?.role === 'SUPER_ADMIN'
+  const isAdmin = isAdminRole(user?.role)
+  const isSuperAdmin = isSuperAdminRole(user?.role)
 
   // 세션 남은 시간 계산
   useEffect(() => {
@@ -179,7 +180,7 @@ export default function Header() {
                 <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-700">
                   <div className="text-sm font-semibold text-gray-900 dark:text-white">{user.name}</div>
                   <div className="text-xs text-gray-500 dark:text-gray-300 mt-0.5">
-                    {user.role === 'SUPER_ADMIN' ? '슈퍼 관리자' : user.role === 'SYSTEM_ADMIN' ? '시스템 관리자' : '일반 사용자'}
+                    {getRoleLabel(user.role)}
                   </div>
                 </div>
 
