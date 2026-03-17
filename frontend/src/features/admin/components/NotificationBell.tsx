@@ -50,15 +50,15 @@ export default function NotificationBell() {
           <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
         </svg>
         {totalCount > 0 && (
-          <span className="absolute -top-0.5 -right-0.5 flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-bold text-white bg-red-500 rounded-full leading-none">
+          <span className="absolute -top-0.5 -right-0.5 flex items-center justify-center min-w-[18px] h-[18px] px-1 text-xs font-bold text-white bg-red-500 rounded-full leading-none">
             {totalCount}
           </span>
         )}
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-2 w-80 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg shadow-gray-200/50 dark:shadow-black/30 z-50 overflow-hidden">
-          <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-700">
+        <div className="fixed top-14 right-2 left-2 sm:absolute sm:top-full sm:mt-2 sm:left-auto sm:right-0 sm:w-80 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl shadow-lg shadow-gray-200/50 dark:shadow-black/30 z-50 overflow-hidden">
+          <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-800">
             <div className="text-sm font-semibold text-gray-900 dark:text-white">알림</div>
             <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
               처리 대기 {totalCount}건

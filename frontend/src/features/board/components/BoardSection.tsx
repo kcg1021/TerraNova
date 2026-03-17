@@ -118,7 +118,7 @@ export default function BoardSection({ boards, posts, maxPosts, initialBoardId }
                     <h3 className="text-sm font-medium text-gray-900 dark:text-white truncate group-hover:text-[var(--color-primary)] dark:group-hover:text-sky-400 transition-colors">
                       {post.title}
                       {post.isNew && (
-                        <span className="ml-2 inline-block px-1.5 py-0.5 text-[10px] font-bold text-white bg-red-500 rounded">
+                        <span className="ml-2 inline-block px-1.5 py-0.5 text-xs font-bold text-white bg-red-500 rounded">
                           N
                         </span>
                       )}

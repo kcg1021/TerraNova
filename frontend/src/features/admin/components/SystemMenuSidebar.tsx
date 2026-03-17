@@ -35,7 +35,7 @@ export default function SystemMenuSidebar({ systemId }: Props) {
           {!showCollapsed && (
             <button
               onClick={() => navigate('/admin')}
-              className="flex items-center gap-1 text-[11px] font-medium text-gray-400 dark:text-gray-500 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors cursor-pointer whitespace-nowrap"
+              className="flex items-center gap-1 text-xs font-medium text-gray-400 dark:text-gray-500 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors cursor-pointer whitespace-nowrap"
             >
               <svg className="w-3 h-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
@@ -145,7 +145,7 @@ export default function SystemMenuSidebar({ systemId }: Props) {
                       <div className="absolute right-full top-1/2 -translate-y-1/2 w-0 h-0 border-y-[5px] border-y-transparent border-r-[5px] border-r-white dark:border-r-gray-800" style={{ marginLeft: '1px' }} />
                       <div className="text-sm font-medium text-gray-800 dark:text-gray-100">{menu.name}</div>
                       {menu.description && (
-                        <div className="text-[11px] text-gray-400 dark:text-gray-500 mt-0.5 leading-snug">{menu.description}</div>
+                        <div className="text-xs text-gray-400 dark:text-gray-500 mt-0.5 leading-snug">{menu.description}</div>
                       )}
                     </div>
                   </div>
@@ -157,7 +157,7 @@ export default function SystemMenuSidebar({ systemId }: Props) {
       </aside>
 
       {/* 모바일: 하단 고정 바 */}
-      <div className="fixed bottom-0 left-0 right-0 z-30 md:hidden bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 px-2 py-1.5 flex gap-1 overflow-x-auto">
+      <div className="fixed bottom-0 left-0 right-0 z-30 md:hidden bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 px-3 py-2 flex gap-1.5 overflow-x-auto">
         {/* 허브로 돌아가기 */}
         <button
           onClick={() => navigate('/admin')}
@@ -166,7 +166,7 @@ export default function SystemMenuSidebar({ systemId }: Props) {
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
           </svg>
-          <span className="text-[10px] font-medium whitespace-nowrap">허브</span>
+          <span className="text-xs font-medium whitespace-nowrap">허브</span>
         </button>
 
         {/* 대시보드 */}
@@ -181,7 +181,7 @@ export default function SystemMenuSidebar({ systemId }: Props) {
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
           </svg>
-          <span className="text-[10px] font-medium whitespace-nowrap">대시보드</span>
+          <span className="text-xs font-medium whitespace-nowrap">대시보드</span>
         </button>
 
         {/* 메뉴 항목들 */}
@@ -198,7 +198,7 @@ export default function SystemMenuSidebar({ systemId }: Props) {
             <span className={`w-4 h-4 rounded-full border-2 ${
               menuId === menu.id ? 'border-emerald-500 bg-emerald-500' : 'border-gray-300 dark:border-gray-600'
             }`} />
-            <span className="text-[10px] font-medium whitespace-nowrap">{menu.name}</span>
+            <span className="text-xs font-medium whitespace-nowrap">{menu.name}</span>
           </button>
         ))}
       </div>

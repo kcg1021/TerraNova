@@ -58,7 +58,7 @@ export default function SystemFilterDropdown({ selectedSystems, onChange }: Prop
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen(v => !v)}
-        className="flex items-center gap-1.5 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 shadow-sm hover:bg-gray-50 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
+        className="flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 shadow-sm hover:bg-gray-50 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
       >
         <span>{label}</span>
         <svg className={`w-3.5 h-3.5 transition-transform ${open ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -67,31 +67,31 @@ export default function SystemFilterDropdown({ selectedSystems, onChange }: Prop
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-1 z-50 w-52 rounded-lg border border-gray-200 bg-white py-1 shadow-lg dark:border-gray-600 dark:bg-gray-700">
+        <div className="absolute right-0 top-full mt-1 z-50 w-52 rounded-xl border border-gray-200 bg-white py-1 shadow-lg dark:border-gray-700 dark:bg-gray-800">
           {/* 전체 선택 */}
-          <label className="flex items-center gap-2.5 px-3 py-1.5 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600">
+          <label className="flex items-center gap-2.5 px-3 py-1.5 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700">
             <input
               type="checkbox"
               checked={allSelected}
               ref={el => { if (el) el.indeterminate = someSelected }}
               onChange={toggleAll}
-              className="h-3.5 w-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600"
+              className="h-3.5 w-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-600"
             />
             <span className="text-sm text-gray-700 dark:text-gray-200">전체</span>
           </label>
 
-          <div className="mx-2 my-1 border-t border-gray-200 dark:border-gray-500" />
+          <div className="mx-2 my-1 border-t border-gray-200 dark:border-gray-600" />
 
           {ALL_SYSTEMS.map(sys => (
             <label
               key={sys.id}
-              className="flex items-center gap-2.5 px-3 py-1.5 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600"
+              className="flex items-center gap-2.5 px-3 py-1.5 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700"
             >
               <input
                 type="checkbox"
                 checked={selectedSystems.includes(sys.id)}
                 onChange={() => toggleSystem(sys.id)}
-                className="h-3.5 w-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600"
+                className="h-3.5 w-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-600"
               />
               <span
                 className="w-2.5 h-2.5 rounded-full shrink-0"

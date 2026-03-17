@@ -188,7 +188,7 @@ export default function Header() {
                 <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/50">
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="text-[11px] text-gray-400 dark:text-gray-400 uppercase tracking-wide">세션 남은 시간</div>
+                      <div className="text-xs text-gray-400 dark:text-gray-400 uppercase tracking-wide">세션 남은 시간</div>
                       <div className="text-sm font-semibold text-gray-900 dark:text-white mt-0.5 tabular-nums">{remainingTime}</div>
                     </div>
                     <button

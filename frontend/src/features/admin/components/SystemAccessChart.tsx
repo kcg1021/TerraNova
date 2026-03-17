@@ -80,7 +80,7 @@ export default function SystemAccessChart({ systemIds }: Props) {
             <button
               type="button"
               onClick={() => setSumOnly(v => !v)}
-              className={`text-[11px] px-2.5 py-1 rounded-full font-medium transition-colors ${
+              className={`text-xs px-2.5 py-1 rounded-full font-medium transition-colors ${
                 sumOnly
                   ? 'bg-emerald-500 text-white'
                   : 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700'
@@ -188,12 +188,12 @@ export default function SystemAccessChart({ systemIds }: Props) {
           {ids.map(sid => (
             <div key={sid} className="flex items-center gap-1.5">
               <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: SYSTEM_COLORS[sid] ?? '#6b7280' }} />
-              <span className="text-[11px] text-gray-500 dark:text-gray-400">{SYSTEM_NAMES[sid] ?? sid}</span>
+              <span className="text-xs text-gray-500 dark:text-gray-400">{SYSTEM_NAMES[sid] ?? sid}</span>
             </div>
           ))}
           <div className="flex items-center gap-1.5">
             <span className="w-4 border-t-2 border-dashed border-gray-400" />
-            <span className="text-[11px] text-gray-500 dark:text-gray-400">합산</span>
+            <span className="text-xs text-gray-500 dark:text-gray-400">합산</span>
           </div>
         </div>
       )}

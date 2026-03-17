@@ -30,7 +30,7 @@ export default function Sidebar({ systems }: SidebarProps) {
         {/* 헤더 */}
         <div className={`flex items-center h-12 border-b border-gray-100 dark:border-gray-800 ${showCollapsed ? 'justify-center' : 'justify-between pl-4 pr-2'}`}>
           {!showCollapsed && (
-            <span className="text-[11px] font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-widest whitespace-nowrap">
+            <span className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-widest whitespace-nowrap">
               시스템 목록
             </span>
           )}
@@ -72,7 +72,7 @@ export default function Sidebar({ systems }: SidebarProps) {
                     <div className="text-sm font-medium text-gray-700 dark:text-gray-200 group-hover:text-[var(--color-primary)] dark:group-hover:text-sky-400 truncate transition-colors">
                       {sys.name}
                     </div>
-                    <div className="text-[11px] text-gray-400 dark:text-gray-500 truncate leading-tight">
+                    <div className="text-xs text-gray-400 dark:text-gray-500 truncate leading-tight">
                       {sys.description}
                     </div>
                   </div>
@@ -87,7 +87,7 @@ export default function Sidebar({ systems }: SidebarProps) {
                     <div className="absolute right-full top-1/2 -translate-y-1/2 w-0 h-0 border-y-[6px] border-y-transparent border-r-[6px] border-r-gray-200 dark:border-r-gray-700" />
                     <div className="absolute right-full top-1/2 -translate-y-1/2 ml-px w-0 h-0 border-y-[5px] border-y-transparent border-r-[5px] border-r-white dark:border-r-gray-800" style={{ marginLeft: '1px' }} />
                     <div className="text-sm font-medium text-gray-800 dark:text-gray-100">{sys.name}</div>
-                    <div className="text-[11px] text-gray-400 dark:text-gray-500 mt-1 leading-snug">{sys.description}</div>
+                    <div className="text-xs text-gray-400 dark:text-gray-500 mt-1 leading-snug">{sys.description}</div>
                   </div>
                 </div>
               )}
@@ -107,7 +107,7 @@ export default function Sidebar({ systems }: SidebarProps) {
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
             </svg>
-            <span className="text-[10px] font-medium whitespace-nowrap">{sys.name}</span>
+            <span className="text-xs font-medium whitespace-nowrap">{sys.name}</span>
           </a>
         ))}
       </div>

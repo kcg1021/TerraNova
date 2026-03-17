@@ -89,7 +89,7 @@ export default function NoticeDetailModal({ isOpen, onClose, post, onViewList }:
 
           {/* N 배지 */}
           {post.isNew && (
-            <span className="ml-auto px-1.5 py-0.5 text-[10px] font-bold text-white bg-red-500 rounded">
+            <span className="ml-auto px-1.5 py-0.5 text-xs font-bold text-white bg-red-500 rounded">
               N
             </span>
           )}

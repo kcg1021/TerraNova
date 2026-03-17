@@ -103,7 +103,7 @@ export default function MenuUsageChart({ systemIds }: Props) {
           return (
             <div key={name} className="flex items-center gap-1.5">
               <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: item.color }} />
-              <span className="text-[11px] text-gray-500 dark:text-gray-400">{name}</span>
+              <span className="text-xs text-gray-500 dark:text-gray-400">{name}</span>
             </div>
           )
         })}
