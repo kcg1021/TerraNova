@@ -3,9 +3,9 @@ import { createRoot } from 'react-dom/client'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import './index.css'
 import App from './App.tsx'
-import { AuthProvider } from './contexts/AuthContext'
-import { SiteConfigProvider } from './contexts/SiteConfigContext'
-import { ThemeProvider } from './contexts/ThemeContext'
+import { AuthProvider } from '@/shared/contexts/AuthContext.tsx'
+import { SiteConfigProvider } from '@/shared/contexts/SiteConfigContext.tsx'
+import { ThemeProvider } from '@/shared/contexts/ThemeContext.tsx'
 
 const queryClient = new QueryClient({
   defaultOptions: {

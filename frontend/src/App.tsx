@@ -1,10 +1,8 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Layout from './components/layout/Layout'
-import MainPage from './pages/MainPage'
-import PostDetailPage from './pages/PostDetailPage'
-import AdminHubPage from './pages/AdminHubPage'
-import SystemDetailPage from './pages/SystemDetailPage'
-import SignupPage from './pages/SignupPage'
+import Layout from '@/shared/components/layout/Layout.tsx'
+import { MainPage, PostDetailPage } from '@/features/board'
+import { AdminHubPage, SystemDetailPage } from '@/features/admin'
+import { SignupPage } from '@/features/auth'
 
 export default function App() {
   return (
