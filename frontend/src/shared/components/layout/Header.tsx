@@ -6,6 +6,7 @@ import { useTheme } from '@/shared/contexts/ThemeContext.tsx'
 import { isAdminRole, isSuperAdminRole, getRoleLabel } from '@/shared/utils/auth.ts'
 import Logo from './Logo.tsx'
 import NotificationBell from '@/features/admin/components/NotificationBell.tsx'
+import { useAdminSystems } from '@/features/admin/api/queries.ts'
 
 export default function Header() {
   const { user, sessionExpiry, logout, extendSession } = useAuth()
@@ -21,6 +22,7 @@ export default function Header() {
 
   const isAdmin = isAdminRole(user?.role)
   const isSuperAdmin = isSuperAdminRole(user?.role)
+  const isAdminRoute = location.pathname.startsWith('/admin')
 
   // 세션 남은 시간 계산
   useEffect(() => {
@@ -89,26 +91,30 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-40 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200/60 dark:border-gray-700/60 px-3 md:px-6 h-12 md:h-14 flex items-center justify-between shadow-sm">
-      {/* 좌측: 로고 + 타이틀/슬로건 */}
-      <Link to="/" className="flex items-center gap-2 md:gap-3 no-underline group min-w-0">
-        <div className="transition-transform duration-200 group-hover:scale-105 flex-shrink-0">
-          <Logo className="h-6 w-6 md:h-8 md:w-8" />
-        </div>
-        {config.title ? (
-          <span className="text-sm md:text-lg font-bold text-gray-900 dark:text-white tracking-tight truncate">
-            {config.title}
-          </span>
-        ) : config.slogan ? (
-          <span className="text-xs md:text-sm font-medium text-[var(--color-primary)] dark:text-sky-400 truncate">
-            {config.slogan}
-          </span>
-        ) : null}
-      </Link>
+      {/* 좌측: 로고 + 브레드크럼 */}
+      {isAdminRoute ? (
+        <AdminBreadcrumb />
+      ) : (
+        <Link to="/" className="flex items-center gap-2 md:gap-3 no-underline group min-w-0">
+          <div className="transition-transform duration-200 group-hover:scale-105 flex-shrink-0">
+            <Logo className="h-6 w-6 md:h-8 md:w-8" />
+          </div>
+          {config.title ? (
+            <span className="text-sm md:text-lg font-bold text-gray-900 dark:text-white tracking-tight truncate">
+              {config.title}
+            </span>
+          ) : config.slogan ? (
+            <span className="text-xs md:text-sm font-medium text-[var(--color-primary)] dark:text-sky-400 truncate">
+              {config.slogan}
+            </span>
+          ) : null}
+        </Link>
+      )}
 
       {/* 우측 */}
       <div className="flex items-center gap-1 md:gap-2">
         {/* 알림 벨 (관리자 허브에서만) */}
-        {location.pathname.startsWith('/admin') && <NotificationBell />}
+        {isAdminRoute && <NotificationBell />}
 
         {/* 테마 선택 */}
         <div className="relative" ref={themeMenuRef}>
@@ -151,8 +157,6 @@ export default function Header() {
             </div>
           )}
         </div>
-
-        {/* 비로그인: 로그인 버튼 (메인에 로그인 폼이 있으므로 숨김) */}
 
         {/* 로그인: 사용자 메뉴 */}
         {user && (
@@ -202,7 +206,7 @@ export default function Header() {
 
                 {/* 메뉴 항목들 */}
                 <div className="py-1">
-                  {isAdmin && (
+                  {isAdmin && !isAdminRoute && (
                     <>
                       <button
                         onClick={() => {
@@ -254,5 +258,59 @@ export default function Header() {
         )}
       </div>
     </header>
+  )
+}
+
+/** 관리자 영역 브레드크럼 */
+function AdminBreadcrumb() {
+  const location = useLocation()
+  const { data: adminSystems = [] } = useAdminSystems()
+
+  // /admin/system/:systemId 에서 systemId 추출
+  const match = location.pathname.match(/^\/admin\/system\/([^/]+)/)
+  const systemId = match?.[1]
+
+  const systemName = systemId
+    ? systemId === 'integrated'
+      ? '통합관리'
+      : adminSystems.find(s => s.id === systemId)?.name ?? systemId
+    : null
+
+  const Separator = () => (
+    <svg className="w-3.5 h-3.5 text-gray-300 dark:text-gray-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+    </svg>
+  )
+
+  return (
+    <nav className="flex items-center gap-1.5 min-w-0 text-sm">
+      <Link
+        to="/"
+        className="flex items-center gap-1.5 text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors flex-shrink-0"
+      >
+        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+        </svg>
+      </Link>
+      <Separator />
+      <Link
+        to="/admin"
+        className={`truncate transition-colors flex-shrink-0 ${
+          systemName
+            ? 'text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
+            : 'text-gray-900 dark:text-white font-semibold'
+        }`}
+      >
+        관리자 허브
+      </Link>
+      {systemName && (
+        <>
+          <Separator />
+          <span className="text-gray-900 dark:text-white font-semibold truncate">
+            {systemName}
+          </span>
+        </>
+      )}
+    </nav>
   )
 }

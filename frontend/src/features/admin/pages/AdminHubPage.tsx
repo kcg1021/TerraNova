@@ -34,39 +34,42 @@ export default function AdminHubPage() {
   }
 
   return (
-    <main className="flex-1 overflow-y-auto p-4 md:p-6">
-      <div className="max-w-5xl mx-auto">
-        <div className="flex items-center gap-2 mb-5">
-          <button
-            onClick={() => navigate('/')}
-            className="p-1.5 rounded-lg text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-            aria-label="메인페이지로 이동"
-          >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-            </svg>
-          </button>
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">관리자 허브</h2>
+    <main className="flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-950">
+      <div className="max-w-5xl mx-auto p-6 lg:p-12">
+        {/* 페이지 헤더 */}
+        <div className="mb-8">
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            {isSuperAdmin ? '전체 시스템을 관리합니다' : `${systems.length}개 시스템에 대한 관리 권한이 있습니다`}
+          </p>
         </div>
 
+        {/* 시스템 카드 그리드 */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {/* SUPER_ADMIN: 통합관리 카드 */}
           {isSuperAdmin && (
             <div
               onClick={() => navigate('/admin/system/integrated')}
-              className="group relative rounded-2xl border-2 border-emerald-200 dark:border-emerald-800/60 bg-emerald-50 dark:bg-emerald-950/40 p-5 cursor-pointer hover:shadow-lg hover:shadow-emerald-100 dark:hover:shadow-emerald-950/40 hover:border-emerald-300 dark:hover:border-emerald-700 transition-all duration-200"
+              className="group sm:col-span-2 lg:col-span-3 relative rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 p-6 cursor-pointer hover:shadow-lg hover:shadow-emerald-500/20 transition-all duration-200 overflow-hidden"
             >
-              <div className="flex items-start gap-4">
-                <span className="flex-shrink-0 w-12 h-12 rounded-xl bg-emerald-500 flex items-center justify-center shadow-sm">
-                  <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-                  </svg>
-                </span>
-                <div className="min-w-0 flex-1">
-                  <div className="text-base font-semibold text-emerald-700 dark:text-emerald-300">통합관리</div>
-                  <div className="text-sm text-emerald-600/70 dark:text-emerald-400/60 leading-snug mt-1">전체 시스템 통합 관리</div>
+              {/* 배경 패턴 */}
+              <div className="absolute inset-0 opacity-10">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-white rounded-full -translate-y-1/2 translate-x-1/3" />
+                <div className="absolute bottom-0 left-0 w-40 h-40 bg-white rounded-full translate-y-1/2 -translate-x-1/4" />
+              </div>
+
+              <div className="relative flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <span className="flex-shrink-0 w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                    <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                    </svg>
+                  </span>
+                  <div>
+                    <div className="text-lg font-semibold text-white">통합관리</div>
+                    <div className="text-sm text-white/70 mt-0.5">전체 시스템 통합 대시보드 · 사용자 관리 · 권한 설정</div>
+                  </div>
                 </div>
-                <svg className="w-5 h-5 text-emerald-400 dark:text-emerald-600 group-hover:translate-x-0.5 transition-transform flex-shrink-0 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <svg className="w-5 h-5 text-white/60 group-hover:translate-x-1 transition-transform flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
                 </svg>
               </div>
@@ -78,24 +81,24 @@ export default function AdminHubPage() {
             <div
               key={sys.id}
               onClick={() => navigate(`/admin/system/${sys.id}`)}
-              className="group relative rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-5 cursor-pointer hover:shadow-lg hover:shadow-gray-100 dark:hover:shadow-black/20 hover:border-gray-300 dark:hover:border-gray-700 transition-all duration-200"
+              className="group relative rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-5 cursor-pointer hover:border-gray-300 dark:hover:border-gray-700 hover:shadow-md hover:shadow-gray-200/50 dark:hover:shadow-black/20 transition-all duration-200"
             >
               <div className="flex items-start gap-4">
                 <span
-                  className="flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center shadow-sm"
-                  style={{ backgroundColor: `${sys.color}18` }}
+                  className="flex-shrink-0 w-11 h-11 rounded-lg flex items-center justify-center"
+                  style={{ backgroundColor: `${sys.color}15` }}
                 >
-                  <span className="w-5 h-5 rounded-full" style={{ backgroundColor: sys.color }} />
+                  <span className="w-4 h-4 rounded-full" style={{ backgroundColor: sys.color }} />
                 </span>
                 <div className="min-w-0 flex-1">
-                  <div className="text-base font-semibold text-gray-800 dark:text-gray-100 group-hover:text-gray-900 dark:group-hover:text-white transition-colors">
+                  <div className="text-sm font-semibold text-gray-800 dark:text-gray-100 group-hover:text-gray-900 dark:group-hover:text-white transition-colors">
                     {sys.name}
                   </div>
-                  <div className="text-sm text-gray-400 dark:text-gray-500 leading-snug mt-1">
+                  <div className="text-xs text-gray-400 dark:text-gray-500 leading-snug mt-1">
                     {sys.description}
                   </div>
                 </div>
-                <svg className="w-5 h-5 text-gray-300 dark:text-gray-600 group-hover:text-gray-400 dark:group-hover:text-gray-500 group-hover:translate-x-0.5 transition-all flex-shrink-0 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <svg className="w-4 h-4 text-gray-300 dark:text-gray-600 group-hover:text-gray-400 dark:group-hover:text-gray-500 group-hover:translate-x-0.5 transition-all flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
                 </svg>
               </div>

@@ -72,7 +72,7 @@ export default function SystemAccessChart({ systemIds }: Props) {
   const textColor = isDark ? '#9ca3af' : '#6b7280'
 
   return (
-    <div className="flex-1 min-h-0 flex flex-col bg-white dark:bg-gray-900 border border-gray-200/80 dark:border-gray-800 rounded-2xl shadow-sm p-4 md:p-6">
+    <div className="flex-1 min-h-0 flex flex-col bg-white dark:bg-gray-900 border border-gray-200/80 dark:border-gray-800 rounded-2xl shadow-sm p-4 md:p-5 overflow-hidden">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-sm font-semibold text-gray-900 dark:text-white">시스템 접속현황</h3>
         <div className="flex items-center gap-2">

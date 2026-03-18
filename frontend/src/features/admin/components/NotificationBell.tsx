@@ -65,7 +65,7 @@ export default function NotificationBell() {
             </div>
           </div>
 
-          <div className="max-h-64 overflow-y-auto">
+          <div className="max-h-64 overflow-y-auto scrollbar-thin">
             {notifications.length === 0 ? (
               <div className="px-4 py-6 text-center text-sm text-gray-400 dark:text-gray-500">
                 새로운 알림이 없습니다
