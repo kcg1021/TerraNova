@@ -34,14 +34,11 @@ export default function AdminHubPage() {
   }
 
   return (
-    <main className="flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-950">
+    <main className="flex-1 overflow-y-auto overflow-x-hidden bg-gray-50 dark:bg-gray-950">
       <div className="max-w-5xl mx-auto p-6 lg:p-12">
-        {/* 페이지 헤더 */}
-        <div className="mb-8">
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            {isSuperAdmin ? '전체 시스템을 관리합니다' : `${systems.length}개 시스템에 대한 관리 권한이 있습니다`}
-          </p>
-        </div>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mb-8">
+          {isSuperAdmin ? '전체 시스템을 관리합니다' : `${systems.length}개 시스템에 대한 관리 권한이 있습니다`}
+        </p>
 
         {/* 시스템 카드 그리드 */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">

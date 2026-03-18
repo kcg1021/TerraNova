@@ -65,7 +65,7 @@ export default function SystemDetailPage() {
     <div className="flex flex-1 min-h-0">
       <SystemMenuSidebar systemId={systemId} />
 
-      <main className={`flex-1 flex flex-col p-4 md:p-6 lg:p-8 pb-20 md:pb-6 bg-gray-50 dark:bg-gray-950 min-w-0 ${isDashboard ? 'overflow-hidden' : 'overflow-y-auto overflow-x-hidden'}`}>
+      <main className={`flex-1 flex flex-col p-4 md:p-6 pb-16 md:pb-6 bg-gray-50 dark:bg-gray-950 min-w-0 ${isDashboard ? 'overflow-hidden' : 'overflow-y-auto overflow-x-hidden'}`}>
         {/* 페이지 헤더 */}
         {isDashboard && (
           <div className="flex items-center justify-between shrink-0 mb-4 md:mb-5">
@@ -88,9 +88,7 @@ export default function SystemDetailPage() {
             menuCount={menus.length}
           />
         ) : (
-          <div className="flex-1">
-            <MenuManagementPlaceholder systemId={systemId} menuId={menuId!} />
-          </div>
+          <MenuManagementPlaceholder systemId={systemId} menuId={menuId!} />
         )}
       </main>
     </div>
@@ -130,7 +128,7 @@ function DashboardView({
   ]
 
   return (
-    <div className="flex-1 flex flex-col gap-3 md:gap-4 min-h-0 min-w-0 overflow-hidden">
+    <div className="flex-1 flex flex-col gap-3 md:gap-4 min-h-0 min-w-0">
       {/* KPI 요약 카드 */}
       <div className="grid grid-cols-3 gap-3 shrink-0">
         {kpis.map(kpi => (

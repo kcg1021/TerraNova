@@ -176,7 +176,7 @@ export default function MainPage() {
     <div className="flex-1 flex bg-gray-50 dark:bg-gray-950">
       <Sidebar systems={systems} />
 
-      <div className="flex-1 min-w-0 pb-16 md:pb-0 overflow-y-auto flex flex-col p-6 lg:p-12">
+      <div className="flex-1 min-w-0 pb-16 md:pb-0 overflow-y-auto overflow-x-hidden flex flex-col p-6 lg:p-12">
         {/* 게시판 섹션 */}
         <div className="flex-1 min-h-0">
           <BoardSection boards={visibleBoards} posts={posts} initialBoardId={initialBoardId} />

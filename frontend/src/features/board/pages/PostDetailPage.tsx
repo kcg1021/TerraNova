@@ -44,9 +44,9 @@ export default function PostDetailPage() {
   }
 
   return (
-    <div className="flex-1 flex justify-center bg-gray-50 dark:bg-gray-950">
-      {/* 고정 너비 컨테이너: 모바일 전체, 태블릿 640px, 데스크탑 720px */}
-      <div className="w-full sm:w-[640px] lg:w-[720px] p-4 sm:p-6 lg:py-10">
+    <div className="flex-1 flex justify-center bg-gray-50 dark:bg-gray-950 overflow-y-auto overflow-x-hidden">
+      {/* 고정 너비 컨테이너 */}
+      <div className="w-full max-w-3xl p-4 sm:p-6 lg:p-12">
         {/* 뒤로가기 */}
         <button
           onClick={() => navigate(`/?board=${boardId}`)}

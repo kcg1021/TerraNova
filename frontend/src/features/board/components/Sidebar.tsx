@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { useAuth } from '@/shared/contexts/AuthContext.tsx'
 import { useCollapsible } from '@/shared/hooks/useCollapsible.ts'
 import type { SystemMenu } from '../types/index.ts'
@@ -9,8 +8,7 @@ interface SidebarProps {
 
 export default function Sidebar({ systems }: SidebarProps) {
   const { user } = useAuth()
-  const { collapsed, showCollapsed, animating, toggle, handleTransitionEnd } = useCollapsible()
-  const [hoveredId, setHoveredId] = useState<string | null>(null)
+  const { collapsed, showCollapsed, toggle, handleTransitionEnd } = useCollapsible()
 
   const accessibleSystems = systems.filter(
     sys => user && sys.requiredRoles.includes(user.role)
@@ -25,7 +23,7 @@ export default function Sidebar({ systems }: SidebarProps) {
         onTransitionEnd={handleTransitionEnd}
         className={`hidden md:flex flex-col flex-shrink-0 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 transition-[width] duration-300 ease-in-out ${
           collapsed ? 'w-14' : 'w-56'
-        } ${animating ? 'overflow-hidden' : collapsed ? 'overflow-visible' : ''}`}
+        } overflow-hidden`}
       >
         {/* 헤더 */}
         <div className={`flex items-center h-12 border-b border-gray-100 dark:border-gray-800 ${showCollapsed ? 'justify-center' : 'justify-between pl-4 pr-2'}`}>
@@ -46,21 +44,17 @@ export default function Sidebar({ systems }: SidebarProps) {
         </div>
 
         {/* 시스템 목록 */}
-        <nav className={`flex-1 py-2 ${showCollapsed ? 'overflow-visible' : 'overflow-y-auto'}`}>
+        <nav className="flex-1 py-2 overflow-x-hidden overflow-y-auto scrollbar-thin">
           {accessibleSystems.map(sys => (
-            <div
-              key={sys.id}
-              className="relative"
-              onMouseEnter={() => showCollapsed && setHoveredId(sys.id)}
-              onMouseLeave={() => setHoveredId(null)}
-            >
+            <div key={sys.id} className="mx-2 mb-0.5">
               <a
                 href={sys.url}
-                className={`group flex items-center gap-3 transition-all duration-150 ${
+                title={showCollapsed ? sys.name : undefined}
+                className={`group flex items-center gap-3 h-10 rounded-lg transition-all duration-150 ${
                   showCollapsed
-                    ? 'justify-center py-2.5 mx-2 rounded-lg hover:bg-[var(--color-primary)]/10'
-                    : 'px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-800/50'
-                }`}
+                    ? 'justify-center'
+                    : 'px-3'
+                } hover:bg-gray-50 dark:hover:bg-gray-800/50`}
               >
                 <span className="flex-shrink-0 w-8 h-8 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center group-hover:bg-[var(--color-primary)]/10 transition-colors">
                   <svg className="w-4 h-4 text-gray-500 dark:text-gray-400 group-hover:text-[var(--color-primary)] dark:group-hover:text-sky-400 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -78,19 +72,6 @@ export default function Sidebar({ systems }: SidebarProps) {
                   </div>
                 )}
               </a>
-
-              {/* 접힘 상태 호버 팝업 */}
-              {showCollapsed && hoveredId === sys.id && (
-                <div className="absolute left-full top-1/2 -translate-y-1/2 ml-3 z-50 pointer-events-none">
-                  <div className="relative bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg shadow-gray-200/50 dark:shadow-black/30 px-4 py-3 w-52">
-                    {/* 화살표 */}
-                    <div className="absolute right-full top-1/2 -translate-y-1/2 w-0 h-0 border-y-[6px] border-y-transparent border-r-[6px] border-r-gray-200 dark:border-r-gray-700" />
-                    <div className="absolute right-full top-1/2 -translate-y-1/2 ml-px w-0 h-0 border-y-[5px] border-y-transparent border-r-[5px] border-r-white dark:border-r-gray-800" style={{ marginLeft: '1px' }} />
-                    <div className="text-sm font-medium text-gray-800 dark:text-gray-100">{sys.name}</div>
-                    <div className="text-xs text-gray-400 dark:text-gray-500 mt-1 leading-snug">{sys.description}</div>
-                  </div>
-                </div>
-              )}
             </div>
           ))}
         </nav>

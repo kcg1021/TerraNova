@@ -75,7 +75,7 @@ export default function SystemFilterDropdown({ selectedSystems, onChange }: Prop
               checked={allSelected}
               ref={el => { if (el) el.indeterminate = someSelected }}
               onChange={toggleAll}
-              className="h-3.5 w-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-600"
+              className="h-3.5 w-3.5 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-600"
             />
             <span className="text-sm text-gray-700 dark:text-gray-200">전체</span>
           </label>
@@ -91,7 +91,7 @@ export default function SystemFilterDropdown({ selectedSystems, onChange }: Prop
                 type="checkbox"
                 checked={selectedSystems.includes(sys.id)}
                 onChange={() => toggleSystem(sys.id)}
-                className="h-3.5 w-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-600"
+                className="h-3.5 w-3.5 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-600"
               />
               <span
                 className="w-2.5 h-2.5 rounded-full shrink-0"
