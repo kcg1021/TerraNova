@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
-import { ICON_PATHS, type IconName, type IconDef } from '@/shared/constants/icons'
+import Icon from './Icon'
+import type { IconName } from './Icon'
 
 export interface IconBadgeProps {
   icon: ReactNode
@@ -77,7 +78,6 @@ export default function IconBadge({
 
   return (
     <div className={`relative ${className}`}>
-      {/* 메인 아이콘 배경 */}
       <div
         className={`
           ${sizeClass.container}
@@ -92,7 +92,6 @@ export default function IconBadge({
         </span>
       </div>
 
-      {/* 배지 (선택적) */}
       {badge && (
         <div
           className={`
@@ -111,27 +110,18 @@ export default function IconBadge({
   )
 }
 
-// 카탈로그 기반 아이콘 생성 헬퍼
-function iconFromCatalog(name: IconName): ReactNode {
-  const icon: IconDef = ICON_PATHS[name]
-  const sw = icon.strokeWidth ?? 2
-  return (
-    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={sw} className="w-full h-full">
-      {icon.d.map((d, i) => (
-        <path key={i} strokeLinecap="round" strokeLinejoin="round" d={d} />
-      ))}
-    </svg>
-  )
+// IconBadge에서 사용할 수 있는 미리 정의된 아이콘
+function iconElement(name: IconName): ReactNode {
+  return <Icon name={name} className="w-full h-full" />
 }
 
-// 미리 정의된 아이콘들 (IconBadge에서 사용)
 export const Icons = {
-  user: iconFromCatalog('user'),
-  lock: iconFromCatalog('lock'),
-  email: iconFromCatalog('email'),
-  check: iconFromCatalog('check'),
-  search: iconFromCatalog('search'),
-  key: iconFromCatalog('key'),
-  megaphone: iconFromCatalog('megaphone'),
-  list: iconFromCatalog('list'),
+  user: iconElement('user'),
+  lock: iconElement('lock'),
+  email: iconElement('email'),
+  check: iconElement('check'),
+  search: iconElement('search'),
+  key: iconElement('key'),
+  megaphone: iconElement('megaphone'),
+  list: iconElement('list'),
 }

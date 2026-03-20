@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Icon } from '@/shared/components/ui-kit'
-import type { IconName } from '@/shared/constants/icons.ts'
+import type { IconName } from '@/shared/components/ui-kit/Icon'
 
 export type ToastType = 'success' | 'error' | 'info' | 'warning'
 

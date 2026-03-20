@@ -1,5 +1,5 @@
 import Icon from './Icon'
-import type { IconName } from '@/shared/constants/icons'
+import type { IconName } from './Icon'
 
 export interface EmptyStateProps {
   icon?: IconName
