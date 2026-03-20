@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '@/shared/contexts/AuthContext.tsx'
 import type { Board, BoardPost } from '../types/index.ts'
 import Toast from '@/shared/components/Toast.tsx'
+import { Icon } from '@/shared/components/ui-kit'
 
 interface BoardSectionProps {
   boards: Board[]
@@ -56,9 +57,7 @@ export default function BoardSection({ boards, posts, maxPosts, initialBoardId }
 
   // 비로그인 상태에서 비공개 게시글 잠금 아이콘
   const LockIcon = () => (
-    <svg className="inline-block ml-1.5 w-3.5 h-3.5 text-gray-300 dark:text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-    </svg>
+    <Icon name="lock" className="inline-block ml-1.5 w-3.5 h-3.5 text-gray-300 dark:text-gray-600" />
   )
 
   const showLock = (post: BoardPost) => !user && !post.isPublic
@@ -100,9 +99,7 @@ export default function BoardSection({ boards, posts, maxPosts, initialBoardId }
           {activePosts.length === 0 ? (
             <div className="flex items-center justify-center py-20">
               <div className="text-center">
-                <svg className="w-10 h-10 mx-auto text-gray-300 dark:text-gray-700 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-                </svg>
+                <Icon name="documentEmpty" className="w-10 h-10 mx-auto text-gray-300 dark:text-gray-700 mb-3" strokeWidth={1} />
                 <p className="text-sm text-gray-400 dark:text-gray-500">등록된 게시물이 없습니다.</p>
               </div>
             </div>
@@ -123,9 +120,7 @@ export default function BoardSection({ boards, posts, maxPosts, initialBoardId }
                         </span>
                       )}
                       {post.attachments && post.attachments.length > 0 && (
-                        <svg className="inline-block ml-1.5 w-3.5 h-3.5 text-gray-300 dark:text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13" />
-                        </svg>
+                        <Icon name="paperclip" className="inline-block ml-1.5 w-3.5 h-3.5 text-gray-300 dark:text-gray-600" />
                       )}
                       {showLock(post) && <LockIcon />}
                     </h3>
@@ -133,9 +128,7 @@ export default function BoardSection({ boards, posts, maxPosts, initialBoardId }
                       {post.author} · {post.createdAt}
                     </p>
                   </div>
-                  <svg className="w-4 h-4 text-gray-300 dark:text-gray-600 group-hover:text-[var(--color-primary)] dark:group-hover:text-sky-400 group-hover:translate-x-1 transition-all flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                  </svg>
+                  <Icon name="chevronRight" className="w-4 h-4 text-gray-300 dark:text-gray-600 group-hover:text-[var(--color-primary)] dark:group-hover:text-sky-400 group-hover:translate-x-1 transition-all flex-shrink-0 mt-0.5" />
                 </div>
               </div>
             ))
@@ -152,16 +145,12 @@ export default function BoardSection({ boards, posts, maxPosts, initialBoardId }
               {expanded ? (
                 <>
                   접기
-                  <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
-                  </svg>
+                  <Icon name="chevronUp" className="w-3 h-3" />
                 </>
               ) : (
                 <>
                   더보기 ({allActivePosts.length - maxPosts!}건)
-                  <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                  </svg>
+                  <Icon name="chevronDown" className="w-3 h-3" />
                 </>
               )}
             </button>

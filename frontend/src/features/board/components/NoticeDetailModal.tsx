@@ -1,7 +1,7 @@
 import type { BoardPost } from '../types/index.ts'
 import { formatDate } from '@/shared/utils/format.ts'
 import Modal from '@/shared/components/Modal.tsx'
-import { Button, IconBadge, Icons, FileList } from '@/shared/components/ui-kit'
+import { Button, IconBadge, Icons, FileList, Icon } from '@/shared/components/ui-kit'
 
 interface NoticeDetailModalProps {
   isOpen: boolean
@@ -57,9 +57,7 @@ export default function NoticeDetailModal({ isOpen, onClose, post, onViewList }:
           {/* 작성자 */}
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-full bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-800 flex items-center justify-center">
-              <svg className="w-4 h-4 text-slate-500 dark:text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
-              </svg>
+              <Icon name="user" className="w-4 h-4 text-slate-500 dark:text-slate-400" />
             </div>
             <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
               {post.author}
@@ -70,9 +68,7 @@ export default function NoticeDetailModal({ isOpen, onClose, post, onViewList }:
 
           {/* 날짜 */}
           <div className="flex items-center gap-1.5 text-sm text-slate-500 dark:text-slate-400">
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
-            </svg>
+            <Icon name="calendar" className="w-4 h-4" />
             {formatDate(post.createdAt)}
           </div>
 
@@ -80,10 +76,7 @@ export default function NoticeDetailModal({ isOpen, onClose, post, onViewList }:
 
           {/* 조회수 */}
           <div className="flex items-center gap-1.5 text-sm text-slate-500 dark:text-slate-400">
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
+            <Icon name="eye" className="w-4 h-4" />
             조회 {post.views.toLocaleString()}
           </div>
 

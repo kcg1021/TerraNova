@@ -9,6 +9,7 @@ import LoginForm from '@/features/auth/components/LoginForm.tsx'
 import NoticeDetailModal from '../components/NoticeDetailModal.tsx'
 import NoticeListModal from '../components/NoticeListModal.tsx'
 import type { BoardPost } from '../types/index.ts'
+import { Icon } from '@/shared/components/ui-kit'
 
 export default function MainPage() {
   const { user, login } = useAuth()
@@ -78,9 +79,7 @@ export default function MainPage() {
                 className="text-sm text-gray-500 dark:text-gray-400 hover:text-[var(--color-primary)] dark:hover:text-sky-400 cursor-pointer transition-colors flex items-center gap-1"
               >
                 전체보기
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                </svg>
+                <Icon name="chevronRight" className="w-4 h-4" />
               </button>
             </div>
 
@@ -102,18 +101,14 @@ export default function MainPage() {
                           </span>
                         )}
                         {post.attachments && post.attachments.length > 0 && (
-                          <svg className="inline-block ml-1.5 w-3.5 h-3.5 text-gray-300 dark:text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13" />
-                          </svg>
+                          <Icon name="paperclip" className="inline-block ml-1.5 w-3.5 h-3.5 text-gray-300 dark:text-gray-600" />
                         )}
                       </h3>
                       <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                         {post.author} · {post.createdAt}
                       </p>
                     </div>
-                    <svg className="w-4 h-4 text-gray-300 dark:text-gray-600 group-hover:text-[var(--color-primary)] dark:group-hover:text-sky-400 group-hover:translate-x-1 transition-all flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                    </svg>
+                    <Icon name="chevronRight" className="w-4 h-4 text-gray-300 dark:text-gray-600 group-hover:text-[var(--color-primary)] dark:group-hover:text-sky-400 group-hover:translate-x-1 transition-all flex-shrink-0 mt-0.5" />
                   </div>
                 </div>
               ))}

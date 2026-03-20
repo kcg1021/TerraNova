@@ -1,7 +1,7 @@
 import { useParams, useNavigate, Navigate } from 'react-router-dom'
 import { useAuth } from '@/shared/contexts/AuthContext.tsx'
 import { usePost, useBoards } from '../api/queries.ts'
-import { FileList } from '@/shared/components/ui-kit'
+import { FileList, Icon } from '@/shared/components/ui-kit'
 
 export default function PostDetailPage() {
   const { boardId, postId } = useParams<{ boardId: string; postId: string }>()
@@ -52,9 +52,7 @@ export default function PostDetailPage() {
           onClick={() => navigate(`/?board=${boardId}`)}
           className="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-[var(--color-primary)] dark:hover:text-sky-400 transition-colors mb-4 cursor-pointer"
         >
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-          </svg>
+          <Icon name="chevronLeft" className="w-4 h-4" />
           목록으로
         </button>
 
@@ -81,9 +79,7 @@ export default function PostDetailPage() {
               <span>조회 {post.views.toLocaleString()}</span>
               {post.attachments && post.attachments.length > 0 && (
                 <span className="flex items-center gap-1">
-                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13" />
-                  </svg>
+                  <Icon name="paperclip" className="w-3.5 h-3.5" />
                   첨부파일 {post.attachments.length}개
                 </span>
               )}

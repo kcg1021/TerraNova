@@ -1,21 +1,45 @@
 import { useEffect, useState } from 'react'
+import { Icon } from '@/shared/components/ui-kit'
+import type { IconName } from '@/shared/constants/icons.ts'
+
+export type ToastType = 'success' | 'error' | 'info' | 'warning'
 
 interface ToastProps {
   message: string
+  type?: ToastType
   onClose: () => void
   duration?: number
 }
 
-export default function Toast({ message, onClose, duration = 3000 }: ToastProps) {
+const TOAST_STYLES: Record<ToastType, { icon: IconName; iconColor: string }> = {
+  success: {
+    icon: 'checkCircle',
+    iconColor: 'text-emerald-400',
+  },
+  error: {
+    icon: 'warningCircle',
+    iconColor: 'text-red-400',
+  },
+  warning: {
+    icon: 'warningTriangle',
+    iconColor: 'text-amber-400',
+  },
+  info: {
+    icon: 'infoCircle',
+    iconColor: 'text-blue-400',
+  },
+}
+
+export default function Toast({ message, type = 'info', onClose, duration = 3000 }: ToastProps) {
   const [visible, setVisible] = useState(false)
+  const style = TOAST_STYLES[type]
 
   useEffect(() => {
-    // 마운트 직후 애니메이션 시작
     requestAnimationFrame(() => setVisible(true))
 
     const timer = setTimeout(() => {
       setVisible(false)
-      setTimeout(onClose, 200) // fade-out 후 제거
+      setTimeout(onClose, 200)
     }, duration)
 
     return () => clearTimeout(timer)
@@ -28,9 +52,7 @@ export default function Toast({ message, onClose, duration = 3000 }: ToastProps)
           visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
         }`}
       >
-        <svg className="w-4 h-4 flex-shrink-0 text-amber-400 dark:text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-        </svg>
+        <Icon name={style.icon} className={`w-4 h-4 flex-shrink-0 ${style.iconColor}`} />
         {message}
       </div>
     </div>

@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react'
 import type { BoardPost } from '../types/index.ts'
-import { Input, Button, IconBadge, Icons, Pagination } from '@/shared/components/ui-kit'
+import { Input, Button, IconBadge, Icons, Pagination, Icon } from '@/shared/components/ui-kit'
 
 interface NoticeListModalProps {
   isOpen: boolean
@@ -68,15 +68,7 @@ export default function NoticeListModal({ isOpen, onClose, posts, onSelectPost }
             onClick={handleClose}
             className="absolute top-4 right-4 z-10 p-2 rounded-full text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-200 cursor-pointer"
           >
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-            </svg>
+            <Icon name="close" className="w-5 h-5" />
           </button>
 
           {/* 헤더 */}
@@ -128,9 +120,7 @@ export default function NoticeListModal({ isOpen, onClose, posts, onSelectPost }
                             </span>
                           )}
                           {post.attachments && post.attachments.length > 0 && (
-                            <svg className="w-4 h-4 text-slate-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13" />
-                            </svg>
+                            <Icon name="paperclip" className="w-4 h-4 text-slate-400 flex-shrink-0" strokeWidth={1.5} />
                           )}
                         </div>
                         <div className="flex items-center gap-3 text-xs text-slate-500 dark:text-slate-400">
@@ -143,17 +133,13 @@ export default function NoticeListModal({ isOpen, onClose, posts, onSelectPost }
                       </div>
 
                       {/* 화살표 */}
-                      <svg className="w-5 h-5 text-slate-300 dark:text-slate-600 group-hover:text-[var(--color-primary)] dark:group-hover:text-sky-400 group-hover:translate-x-1 transition-all flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                      </svg>
+                      <Icon name="chevronRight" className="w-5 h-5 text-slate-300 dark:text-slate-600 group-hover:text-[var(--color-primary)] dark:group-hover:text-sky-400 group-hover:translate-x-1 transition-all flex-shrink-0" />
                     </div>
                   </div>
                 ))
               ) : (
                 <div className="py-12 text-center">
-                  <svg className="w-12 h-12 mx-auto text-slate-300 dark:text-slate-600 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-                  </svg>
+                  <Icon name="search" className="w-12 h-12 mx-auto text-slate-300 dark:text-slate-600 mb-3" strokeWidth={1} />
                   <p className="text-sm text-slate-500 dark:text-slate-400">
                     검색 결과가 없습니다
                   </p>

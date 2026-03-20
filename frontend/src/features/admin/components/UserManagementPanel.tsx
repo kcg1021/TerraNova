@@ -1,5 +1,7 @@
 import { useState, useMemo, useRef, useEffect } from 'react'
-import { Pagination } from '@/shared/components/ui-kit'
+import { Icon, Pagination } from '@/shared/components/ui-kit'
+import Toast from '@/shared/components/Toast'
+import { useToast } from '@/shared/hooks/useToast'
 import { mockOrganization, type OrgUnit } from '@/shared/mocks/organization'
 import { useUsers, useAdminSystems, useAdminPermissions } from '../api/queries'
 import type { AdminSystem } from '../types/index'
@@ -84,9 +86,7 @@ export default function UserManagementPanel() {
         <div className="w-80 shrink-0 flex flex-col bg-white dark:bg-gray-900 border border-gray-200/80 dark:border-gray-800 rounded-xl overflow-hidden">
           <div className="p-3 border-b border-gray-100 dark:border-gray-800">
             <div className="relative">
-              <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-gray-500 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-              </svg>
+              <Icon name="search" className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-gray-500 pointer-events-none" />
               <input
                 type="text"
                 value={search}
@@ -146,9 +146,7 @@ export default function UserManagementPanel() {
             <div className="h-full flex items-center justify-center bg-white dark:bg-gray-900 border border-gray-200/80 dark:border-gray-800 rounded-xl">
               <div className="text-center">
                 <div className="w-12 h-12 rounded-xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center mx-auto mb-3">
-                  <svg className="w-6 h-6 text-gray-300 dark:text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
-                  </svg>
+                  <Icon name="user" className="w-6 h-6 text-gray-300 dark:text-gray-600" />
                 </div>
                 <p className="text-sm text-gray-400 dark:text-gray-500">좌측에서 사용자를 선택하세요</p>
               </div>
@@ -191,9 +189,7 @@ function OrgTreeSelect({ value, onChange }: { value?: string; onChange: (id: str
         <span className={selectedName ? 'text-gray-900 dark:text-white' : 'text-gray-400 dark:text-gray-500'}>
           {selectedName ?? '소속 부서를 선택하세요'}
         </span>
-        <svg className={`w-4 h-4 text-gray-400 transition-transform ${open ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-        </svg>
+        <Icon name="chevronDown" className={`w-4 h-4 text-gray-400 transition-transform ${open ? 'rotate-180' : ''}`} />
       </button>
 
       {open && (
@@ -224,9 +220,7 @@ function OrgTreeNode({ node, depth, selectedId, onSelect }: { node: OrgUnit; dep
         style={{ paddingLeft: `${12 + depth * 20}px` }}
       >
         {children.length > 0 ? (
-          <svg className="w-3.5 h-3.5 text-gray-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
-          </svg>
+          <Icon name="folder" className="w-3.5 h-3.5 text-gray-400 shrink-0" />
         ) : (
           <span className="w-3.5 shrink-0" />
         )}
@@ -263,9 +257,7 @@ function UserAddForm({ onClose }: { onClose: () => void }) {
       <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-gray-800 shrink-0">
         <h4 className="text-sm font-semibold text-gray-900 dark:text-white">새 사용자 등록</h4>
         <button onClick={onClose} className="p-1 rounded-lg text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer transition-colors">
-          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-          </svg>
+          <Icon name="close" className="w-5 h-5" />
         </button>
       </div>
       <div className="flex-1 overflow-y-auto scrollbar-thin p-5">
@@ -327,6 +319,7 @@ function UserDetailPanel({
 }) {
   const [editing, setEditing] = useState(false)
   const [editOrgId, setEditOrgId] = useState(user.orgId)
+  const { toast, showToast, hideToast } = useToast()
 
   const userPerm = permissions.find(p => p.userId === user.id)
   const initialSystemIds = new Set(userPerm?.systemIds ?? [])
@@ -344,7 +337,7 @@ function UserDetailPanel({
   }
 
   const handleSave = () => {
-    alert('저장되었습니다. (mock)')
+    showToast('변경사항이 저장되었습니다')
     setDirty(false)
   }
 
@@ -465,6 +458,8 @@ function UserDetailPanel({
           </button>
         </div>
       )}
+
+      {toast && <Toast message={toast.message} type={toast.type} onClose={hideToast} />}
     </div>
   )
 }

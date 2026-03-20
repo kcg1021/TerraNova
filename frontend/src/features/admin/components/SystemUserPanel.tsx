@@ -1,5 +1,7 @@
 import { useState, useMemo } from 'react'
 import { Pagination } from '@/shared/components/ui-kit'
+import Toast from '@/shared/components/Toast'
+import { useToast } from '@/shared/hooks/useToast'
 import { useUsers, useSystemRoles, useUserRoleAssignments } from '../api/queries'
 import type { MockAccount } from '@/shared/mocks/accounts'
 
@@ -123,6 +125,7 @@ function UserRoleEditor({
 }) {
   const [checkedRoles, setCheckedRoles] = useState(new Set(initialRoleIds))
   const [dirty, setDirty] = useState(false)
+  const { toast, showToast, hideToast } = useToast()
 
   const defaultRole = roles.find(r => r.isDefault)
   const otherRoles = roles.filter(r => !r.isDefault)
@@ -216,13 +219,15 @@ function UserRoleEditor({
         <div className="px-5 py-3 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/30 shrink-0 flex items-center justify-between">
           <p className="text-xs text-amber-600 dark:text-amber-400">변경사항이 있습니다</p>
           <button
-            onClick={() => { alert('저장되었습니다. (mock)'); setDirty(false) }}
+            onClick={() => { showToast('변경사항이 저장되었습니다'); setDirty(false) }}
             className="px-5 py-2 text-sm font-medium text-white bg-emerald-500 hover:bg-emerald-600 rounded-lg transition-colors cursor-pointer"
           >
             저장
           </button>
         </div>
       )}
+
+      {toast && <Toast message={toast.message} type={toast.type} onClose={hideToast} />}
     </div>
   )
 }
