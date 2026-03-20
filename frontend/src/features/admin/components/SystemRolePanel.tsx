@@ -121,6 +121,7 @@ function RoleDetailPanel({ role, systemId }: { role: SystemRole; systemId: strin
   const { data: allTools = [] } = useTools()
   const { data: systemTools = [] } = useSystemTools(systemId)
   const [tab, setTab] = useState<'menu' | 'layer' | 'tool'>('menu')
+  const [editing, setEditing] = useState(false)
 
   const enabledTools = systemTools
     .filter(st => st.enabled)
@@ -133,28 +134,50 @@ function RoleDetailPanel({ role, systemId }: { role: SystemRole; systemId: strin
     { id: 'tool' as const, label: '도구 권한', count: enabledTools.length },
   ]
 
+  const fieldClass = 'w-full px-3 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all'
+
   return (
     <div className="h-full flex flex-col bg-white dark:bg-gray-900 border border-gray-200/80 dark:border-gray-800 rounded-xl overflow-hidden">
       {/* 헤더 */}
       <div className="px-5 py-4 border-b border-gray-100 dark:border-gray-800 shrink-0">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <h4 className="text-sm font-semibold text-gray-900 dark:text-white">{role.name}</h4>
+            {editing && !role.isDefault ? (
+              <input type="text" defaultValue={role.name} className={`${fieldClass} max-w-48`} />
+            ) : (
+              <h4 className="text-sm font-semibold text-gray-900 dark:text-white">{role.name}</h4>
+            )}
             {role.isDefault && (
               <span className="px-1.5 py-0.5 text-xs rounded bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300">기본 역할</span>
             )}
           </div>
-          {!role.isDefault && (
-            <button className="px-3 py-1.5 text-xs font-medium text-red-500 border border-red-200 dark:border-red-800 rounded-lg hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors cursor-pointer">
-              역할 삭제
-            </button>
-          )}
+          <div className="flex items-center gap-2">
+            {!role.isDefault && (
+              <>
+                <button
+                  onClick={() => setEditing(!editing)}
+                  className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-all cursor-pointer ${
+                    editing
+                      ? 'text-emerald-600 dark:text-emerald-400 border-emerald-300 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-950/30'
+                      : 'text-gray-500 dark:text-gray-400 border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
+                  }`}
+                >
+                  {editing ? '완료' : '이름/설명 수정'}
+                </button>
+                <button className="px-3 py-1.5 text-xs font-medium text-red-500 border border-red-200 dark:border-red-800 rounded-lg hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors cursor-pointer">
+                  삭제
+                </button>
+              </>
+            )}
+          </div>
         </div>
-        {role.description && (
+        {editing && !role.isDefault ? (
+          <input type="text" defaultValue={role.description ?? ''} placeholder="역할 설명을 입력하세요" className={`${fieldClass} mt-2`} />
+        ) : role.description ? (
           <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">{role.description}</p>
-        )}
+        ) : null}
         {role.isDefault && (
-          <p className="text-xs text-amber-600 dark:text-amber-400 mt-1">기본 역할은 삭제할 수 없습니다. 권한만 수정 가능합니다.</p>
+          <p className="text-xs text-amber-600 dark:text-amber-400 mt-1">기본 역할은 이름, 설명을 변경하거나 삭제할 수 없습니다. 권한만 수정 가능합니다.</p>
         )}
       </div>
 
