@@ -1,5 +1,5 @@
 import { Navigate, useNavigate } from 'react-router-dom'
-import { Icon } from '@/shared/components/ui-kit'
+import { Icon, LoadingState } from '@/shared/components/ui-kit'
 import { useAuth } from '@/shared/contexts/AuthContext'
 import { isAdminRole, isSuperAdminRole } from '@/shared/utils/auth'
 import { useAdminSystems, useAdminPermissions } from '../api/queries'
@@ -16,11 +16,7 @@ export default function AdminHubPage() {
   }
 
   if (systemsLoading || permsLoading) {
-    return (
-      <main className="flex-1 flex items-center justify-center">
-        <div className="text-sm text-gray-400 dark:text-gray-500">불러오는 중...</div>
-      </main>
-    )
+    return <LoadingState />
   }
 
   const isSuperAdmin = isSuperAdminRole(user.role)
@@ -35,9 +31,9 @@ export default function AdminHubPage() {
   }
 
   return (
-    <main className="flex-1 overflow-y-auto overflow-x-hidden bg-gray-50 dark:bg-gray-950">
+    <main className="flex-1 overflow-y-auto overflow-x-hidden bg-slate-50 dark:bg-slate-950">
       <div className="max-w-5xl mx-auto p-6 lg:p-12">
-        <p className="text-sm text-gray-500 dark:text-gray-400 mb-8">
+        <p className="text-sm text-slate-500 dark:text-slate-400 mb-8">
           {isSuperAdmin ? '전체 시스템을 관리합니다' : `${systems.length}개 시스템에 대한 관리 권한이 있습니다`}
         </p>
 
@@ -75,7 +71,7 @@ export default function AdminHubPage() {
             <div
               key={sys.id}
               onClick={() => navigate(`/admin/system/${sys.id}`)}
-              className="group relative rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-5 cursor-pointer hover:border-gray-300 dark:hover:border-gray-700 hover:shadow-md hover:shadow-gray-200/50 dark:hover:shadow-black/20 transition-all duration-200"
+              className="group relative rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 cursor-pointer hover:border-slate-300 dark:hover:border-slate-700 hover:shadow-md hover:shadow-slate-200/50 dark:hover:shadow-black/20 transition-all duration-200"
             >
               <div className="flex items-start gap-4">
                 <span
@@ -85,14 +81,14 @@ export default function AdminHubPage() {
                   <span className="w-4 h-4 rounded-full" style={{ backgroundColor: sys.color }} />
                 </span>
                 <div className="min-w-0 flex-1">
-                  <div className="text-sm font-semibold text-gray-800 dark:text-gray-100 group-hover:text-gray-900 dark:group-hover:text-white transition-colors">
+                  <div className="text-sm font-semibold text-slate-800 dark:text-slate-100 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">
                     {sys.name}
                   </div>
-                  <div className="text-xs text-gray-400 dark:text-gray-500 leading-snug mt-1">
+                  <div className="text-xs text-slate-400 dark:text-slate-500 leading-snug mt-1">
                     {sys.description}
                   </div>
                 </div>
-                <Icon name="chevronRight" className="w-4 h-4 text-gray-300 dark:text-gray-600 group-hover:text-gray-400 dark:group-hover:text-gray-500 group-hover:translate-x-0.5 transition-all flex-shrink-0 mt-0.5" />
+                <Icon name="chevronRight" className="w-4 h-4 text-slate-300 dark:text-slate-600 group-hover:text-slate-400 dark:group-hover:text-slate-500 group-hover:translate-x-0.5 transition-all flex-shrink-0 mt-0.5" />
               </div>
             </div>
           ))}

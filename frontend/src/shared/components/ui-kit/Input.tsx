@@ -6,7 +6,7 @@ export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 
   error?: string
   size?: 'sm' | 'md' | 'lg'
   variant?: 'default' | 'filled'
-  accentColor?: 'primary' | 'amber'
+  accentColor?: 'primary' | 'amber' | 'emerald'
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(({
@@ -28,6 +28,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({
   const accentClasses = {
     primary: 'focus:ring-[var(--color-primary)]/50 focus:border-[var(--color-primary)]',
     amber: 'focus:ring-amber-500/50 focus:border-amber-500',
+    emerald: 'focus:ring-emerald-500/50 focus:border-emerald-500',
   }
 
   const baseClasses = variant === 'filled'

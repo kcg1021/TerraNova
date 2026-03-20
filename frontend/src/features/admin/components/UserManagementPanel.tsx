@@ -1,5 +1,5 @@
 import { useState, useMemo, useRef } from 'react'
-import { Icon, Pagination, SaveBar, EmptyState, PanelHeader } from '@/shared/components/ui-kit'
+import { Icon, Button, Input, Avatar, Badge, Pagination, SaveBar, EmptyState, PanelHeader } from '@/shared/components/ui-kit'
 import Toast from '@/shared/components/Toast'
 import { useClickOutside } from '@/shared/hooks/useClickOutside'
 import { useToast } from '@/shared/hooks/useToast'
@@ -14,10 +14,10 @@ const ROLE_LABELS: Record<string, string> = {
   USER: '일반 사용자',
 }
 
-const ROLE_COLORS: Record<string, string> = {
-  SUPER_ADMIN: 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300',
-  SYSTEM_ADMIN: 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300',
-  USER: 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400',
+const ROLE_BADGE_COLORS: Record<string, 'red' | 'emerald' | 'slate'> = {
+  SUPER_ADMIN: 'red',
+  SYSTEM_ADMIN: 'emerald',
+  USER: 'slate',
 }
 
 const PAGE_SIZE = 10
@@ -71,29 +71,24 @@ export default function UserManagementPanel() {
         title="사용자 관리"
         subtitle={`사용자 정보를 관리하고 시스템 접근 권한을 부여합니다 · 총 ${users.length}명`}
         action={
-          <button
-            onClick={() => { setShowAddForm(true); setSelectedUserId(null) }}
-            className="px-4 py-2 text-sm font-medium text-white bg-emerald-500 hover:bg-emerald-600 rounded-lg transition-colors cursor-pointer"
-          >
+          <Button color="emerald" size="sm" onClick={() => { setShowAddForm(true); setSelectedUserId(null) }}>
             + 사용자 추가
-          </button>
+          </Button>
         }
       />
 
       <div className="flex gap-4 flex-1 min-h-0">
         {/* 좌측: 사용자 목록 */}
-        <div className="w-80 shrink-0 flex flex-col bg-white dark:bg-gray-900 border border-gray-200/80 dark:border-gray-800 rounded-xl overflow-hidden">
-          <div className="p-3 border-b border-gray-100 dark:border-gray-800">
-            <div className="relative">
-              <Icon name="search" className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-gray-500 pointer-events-none" />
-              <input
-                type="text"
-                value={search}
-                onChange={e => { setSearch(e.target.value); setCurrentPage(1) }}
-                placeholder="이름, 아이디, 부서 검색..."
-                className="w-full pl-9 pr-3 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-800/50 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 dark:focus:border-emerald-400 focus:bg-white dark:focus:bg-gray-800 transition-all"
-              />
-            </div>
+        <div className="w-80 shrink-0 flex flex-col bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-xl overflow-hidden">
+          <div className="p-3 border-b border-slate-100 dark:border-slate-800">
+            <Input
+              icon={<Icon name="search" className="w-4 h-4" />}
+              value={search}
+              onChange={e => { setSearch(e.target.value); setCurrentPage(1) }}
+              placeholder="이름, 아이디, 부서 검색..."
+              accentColor="emerald"
+              size="sm"
+            />
           </div>
 
           <div className="flex-1 overflow-y-auto scrollbar-thin">
@@ -101,35 +96,33 @@ export default function UserManagementPanel() {
               <button
                 key={user.id}
                 onClick={() => { setSelectedUserId(user.id); setShowAddForm(false) }}
-                className={`w-full flex items-center gap-3 px-4 py-3 text-left border-b border-gray-50 dark:border-gray-800/50 last:border-b-0 transition-colors cursor-pointer ${
+                className={`w-full flex items-center gap-3 px-4 py-3 text-left border-b border-slate-50 dark:border-slate-800/50 last:border-b-0 transition-colors cursor-pointer ${
                   selectedUserId === user.id
                     ? 'bg-emerald-50 dark:bg-emerald-950/20'
-                    : 'hover:bg-gray-50 dark:hover:bg-gray-800/30'
+                    : 'hover:bg-slate-50 dark:hover:bg-slate-800/30'
                 }`}
               >
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-600 dark:to-gray-700 flex items-center justify-center text-xs font-bold text-gray-500 dark:text-gray-300 shrink-0">
-                  {user.name.charAt(0)}
-                </div>
+                <Avatar name={user.name} />
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium text-gray-900 dark:text-white truncate">{user.name}</span>
-                    <span className={`px-1.5 py-0.5 text-xs rounded shrink-0 ${ROLE_COLORS[user.role]}`}>
+                    <span className="text-sm font-medium text-slate-900 dark:text-white truncate">{user.name}</span>
+                    <Badge color={ROLE_BADGE_COLORS[user.role]} className="shrink-0">
                       {ROLE_LABELS[user.role]}
-                    </span>
+                    </Badge>
                   </div>
-                  <div className="text-xs text-gray-400 dark:text-gray-500 mt-0.5 truncate">
+                  <div className="text-xs text-slate-400 dark:text-slate-500 mt-0.5 truncate">
                     {getOrgName(user.orgId)} · {user.id}
                   </div>
                 </div>
               </button>
             ))}
             {paginatedUsers.length === 0 && (
-              <div className="px-4 py-8 text-center text-sm text-gray-400 dark:text-gray-500">검색 결과가 없습니다</div>
+              <div className="px-4 py-8 text-center text-sm text-slate-400 dark:text-slate-500">검색 결과가 없습니다</div>
             )}
           </div>
 
           {totalPages > 1 && (
-            <div className="p-3 border-t border-gray-100 dark:border-gray-800">
+            <div className="p-3 border-t border-slate-100 dark:border-slate-800">
               <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
             </div>
           )}
@@ -168,18 +161,18 @@ function OrgTreeSelect({ value, onChange }: { value?: string; onChange: (id: str
         onClick={() => setOpen(!open)}
         className={`w-full flex items-center justify-between px-3 py-2.5 text-sm border rounded-lg transition-all cursor-pointer ${
           open
-            ? 'border-emerald-500 dark:border-emerald-400 ring-2 ring-emerald-500/30 dark:ring-emerald-400/20 bg-white dark:bg-gray-800'
-            : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600'
+            ? 'border-emerald-500 dark:border-emerald-400 ring-2 ring-emerald-500/30 dark:ring-emerald-400/20 bg-white dark:bg-slate-800'
+            : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-slate-300 dark:hover:border-slate-600'
         }`}
       >
-        <span className={selectedName ? 'text-gray-900 dark:text-white' : 'text-gray-400 dark:text-gray-500'}>
+        <span className={selectedName ? 'text-slate-900 dark:text-white' : 'text-slate-400 dark:text-slate-500'}>
           {selectedName ?? '소속 부서를 선택하세요'}
         </span>
-        <Icon name="chevronDown" className={`w-4 h-4 text-gray-400 transition-transform ${open ? 'rotate-180' : ''}`} />
+        <Icon name="chevronDown" className={`w-4 h-4 text-slate-400 transition-transform ${open ? 'rotate-180' : ''}`} />
       </button>
 
       {open && (
-        <div className="absolute z-50 top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg shadow-black/10 dark:shadow-black/30 max-h-64 overflow-y-auto scrollbar-thin py-1">
+        <div className="absolute z-50 top-full left-0 right-0 mt-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-lg shadow-black/10 dark:shadow-black/30 max-h-64 overflow-y-auto scrollbar-thin py-1">
           {roots.map(root => (
             <OrgTreeNode key={root.id} node={root} depth={0} selectedId={value} onSelect={id => { onChange(id); setOpen(false) }} />
           ))}
@@ -201,12 +194,12 @@ function OrgTreeNode({ node, depth, selectedId, onSelect }: { node: OrgUnit; dep
         className={`w-full flex items-center gap-2 px-3 py-2 text-sm text-left transition-colors cursor-pointer ${
           isSelected
             ? 'bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-300 font-medium'
-            : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50'
+            : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50'
         }`}
         style={{ paddingLeft: `${12 + depth * 20}px` }}
       >
         {children.length > 0 ? (
-          <Icon name="folder" className="w-3.5 h-3.5 text-gray-400 shrink-0" />
+          <Icon name="folder" className="w-3.5 h-3.5 text-slate-400 shrink-0" />
         ) : (
           <span className="w-3.5 shrink-0" />
         )}
@@ -221,17 +214,7 @@ function OrgTreeNode({ node, depth, selectedId, onSelect }: { node: OrgUnit; dep
 
 // ─── 폼 필드 ─────────────────────────────────────────────────
 
-const fieldInputClass = 'w-full px-3 py-2.5 text-sm border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 dark:focus:ring-emerald-400/20 dark:focus:border-emerald-400 transition-all'
-
-const fieldSelectClass = `${fieldInputClass} cursor-pointer`
-
-function FieldLabel({ children }: { children: React.ReactNode }) {
-  return <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">{children}</label>
-}
-
-function FieldLabelSm({ children }: { children: React.ReactNode }) {
-  return <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">{children}</label>
-}
+const selectClass = 'w-full px-4 py-3 text-sm bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all cursor-pointer'
 
 // ─── 사용자 추가 폼 ─────────────────────────────────────────
 
@@ -239,52 +222,38 @@ function UserAddForm({ onClose }: { onClose: () => void }) {
   const [orgId, setOrgId] = useState<string | undefined>()
 
   return (
-    <div className="h-full bg-white dark:bg-gray-900 border border-gray-200/80 dark:border-gray-800 rounded-xl overflow-hidden flex flex-col">
-      <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-gray-800 shrink-0">
-        <h4 className="text-sm font-semibold text-gray-900 dark:text-white">새 사용자 등록</h4>
-        <button onClick={onClose} className="p-1 rounded-lg text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer transition-colors">
+    <div className="h-full bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-xl overflow-hidden flex flex-col">
+      <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100 dark:border-slate-800 shrink-0">
+        <h4 className="text-sm font-semibold text-slate-900 dark:text-white">새 사용자 등록</h4>
+        <Button variant="ghost" size="sm" onClick={onClose} className="!p-1">
           <Icon name="close" className="w-5 h-5" />
-        </button>
+        </Button>
       </div>
       <div className="flex-1 overflow-y-auto scrollbar-thin p-5">
         <div className="space-y-5 max-w-lg">
           <div className="grid grid-cols-2 gap-4">
-            <div>
-              <FieldLabel>아이디</FieldLabel>
-              <input type="text" placeholder="로그인에 사용할 아이디" className={fieldInputClass} />
+            <Input label="아이디" placeholder="로그인에 사용할 아이디" variant="default" accentColor="emerald" />
+            <Input label="이름" placeholder="사용자 이름" variant="default" accentColor="emerald" />
+          </div>
+          <Input label="이메일" type="email" placeholder="example@email.com" variant="default" accentColor="emerald" />
+          <div>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">소속 부서</label>
+            <div className="mt-2">
+              <OrgTreeSelect value={orgId} onChange={setOrgId} />
             </div>
-            <div>
-              <FieldLabel>이름</FieldLabel>
-              <input type="text" placeholder="사용자 이름" className={fieldInputClass} />
-            </div>
           </div>
+          <Input label="초기 비밀번호" type="password" placeholder="초기 비밀번호 지정" variant="default" accentColor="emerald" />
           <div>
-            <FieldLabel>이메일</FieldLabel>
-            <input type="email" placeholder="example@email.com" className={fieldInputClass} />
-          </div>
-          <div>
-            <FieldLabel>소속 부서</FieldLabel>
-            <OrgTreeSelect value={orgId} onChange={setOrgId} />
-          </div>
-          <div>
-            <FieldLabel>초기 비밀번호</FieldLabel>
-            <input type="password" placeholder="초기 비밀번호 지정" className={fieldInputClass} />
-          </div>
-          <div>
-            <FieldLabel>역할</FieldLabel>
-            <select defaultValue="USER" className={fieldSelectClass}>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">역할</label>
+            <select defaultValue="USER" className={selectClass}>
               <option value="USER">일반 사용자</option>
               <option value="SYSTEM_ADMIN">시스템 관리자</option>
               <option value="SUPER_ADMIN">슈퍼 관리자</option>
             </select>
           </div>
           <div className="flex gap-3 pt-3">
-            <button className="px-5 py-2.5 text-sm font-medium text-white bg-emerald-500 hover:bg-emerald-600 rounded-lg transition-colors cursor-pointer">
-              사용자 등록
-            </button>
-            <button onClick={onClose} className="px-5 py-2.5 text-sm font-medium text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors cursor-pointer">
-              취소
-            </button>
+            <Button color="emerald" size="sm">사용자 등록</Button>
+            <Button variant="secondary" size="sm" onClick={onClose}>취소</Button>
           </div>
         </div>
       </div>
@@ -328,22 +297,20 @@ function UserDetailPanel({
   }
 
   return (
-    <div className="h-full flex flex-col bg-white dark:bg-gray-900 border border-gray-200/80 dark:border-gray-800 rounded-xl overflow-hidden">
+    <div className="h-full flex flex-col bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-xl overflow-hidden">
       {/* 사용자 정보 헤더 */}
-      <div className="px-5 py-4 border-b border-gray-100 dark:border-gray-800 shrink-0">
+      <div className="px-5 py-4 border-b border-slate-100 dark:border-slate-800 shrink-0">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-600 dark:to-gray-700 flex items-center justify-center text-sm font-bold text-gray-500 dark:text-gray-300">
-              {user.name.charAt(0)}
-            </div>
+            <Avatar name={user.name} size="md" />
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-sm font-semibold text-gray-900 dark:text-white">{user.name}</span>
-                <span className={`px-1.5 py-0.5 text-xs rounded ${ROLE_COLORS[user.role]}`}>
+                <span className="text-sm font-semibold text-slate-900 dark:text-white">{user.name}</span>
+                <Badge color={ROLE_BADGE_COLORS[user.role]}>
                   {ROLE_LABELS[user.role]}
-                </span>
+                </Badge>
               </div>
-              <div className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
+              <div className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">
                 {getOrgPath(user.orgId, mockOrganization)} · {user.email}
               </div>
             </div>
@@ -353,7 +320,7 @@ function UserDetailPanel({
             className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-all cursor-pointer ${
               editing
                 ? 'text-emerald-600 dark:text-emerald-400 border-emerald-300 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-950/30'
-                : 'text-gray-500 dark:text-gray-400 border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
+                : 'text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'
             }`}
           >
             {editing ? '접기' : '정보 수정'}
@@ -363,23 +330,17 @@ function UserDetailPanel({
         {editing && (
           <div className="mt-4 space-y-3">
             <div className="grid grid-cols-2 gap-3">
-              <div>
-                <FieldLabelSm>이름</FieldLabelSm>
-                <input type="text" defaultValue={user.name} className={fieldInputClass} />
-              </div>
-              <div>
-                <FieldLabelSm>이메일</FieldLabelSm>
-                <input type="email" defaultValue={user.email} className={fieldInputClass} />
-              </div>
+              <Input label="이름" defaultValue={user.name} variant="default" accentColor="emerald" size="sm" />
+              <Input label="이메일" type="email" defaultValue={user.email} variant="default" accentColor="emerald" size="sm" />
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <FieldLabelSm>소속 부서</FieldLabelSm>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">소속 부서</label>
                 <OrgTreeSelect value={editOrgId} onChange={setEditOrgId} />
               </div>
               <div>
-                <FieldLabelSm>역할</FieldLabelSm>
-                <select defaultValue={user.role} className={fieldSelectClass}>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">역할</label>
+                <select defaultValue={user.role} className={selectClass}>
                   <option value="USER">일반 사용자</option>
                   <option value="SYSTEM_ADMIN">시스템 관리자</option>
                   <option value="SUPER_ADMIN">슈퍼 관리자</option>
@@ -393,8 +354,8 @@ function UserDetailPanel({
       {/* 시스템 접근 권한 (체크만, 역할은 각 시스템에서) */}
       <div className="flex-1 overflow-y-auto scrollbar-thin">
         <div className="p-5">
-          <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-1">시스템 접근 권한</h4>
-          <p className="text-xs text-gray-400 dark:text-gray-500 mb-4">
+          <h4 className="text-sm font-semibold text-slate-900 dark:text-white mb-1">시스템 접근 권한</h4>
+          <p className="text-xs text-slate-400 dark:text-slate-500 mb-4">
             접근 허용된 시스템에는 기본 역할이 자동 부여됩니다. 세부 역할은 각 시스템의 사용자 관리에서 설정합니다.
           </p>
           <div className="space-y-2">
@@ -406,22 +367,22 @@ function UserDetailPanel({
                   className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${
                     isChecked
                       ? 'border-emerald-300 dark:border-emerald-700 bg-emerald-50/50 dark:bg-emerald-950/20'
-                      : 'border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700'
+                      : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
                   }`}
                 >
                   <input
                     type="checkbox"
                     checked={isChecked}
                     onChange={() => toggleSystem(sys.id)}
-                    className="h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500 dark:border-gray-600 cursor-pointer"
+                    className="h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 dark:border-slate-600 cursor-pointer"
                   />
                   <span className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: sys.color }} />
                   <div className="flex-1">
-                    <div className="text-sm font-medium text-gray-900 dark:text-white">{sys.name}</div>
-                    <div className="text-xs text-gray-400 dark:text-gray-500">{sys.description}</div>
+                    <div className="text-sm font-medium text-slate-900 dark:text-white">{sys.name}</div>
+                    <div className="text-xs text-slate-400 dark:text-slate-500">{sys.description}</div>
                   </div>
                   {isChecked && (
-                    <span className="px-2 py-0.5 text-xs rounded-full bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400">
+                    <span className="px-2 py-0.5 text-xs rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400">
                       기본 역할
                     </span>
                   )}

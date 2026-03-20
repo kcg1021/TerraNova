@@ -37,7 +37,7 @@ export default function NotificationBell() {
     <div className="relative" ref={ref}>
       <button
         onClick={() => setOpen(prev => !prev)}
-        className="relative p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-150 cursor-pointer"
+        className="relative p-2 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-150 cursor-pointer"
         title="알림"
       >
         <Icon name="bell" className="w-4 h-4 md:w-5 md:h-5" />
@@ -49,17 +49,17 @@ export default function NotificationBell() {
       </button>
 
       {open && (
-        <div className="fixed top-14 right-2 left-2 sm:absolute sm:top-full sm:mt-2 sm:left-auto sm:right-0 sm:w-80 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl shadow-lg shadow-gray-200/50 dark:shadow-black/30 z-50 overflow-hidden">
-          <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-800">
-            <div className="text-sm font-semibold text-gray-900 dark:text-white">알림</div>
-            <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+        <div className="fixed top-14 right-2 left-2 sm:absolute sm:top-full sm:mt-2 sm:left-auto sm:right-0 sm:w-80 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-lg shadow-slate-200/50 dark:shadow-black/30 z-50 overflow-hidden">
+          <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-800">
+            <div className="text-sm font-semibold text-slate-900 dark:text-white">알림</div>
+            <div className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
               처리 대기 {totalCount}건
             </div>
           </div>
 
           <div className="max-h-64 overflow-y-auto scrollbar-thin">
             {notifications.length === 0 ? (
-              <div className="px-4 py-6 text-center text-sm text-gray-400 dark:text-gray-500">
+              <div className="px-4 py-6 text-center text-sm text-slate-400 dark:text-slate-500">
                 새로운 알림이 없습니다
               </div>
             ) : (
@@ -70,12 +70,12 @@ export default function NotificationBell() {
                     navigate(`/admin/permissions/${n.systemId}`)
                     setOpen(false)
                   }}
-                  className="w-full flex items-start gap-3 px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-150 cursor-pointer border-b border-gray-50 dark:border-gray-700/50 last:border-b-0"
+                  className="w-full flex items-start gap-3 px-4 py-3 text-left hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors duration-150 cursor-pointer border-b border-slate-50 dark:border-slate-700/50 last:border-b-0"
                 >
                   <span className="flex-shrink-0 mt-0.5 w-2 h-2 rounded-full bg-red-500" />
                   <div className="min-w-0 flex-1">
-                    <div className="text-sm text-gray-700 dark:text-gray-200">{n.message}</div>
-                    <div className="text-xs text-gray-400 dark:text-gray-500 mt-1">권한 관리 →</div>
+                    <div className="text-sm text-slate-700 dark:text-slate-200">{n.message}</div>
+                    <div className="text-xs text-slate-400 dark:text-slate-500 mt-1">권한 관리 →</div>
                   </div>
                   <span className="flex-shrink-0 text-xs font-semibold text-red-500 bg-red-50 dark:bg-red-950/50 px-1.5 py-0.5 rounded-md">
                     {n.count}건

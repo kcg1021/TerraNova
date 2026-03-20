@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react'
 import { Navigate, useParams } from 'react-router-dom'
+import { LoadingState } from '@/shared/components/ui-kit'
 import { useAuth } from '@/shared/contexts/AuthContext'
 import { isAdminRole, isSuperAdminRole } from '@/shared/utils/auth'
 import { useAdminSystems, useAdminPermissions, useSystemDailyAccess, useSystemMenus } from '../api/queries'
@@ -35,11 +36,7 @@ export default function SystemDetailPage() {
   }
 
   if (systemsLoading || permsLoading) {
-    return (
-      <div className="flex-1 flex items-center justify-center">
-        <div className="text-sm text-gray-400 dark:text-gray-500">불러오는 중...</div>
-      </div>
-    )
+    return <LoadingState />
   }
 
   const isIntegrated = systemId === 'integrated'
@@ -70,11 +67,11 @@ export default function SystemDetailPage() {
     <div className="flex flex-1 min-h-0">
       <SystemMenuSidebar systemId={systemId} />
 
-      <main className="flex-1 flex flex-col p-4 md:p-6 pb-16 md:pb-6 bg-gray-50 dark:bg-gray-950 min-w-0 overflow-y-auto overflow-x-hidden md:overflow-hidden">
+      <main className="flex-1 flex flex-col p-4 md:p-6 pb-16 md:pb-6 bg-slate-50 dark:bg-slate-950 min-w-0 overflow-y-auto overflow-x-hidden md:overflow-hidden">
         {/* 페이지 헤더 */}
         {isDashboard && (
           <div className="flex items-center justify-between shrink-0 mb-4 md:mb-5">
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <p className="text-sm text-slate-500 dark:text-slate-400">
               {system.description}
             </p>
             {isIntegrated && (
@@ -139,14 +136,14 @@ function DashboardView({
         {kpis.map(kpi => (
           <div
             key={kpi.label}
-            className="bg-white dark:bg-gray-900 border border-gray-200/80 dark:border-gray-800 rounded-xl p-4 md:p-5"
+            className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-xl p-4 md:p-5"
           >
-            <div className="text-xs text-gray-400 dark:text-gray-500 mb-1.5">{kpi.label}</div>
+            <div className="text-xs text-slate-400 dark:text-slate-500 mb-1.5">{kpi.label}</div>
             <div className="flex items-baseline gap-1">
               <span className={`text-xl md:text-2xl font-bold tabular-nums ${kpi.color}`}>
                 {kpi.value}
               </span>
-              <span className="text-xs text-gray-400 dark:text-gray-500">{kpi.unit}</span>
+              <span className="text-xs text-slate-400 dark:text-slate-500">{kpi.unit}</span>
             </div>
           </div>
         ))}

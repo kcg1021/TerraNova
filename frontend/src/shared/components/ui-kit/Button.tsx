@@ -2,7 +2,7 @@ import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from 'react'
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'ghost'
-  color?: 'blue' | 'amber' | 'gray'
+  color?: 'blue' | 'amber' | 'gray' | 'emerald' | 'red'
   size?: 'sm' | 'md' | 'lg'
   loading?: boolean
   loadingText?: string
@@ -51,6 +51,14 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(({
     gray: {
       bg: 'bg-slate-700 hover:bg-slate-600',
       shadow: 'shadow-slate-500/15 hover:shadow-slate-500/25',
+    },
+    emerald: {
+      bg: 'bg-emerald-500 hover:bg-emerald-600',
+      shadow: 'shadow-emerald-500/15 hover:shadow-emerald-500/25',
+    },
+    red: {
+      bg: 'bg-red-500 hover:bg-red-600',
+      shadow: 'shadow-red-500/15 hover:shadow-red-500/25',
     },
   }
 

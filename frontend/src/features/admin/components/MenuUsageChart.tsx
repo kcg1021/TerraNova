@@ -35,13 +35,13 @@ export default function MenuUsageChart({ systemIds }: Props) {
   const textColor = isDark ? '#9ca3af' : '#6b7280'
 
   return (
-    <div className="flex-1 min-h-0 flex flex-col bg-white dark:bg-gray-900 border border-gray-200/80 dark:border-gray-800 rounded-xl p-4 md:p-5 overflow-hidden">
+    <div className="flex-1 min-h-0 flex flex-col bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-xl p-4 md:p-5 overflow-hidden">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-semibold text-gray-900 dark:text-white">메뉴이용현황</h3>
+        <h3 className="text-sm font-semibold text-slate-900 dark:text-white">메뉴이용현황</h3>
         <select
           value={topN}
           onChange={e => setTopN(Number(e.target.value) as TopN)}
-          className="text-xs px-2 py-1 rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 cursor-pointer focus:outline-none focus:ring-1 focus:ring-emerald-500"
+          className="text-xs px-2 py-1 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 cursor-pointer focus:outline-none focus:ring-1 focus:ring-emerald-500"
         >
           <option value={5}>상위 5개</option>
           <option value={10}>상위 10개</option>
@@ -97,13 +97,13 @@ export default function MenuUsageChart({ systemIds }: Props) {
       </div>
 
       {/* 범례 */}
-      <div className="flex flex-wrap gap-3 mt-3 pt-3 border-t border-gray-100 dark:border-gray-800">
+      <div className="flex flex-wrap gap-3 mt-3 pt-3 border-t border-slate-100 dark:border-slate-800">
         {Array.from(new Set(data.map(m => m.systemName))).map(name => {
           const item = data.find(m => m.systemName === name)!
           return (
             <div key={name} className="flex items-center gap-1.5">
               <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: item.color }} />
-              <span className="text-xs text-gray-500 dark:text-gray-400">{name}</span>
+              <span className="text-xs text-slate-500 dark:text-slate-400">{name}</span>
             </div>
           )
         })}

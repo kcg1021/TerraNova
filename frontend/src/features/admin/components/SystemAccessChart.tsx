@@ -72,9 +72,9 @@ export default function SystemAccessChart({ systemIds }: Props) {
   const textColor = isDark ? '#9ca3af' : '#6b7280'
 
   return (
-    <div className="flex-1 min-h-0 flex flex-col bg-white dark:bg-gray-900 border border-gray-200/80 dark:border-gray-800 rounded-xl p-4 md:p-5 overflow-hidden">
+    <div className="flex-1 min-h-0 flex flex-col bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-xl p-4 md:p-5 overflow-hidden">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-semibold text-gray-900 dark:text-white">시스템 접속현황</h3>
+        <h3 className="text-sm font-semibold text-slate-900 dark:text-white">시스템 접속현황</h3>
         <div className="flex items-center gap-2">
           {mode === 'multi' && (
             <button
@@ -83,7 +83,7 @@ export default function SystemAccessChart({ systemIds }: Props) {
               className={`text-xs px-2.5 py-1 rounded-full font-medium transition-colors ${
                 sumOnly
                   ? 'bg-emerald-500 text-white'
-                  : 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700'
+                  : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
               }`}
             >
               합산만
@@ -92,7 +92,7 @@ export default function SystemAccessChart({ systemIds }: Props) {
           <select
             value={period}
             onChange={e => setPeriod(Number(e.target.value) as Period)}
-            className="text-xs px-2 py-1 rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 cursor-pointer focus:outline-none focus:ring-1 focus:ring-emerald-500"
+            className="text-xs px-2 py-1 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 cursor-pointer focus:outline-none focus:ring-1 focus:ring-emerald-500"
           >
             <option value={7}>7일</option>
             <option value={14}>14일</option>
@@ -184,16 +184,16 @@ export default function SystemAccessChart({ systemIds }: Props) {
 
       {/* 범례 */}
       {mode === 'multi' && !sumOnly && (
-        <div className="flex flex-wrap gap-3 mt-3 pt-3 border-t border-gray-100 dark:border-gray-800">
+        <div className="flex flex-wrap gap-3 mt-3 pt-3 border-t border-slate-100 dark:border-slate-800">
           {ids.map(sid => (
             <div key={sid} className="flex items-center gap-1.5">
               <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: SYSTEM_COLORS[sid] ?? '#6b7280' }} />
-              <span className="text-xs text-gray-500 dark:text-gray-400">{SYSTEM_NAMES[sid] ?? sid}</span>
+              <span className="text-xs text-slate-500 dark:text-slate-400">{SYSTEM_NAMES[sid] ?? sid}</span>
             </div>
           ))}
           <div className="flex items-center gap-1.5">
-            <span className="w-4 border-t-2 border-dashed border-gray-400" />
-            <span className="text-xs text-gray-500 dark:text-gray-400">합산</span>
+            <span className="w-4 border-t-2 border-dashed border-slate-400" />
+            <span className="text-xs text-slate-500 dark:text-slate-400">합산</span>
           </div>
         </div>
       )}
