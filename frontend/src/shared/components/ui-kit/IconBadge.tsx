@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { ICON_PATHS, type IconName, type IconDef } from '@/shared/constants/icons.ts'
+import { ICON_PATHS, type IconName, type IconDef } from '@/shared/constants/icons'
 
 export interface IconBadgeProps {
   icon: ReactNode

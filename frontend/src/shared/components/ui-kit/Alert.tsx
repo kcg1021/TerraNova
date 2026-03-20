@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import Icon from './Icon'
-import type { IconName } from '@/shared/constants/icons.ts'
+import type { IconName } from '@/shared/constants/icons'
 
 export interface AlertProps {
   type?: 'error' | 'info' | 'success' | 'warning'

@@ -1,9 +1,9 @@
 import { useState, useRef, useCallback } from 'react'
-import type { Attachment } from '@/shared/types/attachment.ts'
-import { formatFileSize } from '@/shared/utils/file.ts'
+import type { Attachment } from '@/shared/types/attachment'
+import { formatFileSize } from '@/shared/utils/file'
 import Icon from './Icon'
 
-interface FileUploadProps {
+export interface FileUploadProps {
   value: Attachment[]
   onChange: (files: Attachment[]) => void
   maxFiles?: number
@@ -146,5 +146,3 @@ export default function FileUpload({
     </div>
   )
 }
-
-export type { FileUploadProps }

@@ -1,9 +1,9 @@
 import { useState } from 'react'
-import type { Attachment } from '@/shared/types/attachment.ts'
-import { formatFileSize, isImageFile, getFileIcon } from '@/shared/utils/file.ts'
+import type { Attachment } from '@/shared/types/attachment'
+import { formatFileSize, isImageFile, getFileIcon } from '@/shared/utils/file'
 import Icon from './Icon'
 
-interface FileListProps {
+export interface FileListProps {
   attachments: Attachment[]
 }
 
@@ -134,5 +134,3 @@ export default function FileList({ attachments }: FileListProps) {
     </>
   )
 }
-
-export type { FileListProps }

@@ -1,6 +1,6 @@
-import { ICON_PATHS, type IconName, type IconDef } from '@/shared/constants/icons.ts'
+import { ICON_PATHS, type IconName, type IconDef } from '@/shared/constants/icons'
 
-interface IconProps {
+export interface IconProps {
   name: IconName
   className?: string
   strokeWidth?: number
@@ -18,5 +18,3 @@ export default function Icon({ name, className = 'w-5 h-5', strokeWidth }: IconP
     </svg>
   )
 }
-
-export type { IconProps }

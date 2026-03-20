@@ -1,4 +1,4 @@
-interface SaveBarProps {
+export interface SaveBarProps {
   isDirty: boolean
   onSave: () => void
   message?: string
@@ -9,7 +9,7 @@ export default function SaveBar({ isDirty, onSave, message = '변경사항이 �
   if (!isDirty) return null
 
   return (
-    <div className="px-5 py-3 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/30 shrink-0 flex items-center justify-between">
+    <div className="px-5 py-3 border-t border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/30 shrink-0 flex items-center justify-between">
       <p className="text-xs text-amber-600 dark:text-amber-400">{message}</p>
       <button
         onClick={onSave}
@@ -20,5 +20,3 @@ export default function SaveBar({ isDirty, onSave, message = '변경사항이 �
     </div>
   )
 }
-
-export type { SaveBarProps }
