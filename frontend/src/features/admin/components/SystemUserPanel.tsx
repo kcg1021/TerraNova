@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { Pagination } from '@/shared/components/ui-kit'
+import { Pagination, SaveBar, EmptyState } from '@/shared/components/ui-kit'
 import Toast from '@/shared/components/Toast'
 import { useToast } from '@/shared/hooks/useToast'
 import { useUsers, useSystemRoles, useUserRoleAssignments } from '../api/queries'
@@ -104,9 +104,7 @@ export default function SystemUserPanel({ systemId }: Props) {
           {selectedUser ? (
             <UserRoleEditor user={selectedUser} roles={roles} assignedRoleIds={selectedAssignment?.roleIds ?? []} />
           ) : (
-            <div className="h-full flex items-center justify-center bg-white dark:bg-gray-900 border border-gray-200/80 dark:border-gray-800 rounded-xl">
-              <p className="text-sm text-gray-400 dark:text-gray-500">좌측에서 사용자를 선택하세요</p>
-            </div>
+            <EmptyState icon="user" message="좌측에서 사용자를 선택하세요" />
           )}
         </div>
       </div>
@@ -215,17 +213,7 @@ function UserRoleEditor({
         )}
       </div>
 
-      {dirty && (
-        <div className="px-5 py-3 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/30 shrink-0 flex items-center justify-between">
-          <p className="text-xs text-amber-600 dark:text-amber-400">변경사항이 있습니다</p>
-          <button
-            onClick={() => { showToast('변경사항이 저장되었습니다'); setDirty(false) }}
-            className="px-5 py-2 text-sm font-medium text-white bg-emerald-500 hover:bg-emerald-600 rounded-lg transition-colors cursor-pointer"
-          >
-            저장
-          </button>
-        </div>
-      )}
+      <SaveBar isDirty={dirty} onSave={() => { showToast('변경사항이 저장되었습니다'); setDirty(false) }} />
 
       {toast && <Toast message={toast.message} type={toast.type} onClose={hideToast} />}
     </div>

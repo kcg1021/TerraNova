@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Icon } from '@/shared/components/ui-kit'
+import { Icon, PanelHeader } from '@/shared/components/ui-kit'
 import { useTools } from '../api/queries'
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -39,17 +39,15 @@ export default function ToolManagementPanel() {
   return (
     <div className="flex flex-col gap-4 h-full">
       {/* 헤더 */}
-      <div className="flex items-center justify-between shrink-0">
-        <div>
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">도구 관리</h3>
-          <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
-            공통 도구 풀을 관리합니다 · {tools.length}개
-          </p>
-        </div>
-        <button className="px-4 py-2 text-sm font-medium text-white bg-emerald-500 hover:bg-emerald-600 rounded-lg transition-colors cursor-pointer">
-          + 도구 추가
-        </button>
-      </div>
+      <PanelHeader
+        title="도구 관리"
+        subtitle={`공통 도구 풀을 관리합니다 · ${tools.length}개`}
+        action={
+          <button className="px-4 py-2 text-sm font-medium text-white bg-emerald-500 hover:bg-emerald-600 rounded-lg transition-colors cursor-pointer">
+            + 도구 추가
+          </button>
+        }
+      />
 
       {/* 카테고리 필터 */}
       <div className="flex items-center gap-1.5 shrink-0 overflow-x-auto scrollbar-thin pb-0.5">

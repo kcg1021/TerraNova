@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Icon } from '@/shared/components/ui-kit'
+import { Icon, EmptyState, PanelHeader } from '@/shared/components/ui-kit'
 import { useSystemRoles, useSystemMenus, useLayers, useTools, useSystemTools } from '../api/queries'
 import type { SystemRole, PermissionLevel } from '../types/index'
 
@@ -28,20 +28,18 @@ export default function SystemRolePanel({ systemId }: Props) {
 
   return (
     <div className="flex flex-col gap-4 h-full">
-      <div className="flex items-center justify-between shrink-0">
-        <div>
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">역할 관리</h3>
-          <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
-            시스템 권한 역할을 생성하고 각 역할의 세부 권한을 설정합니다 · {roles.length}개 역할
-          </p>
-        </div>
-        <button
-          onClick={() => { setShowCreateForm(true); setSelectedRoleId(null) }}
-          className="px-4 py-2 text-sm font-medium text-white bg-emerald-500 hover:bg-emerald-600 rounded-lg transition-colors cursor-pointer"
-        >
-          + 역할 추가
-        </button>
-      </div>
+      <PanelHeader
+        title="역할 관리"
+        subtitle={`시스템 권한 역할을 생성하고 각 역할의 세부 권한을 설정합니다 · ${roles.length}개 역할`}
+        action={
+          <button
+            onClick={() => { setShowCreateForm(true); setSelectedRoleId(null) }}
+            className="px-4 py-2 text-sm font-medium text-white bg-emerald-500 hover:bg-emerald-600 rounded-lg transition-colors cursor-pointer"
+          >
+            + 역할 추가
+          </button>
+        }
+      />
 
       <div className="flex gap-4 flex-1 min-h-0">
         {/* 좌측: 역할 목록 */}
@@ -76,9 +74,7 @@ export default function SystemRolePanel({ systemId }: Props) {
           ) : selectedRole ? (
             <RoleDetailPanel role={selectedRole} systemId={systemId} />
           ) : (
-            <div className="h-full flex items-center justify-center bg-white dark:bg-gray-900 border border-gray-200/80 dark:border-gray-800 rounded-xl">
-              <p className="text-sm text-gray-400 dark:text-gray-500">좌측에서 역할을 선택하세요</p>
-            </div>
+            <EmptyState icon="user" message="좌측에서 역할을 선택하세요" />
           )}
         </div>
       </div>

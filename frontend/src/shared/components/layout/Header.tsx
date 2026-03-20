@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '@/shared/contexts/AuthContext.tsx'
 import { useSiteConfig } from '@/shared/contexts/SiteConfigContext.tsx'
 import { useTheme } from '@/shared/contexts/ThemeContext.tsx'
+import { useClickOutside } from '@/shared/hooks/useClickOutside'
 import { isAdminRole, isSuperAdminRole, getRoleLabel } from '@/shared/utils/auth.ts'
 import { Icon } from '@/shared/components/ui-kit'
 import Logo from './Logo.tsx'
@@ -45,18 +46,8 @@ export default function Header() {
   }, [sessionExpiry, logout])
 
   // 메뉴 외부 클릭 시 닫기
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setUserMenuOpen(false)
-      }
-      if (themeMenuRef.current && !themeMenuRef.current.contains(e.target as Node)) {
-        setThemeMenuOpen(false)
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
+  useClickOutside(menuRef, () => setUserMenuOpen(false))
+  useClickOutside(themeMenuRef, () => setThemeMenuOpen(false))
 
   const themeOptions = [
     {

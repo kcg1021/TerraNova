@@ -1,5 +1,6 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import { Icon } from '@/shared/components/ui-kit'
+import { useClickOutside } from '@/shared/hooks/useClickOutside'
 import { SYSTEM_COLORS } from '../constants/systems'
 
 const ALL_SYSTEMS = [
@@ -23,15 +24,7 @@ export default function SystemFilterDropdown({ selectedSystems, onChange }: Prop
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    function handleMouseDown(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        setOpen(false)
-      }
-    }
-    document.addEventListener('mousedown', handleMouseDown)
-    return () => document.removeEventListener('mousedown', handleMouseDown)
-  }, [])
+  useClickOutside(ref, () => setOpen(false))
 
   const allSelected = selectedSystems.length === ALL_IDS.length
   const someSelected = selectedSystems.length > 0 && !allSelected

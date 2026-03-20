@@ -1,7 +1,8 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Icon } from '@/shared/components/ui-kit'
 import { useAuth } from '@/shared/contexts/AuthContext'
+import { useClickOutside } from '@/shared/hooks/useClickOutside'
 import { isAdminRole, isSuperAdminRole } from '@/shared/utils/auth'
 import { useAdminNotifications, useAdminPermissions } from '../api/queries'
 
@@ -17,15 +18,7 @@ export default function NotificationBell() {
   const { data: allNotifications = [] } = useAdminNotifications({ enabled: isAdmin })
   const { data: permissions = [] } = useAdminPermissions({ enabled: isAdmin })
 
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        setOpen(false)
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
+  useClickOutside(ref, () => setOpen(false))
 
   if (!isAdmin || !user) return null
 

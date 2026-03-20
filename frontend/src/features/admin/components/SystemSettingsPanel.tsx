@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
-import { Icon } from '@/shared/components/ui-kit'
+import { Icon, SaveBar, EmptyState, PanelHeader } from '@/shared/components/ui-kit'
 import Toast from '@/shared/components/Toast'
+import { useClickOutside } from '@/shared/hooks/useClickOutside'
 import { useToast } from '@/shared/hooks/useToast'
 import { useAdminSystems } from '../api/queries'
 import type { AdminSystem } from '../types/index'
@@ -22,18 +23,18 @@ export default function SystemSettingsPanel() {
 
   return (
     <div className="flex flex-col gap-4 h-full">
-      <div className="flex items-center justify-between shrink-0">
-        <div>
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">시스템 설정</h3>
-          <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">시스템을 생성하고 메뉴, 레이어, 도구를 구성합니다 · {systems.length}개</p>
-        </div>
-        <button
-          onClick={() => { setShowAddForm(true); setSelectedId(null) }}
-          className="px-4 py-2 text-sm font-medium text-white bg-emerald-500 hover:bg-emerald-600 rounded-lg transition-colors cursor-pointer"
-        >
-          + 시스템 추가
-        </button>
-      </div>
+      <PanelHeader
+        title="시스템 설정"
+        subtitle={`시스템을 생성하고 메뉴, 레이어, 도구를 구성합니다 · ${systems.length}개`}
+        action={
+          <button
+            onClick={() => { setShowAddForm(true); setSelectedId(null) }}
+            className="px-4 py-2 text-sm font-medium text-white bg-emerald-500 hover:bg-emerald-600 rounded-lg transition-colors cursor-pointer"
+          >
+            + 시스템 추가
+          </button>
+        }
+      />
 
       <div className="flex gap-4 flex-1 min-h-0">
         {/* 좌측: 시스템 목록 */}
@@ -69,14 +70,7 @@ export default function SystemSettingsPanel() {
           ) : selectedSystem ? (
             <SystemDetailForm system={selectedSystem} />
           ) : (
-            <div className="h-full flex items-center justify-center bg-white dark:bg-gray-900 border border-gray-200/80 dark:border-gray-800 rounded-xl">
-              <div className="text-center">
-                <div className="w-12 h-12 rounded-xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center mx-auto mb-3">
-                  <Icon name="settings" className="w-6 h-6 text-gray-300 dark:text-gray-600" />
-                </div>
-                <p className="text-sm text-gray-400 dark:text-gray-500">좌측에서 시스템을 선택하세요</p>
-              </div>
-            </div>
+            <EmptyState icon="settings" message="좌측에서 시스템을 선택하세요" />
           )}
         </div>
       </div>
@@ -95,13 +89,7 @@ function ColorPicker({ value, onChange }: { value: string; onChange: (color: str
     setHexInput(value)
   }, [value])
 
-  useEffect(() => {
-    function handleClick(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) setShowPicker(false)
-    }
-    document.addEventListener('mousedown', handleClick)
-    return () => document.removeEventListener('mousedown', handleClick)
-  }, [])
+  useClickOutside(ref, () => setShowPicker(false))
 
   const isValidHex = /^#[0-9a-fA-F]{6}$/.test(hexInput)
 
@@ -300,17 +288,7 @@ function SystemDetailForm({ system }: { system: AdminSystem }) {
       </div>
 
       {/* 하단 저장 */}
-      {dirty && (
-        <div className="px-5 py-3 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/30 shrink-0 flex items-center justify-between">
-          <p className="text-xs text-amber-600 dark:text-amber-400">변경사항이 있습니다</p>
-          <button
-            onClick={handleSave}
-            className="px-5 py-2 text-sm font-medium text-white bg-emerald-500 hover:bg-emerald-600 rounded-lg transition-colors cursor-pointer"
-          >
-            저장
-          </button>
-        </div>
-      )}
+      <SaveBar isDirty={dirty} onSave={handleSave} />
 
       {toast && <Toast message={toast.message} type={toast.type} onClose={hideToast} />}
     </div>
