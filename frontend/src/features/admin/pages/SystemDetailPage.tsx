@@ -10,6 +10,8 @@ import MenuManagementPlaceholder from '../components/MenuManagementPlaceholder'
 import SystemSettingsPanel from '../components/SystemSettingsPanel'
 import ToolManagementPanel from '../components/ToolManagementPanel'
 import UserManagementPanel from '../components/UserManagementPanel'
+import SystemUserPanel from '../components/SystemUserPanel'
+import SystemRolePanel from '../components/SystemRolePanel'
 import SystemFilterDropdown from '../components/SystemFilterDropdown'
 
 const ALL_SYSTEM_IDS = ['integrated', 'hr', 'budget', 'civil', 'approval', 'asset', 'monitor']
@@ -173,6 +175,16 @@ function MenuContent({ systemId, menuId }: { systemId: string; menuId: string })
   // 통합관리의 사용자 관리
   if (systemId === 'integrated' && menuId === 'user-mgmt') {
     return <UserManagementPanel />
+  }
+
+  // 각 시스템의 사용자 관리
+  if (menuId.endsWith('-user-mgmt')) {
+    return <SystemUserPanel systemId={systemId} />
+  }
+
+  // 각 시스템의 역할 관리
+  if (menuId.endsWith('-role-mgmt')) {
+    return <SystemRolePanel systemId={systemId} />
   }
 
   // 그 외 메뉴는 Placeholder

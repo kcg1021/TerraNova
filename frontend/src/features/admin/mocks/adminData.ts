@@ -71,6 +71,7 @@ export const mockDailyAccess: DailyAccessSummary[] = mockSystemDailyAccess[syste
 export const mockSystemMenus: AdminMenu[] = [
   // 상수도 관리
   { id: 'water-user-mgmt', systemId: 'water', name: '사용자 관리', description: '시스템 사용자 역할 관리' },
+  { id: 'water-role-mgmt', systemId: 'water', name: '역할 관리', description: '시스템 권한 역할 관리' },
   { id: 'water-pipe', systemId: 'water', name: '관로 관리', description: '상수관로 현황 및 정보 관리' },
   { id: 'water-meter', systemId: 'water', name: '계량기 관리', description: '수도계량기 현황 관리' },
   { id: 'water-facility', systemId: 'water', name: '시설물 관리', description: '정수장, 배수지 등 시설 관리' },
@@ -79,6 +80,7 @@ export const mockSystemMenus: AdminMenu[] = [
 
   // 하수도 관리
   { id: 'sewage-user-mgmt', systemId: 'sewage', name: '사용자 관리', description: '시스템 사용자 역할 관리' },
+  { id: 'sewage-role-mgmt', systemId: 'sewage', name: '역할 관리', description: '시스템 권한 역할 관리' },
   { id: 'sewer-pipe', systemId: 'sewage', name: '관거 관리', description: '하수관거 현황 및 정보 관리' },
   { id: 'sewer-manhole', systemId: 'sewage', name: '맨홀 관리', description: '맨홀 현황 및 점검 관리' },
   { id: 'sewer-pump', systemId: 'sewage', name: '펌프장 관리', description: '하수펌프장 시설 관리' },
@@ -87,6 +89,7 @@ export const mockSystemMenus: AdminMenu[] = [
 
   // 공간정보 관리
   { id: 'gis-user-mgmt', systemId: 'gis', name: '사용자 관리', description: '시스템 사용자 역할 관리' },
+  { id: 'gis-role-mgmt', systemId: 'gis', name: '역할 관리', description: '시스템 권한 역할 관리' },
   { id: 'gis-map', systemId: 'gis', name: '지도 관리', description: '배경지도 및 레이어 관리' },
   { id: 'gis-layer', systemId: 'gis', name: '레이어 설정', description: 'GIS 레이어 구성 관리' },
   { id: 'gis-data', systemId: 'gis', name: '데이터 관리', description: '공간 데이터 등록 및 편집' },
@@ -95,6 +98,7 @@ export const mockSystemMenus: AdminMenu[] = [
 
   // 시설물 관리
   { id: 'facility-user-mgmt', systemId: 'facility', name: '사용자 관리', description: '시스템 사용자 역할 관리' },
+  { id: 'facility-role-mgmt', systemId: 'facility', name: '역할 관리', description: '시스템 권한 역할 관리' },
   { id: 'facility-register', systemId: 'facility', name: '시설물 등록', description: '공공시설물 등록 관리' },
   { id: 'facility-inspect', systemId: 'facility', name: '점검 관리', description: '시설물 정기점검 관리' },
   { id: 'facility-repair', systemId: 'facility', name: '보수 이력', description: '시설물 보수 이력 관리' },
@@ -103,6 +107,7 @@ export const mockSystemMenus: AdminMenu[] = [
 
   // 도로관리
   { id: 'road-user-mgmt', systemId: 'road', name: '사용자 관리', description: '시스템 사용자 역할 관리' },
+  { id: 'road-role-mgmt', systemId: 'road', name: '역할 관리', description: '시스템 권한 역할 관리' },
   { id: 'road-pavement', systemId: 'road', name: '포장 관리', description: '도로 포장 현황 관리' },
   { id: 'road-sign', systemId: 'road', name: '표지판 관리', description: '도로표지판 현황 관리' },
   { id: 'road-light', systemId: 'road', name: '가로등 관리', description: '가로등 시설 관리' },
@@ -111,6 +116,7 @@ export const mockSystemMenus: AdminMenu[] = [
 
   // 모니터링
   { id: 'monitor-user-mgmt', systemId: 'monitor', name: '사용자 관리', description: '시스템 사용자 역할 관리' },
+  { id: 'monitor-role-mgmt', systemId: 'monitor', name: '역할 관리', description: '시스템 권한 역할 관리' },
   { id: 'server-status', systemId: 'monitor', name: '서버 상태', description: '서버 상태 모니터링' },
   { id: 'system-log', systemId: 'monitor', name: '시스템 로그', description: '시스템 로그 조회' },
   { id: 'access-stats', systemId: 'monitor', name: '접속 통계', description: '시스템 접속 통계' },

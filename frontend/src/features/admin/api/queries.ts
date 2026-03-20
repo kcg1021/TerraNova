@@ -71,8 +71,7 @@ export function useSystemRoles(systemId?: string) {
 
 export function useUserRoleAssignments(userId?: string) {
   return useQuery({
-    queryKey: ['userRoleAssignments', userId],
+    queryKey: ['userRoleAssignments', userId ?? 'all'],
     queryFn: () => api.fetchUserRoleAssignments(userId),
-    enabled: !!userId,
   })
 }
