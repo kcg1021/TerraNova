@@ -1,4 +1,4 @@
-﻿package com.terranova.service;
+package com.terranova.service;
 
 import com.terranova.domain.audit.AccessLog;
 import com.terranova.domain.audit.AccessLogRepository;
@@ -36,7 +36,7 @@ public class AccessLogService {
             String username = getCurrentUsername();
             String ipAddress = getClientIp(request);
             String userAgent = request.getHeader("User-Agent");
-            String sessionId = request.getSession(false) \!= null ? 
+            String sessionId = request.getSession(false) != null ? 
                               request.getSession(false).getId() : "N/A";
 
             AccessLog accessLog = AccessLog.builder()
@@ -98,7 +98,7 @@ public class AccessLogService {
         LocalDateTime cutoffDate = LocalDateTime.now().minusYears(2);
         var expiredLogs = accessLogRepository.findExpiredLogs(cutoffDate);
         
-        if (\!expiredLogs.isEmpty()) {
+        if (!expiredLogs.isEmpty()) {
             accessLogRepository.deleteAll(expiredLogs);
             log.info("[접속기록 삭제] {}건의 만료된 로그 삭제 완료", expiredLogs.size());
         }
@@ -106,7 +106,7 @@ public class AccessLogService {
 
     private String getCurrentUsername() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || \!authentication.isAuthenticated()) {
+        if (authentication == null || !authentication.isAuthenticated()) {
             return "anonymous";
         }
         return authentication.getName();

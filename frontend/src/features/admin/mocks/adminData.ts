@@ -5,6 +5,11 @@ import type {
   MenuUsageRankItem,
   AdminNotification,
   AdminMenu,
+  Tool,
+  SystemTool,
+  Layer,
+  SystemRole,
+  UserRoleAssignment,
 } from '../types/index'
 import { SYSTEM_COLORS } from '../constants/systems'
 
@@ -65,6 +70,7 @@ export const mockDailyAccess: DailyAccessSummary[] = mockSystemDailyAccess[syste
 // 시스템별 관리 메뉴
 export const mockSystemMenus: AdminMenu[] = [
   // 상수도 관리
+  { id: 'water-user-mgmt', systemId: 'water', name: '사용자 관리', description: '시스템 사용자 역할 관리' },
   { id: 'water-pipe', systemId: 'water', name: '관로 관리', description: '상수관로 현황 및 정보 관리' },
   { id: 'water-meter', systemId: 'water', name: '계량기 관리', description: '수도계량기 현황 관리' },
   { id: 'water-facility', systemId: 'water', name: '시설물 관리', description: '정수장, 배수지 등 시설 관리' },
@@ -72,6 +78,7 @@ export const mockSystemMenus: AdminMenu[] = [
   { id: 'water-leak', systemId: 'water', name: '누수 관리', description: '누수 탐사 및 복구 이력' },
 
   // 하수도 관리
+  { id: 'sewage-user-mgmt', systemId: 'sewage', name: '사용자 관리', description: '시스템 사용자 역할 관리' },
   { id: 'sewer-pipe', systemId: 'sewage', name: '관거 관리', description: '하수관거 현황 및 정보 관리' },
   { id: 'sewer-manhole', systemId: 'sewage', name: '맨홀 관리', description: '맨홀 현황 및 점검 관리' },
   { id: 'sewer-pump', systemId: 'sewage', name: '펌프장 관리', description: '하수펌프장 시설 관리' },
@@ -79,6 +86,7 @@ export const mockSystemMenus: AdminMenu[] = [
   { id: 'sewer-cctv', systemId: 'sewage', name: 'CCTV 조사', description: '관거 CCTV 조사 이력' },
 
   // 공간정보 관리
+  { id: 'gis-user-mgmt', systemId: 'gis', name: '사용자 관리', description: '시스템 사용자 역할 관리' },
   { id: 'gis-map', systemId: 'gis', name: '지도 관리', description: '배경지도 및 레이어 관리' },
   { id: 'gis-layer', systemId: 'gis', name: '레이어 설정', description: 'GIS 레이어 구성 관리' },
   { id: 'gis-data', systemId: 'gis', name: '데이터 관리', description: '공간 데이터 등록 및 편집' },
@@ -86,6 +94,7 @@ export const mockSystemMenus: AdminMenu[] = [
   { id: 'gis-print', systemId: 'gis', name: '출력 관리', description: '지도 출력 템플릿 관리' },
 
   // 시설물 관리
+  { id: 'facility-user-mgmt', systemId: 'facility', name: '사용자 관리', description: '시스템 사용자 역할 관리' },
   { id: 'facility-register', systemId: 'facility', name: '시설물 등록', description: '공공시설물 등록 관리' },
   { id: 'facility-inspect', systemId: 'facility', name: '점검 관리', description: '시설물 정기점검 관리' },
   { id: 'facility-repair', systemId: 'facility', name: '보수 이력', description: '시설물 보수 이력 관리' },
@@ -93,6 +102,7 @@ export const mockSystemMenus: AdminMenu[] = [
   { id: 'facility-stats', systemId: 'facility', name: '현황 통계', description: '시설물 현황 통계 분석' },
 
   // 도로관리
+  { id: 'road-user-mgmt', systemId: 'road', name: '사용자 관리', description: '시스템 사용자 역할 관리' },
   { id: 'road-pavement', systemId: 'road', name: '포장 관리', description: '도로 포장 현황 관리' },
   { id: 'road-sign', systemId: 'road', name: '표지판 관리', description: '도로표지판 현황 관리' },
   { id: 'road-light', systemId: 'road', name: '가로등 관리', description: '가로등 시설 관리' },
@@ -100,6 +110,7 @@ export const mockSystemMenus: AdminMenu[] = [
   { id: 'road-pothole', systemId: 'road', name: '포트홀 관리', description: '포트홀 신고 및 처리' },
 
   // 모니터링
+  { id: 'monitor-user-mgmt', systemId: 'monitor', name: '사용자 관리', description: '시스템 사용자 역할 관리' },
   { id: 'server-status', systemId: 'monitor', name: '서버 상태', description: '서버 상태 모니터링' },
   { id: 'system-log', systemId: 'monitor', name: '시스템 로그', description: '시스템 로그 조회' },
   { id: 'access-stats', systemId: 'monitor', name: '접속 통계', description: '시스템 접속 통계' },
@@ -107,9 +118,10 @@ export const mockSystemMenus: AdminMenu[] = [
   { id: 'backup', systemId: 'monitor', name: '백업 관리', description: '시스템 백업 관리' },
 
   // 통합관리
+  { id: 'system-settings', systemId: 'integrated', name: '시스템 설정', description: '시스템 생성 및 구성 관리' },
+  { id: 'tool-mgmt', systemId: 'integrated', name: '도구 관리', description: '공통 도구 풀 관리' },
   { id: 'user-mgmt', systemId: 'integrated', name: '사용자 관리', description: '전체 사용자 계정 관리' },
   { id: 'permission-mgmt', systemId: 'integrated', name: '권한 관리', description: '시스템 접근 권한 관리' },
-  { id: 'system-settings', systemId: 'integrated', name: '시스템 설정', description: '전체 시스템 환경 설정' },
   { id: 'audit-log', systemId: 'integrated', name: '감사 로그', description: '시스템 감사 로그 조회' },
   { id: 'notice-mgmt', systemId: 'integrated', name: '공지사항 관리', description: '공지사항 등록 및 관리' },
 ]
@@ -143,4 +155,209 @@ export const mockAdminNotifications: AdminNotification[] = [
   { id: '2', type: 'permission_request', systemId: 'sewage', systemName: '하수도', count: 1, message: '하수도 시스템 권한신청 1건이 있습니다' },
   { id: '3', type: 'permission_request', systemId: 'gis', systemName: '공간정보', count: 3, message: '공간정보 시스템 권한신청 3건이 있습니다' },
   { id: '4', type: 'permission_request', systemId: 'facility', systemName: '시설물', count: 1, message: '시설물 시스템 권한신청 1건이 있습니다' },
+]
+
+// === 공통 도구 풀 ===
+export const mockTools: Tool[] = [
+  { id: 'measure-distance', name: '거리 측정', description: '두 점 사이의 거리를 측정합니다', category: 'measure' },
+  { id: 'measure-area', name: '면적 측정', description: '다각형의 면적을 측정합니다', category: 'measure' },
+  { id: 'measure-coordinates', name: '좌표 확인', description: '클릭한 지점의 좌표를 확인합니다', category: 'measure' },
+  { id: 'search-address', name: '주소 검색', description: '주소로 위치를 검색합니다', category: 'search' },
+  { id: 'search-parcel', name: '필지 검색', description: '지번으로 필지를 검색합니다', category: 'search' },
+  { id: 'search-coordinates', name: '좌표 검색', description: '좌표로 위치를 이동합니다', category: 'search' },
+  { id: 'analysis-buffer', name: '버퍼 분석', description: '지점/구간 주변 버퍼를 생성합니다', category: 'analysis' },
+  { id: 'analysis-overlay', name: '중첩 분석', description: '레이어 간 중첩 분석을 수행합니다', category: 'analysis' },
+  { id: 'analysis-route', name: '경로 분석', description: '최단 경로를 분석합니다', category: 'analysis' },
+  { id: 'print-map', name: '지도 인쇄', description: '현재 지도를 인쇄합니다', category: 'print' },
+  { id: 'print-report', name: '보고서 출력', description: '조회 결과를 보고서로 출력합니다', category: 'print' },
+  { id: 'edit-feature', name: '객체 편집', description: '지도 객체를 편집합니다', category: 'edit' },
+  { id: 'edit-attribute', name: '속성 편집', description: '객체 속성을 편집합니다', category: 'edit' },
+  { id: 'bookmark', name: '즐겨찾기', description: '현재 위치를 즐겨찾기에 저장합니다', category: 'etc' },
+  { id: 'screenshot', name: '화면 캡처', description: '현재 화면을 이미지로 저장합니다', category: 'etc' },
+]
+
+// === 시스템별 도구 설정 ===
+export const mockSystemTools: SystemTool[] = [
+  // 상수도
+  { systemId: 'water', toolId: 'measure-distance', order: 1, enabled: true },
+  { systemId: 'water', toolId: 'measure-area', order: 2, enabled: true },
+  { systemId: 'water', toolId: 'search-address', order: 3, enabled: true },
+  { systemId: 'water', toolId: 'analysis-buffer', order: 4, enabled: true },
+  { systemId: 'water', toolId: 'print-map', order: 5, enabled: true },
+  { systemId: 'water', toolId: 'edit-feature', order: 6, enabled: true },
+  { systemId: 'water', toolId: 'edit-attribute', order: 7, enabled: true },
+  // 하수도
+  { systemId: 'sewage', toolId: 'measure-distance', order: 1, enabled: true },
+  { systemId: 'sewage', toolId: 'search-address', order: 2, enabled: true },
+  { systemId: 'sewage', toolId: 'analysis-buffer', order: 3, enabled: true },
+  { systemId: 'sewage', toolId: 'analysis-route', order: 4, enabled: true },
+  { systemId: 'sewage', toolId: 'print-map', order: 5, enabled: true },
+  // 공간정보
+  { systemId: 'gis', toolId: 'measure-distance', order: 1, enabled: true },
+  { systemId: 'gis', toolId: 'measure-area', order: 2, enabled: true },
+  { systemId: 'gis', toolId: 'measure-coordinates', order: 3, enabled: true },
+  { systemId: 'gis', toolId: 'search-address', order: 4, enabled: true },
+  { systemId: 'gis', toolId: 'search-parcel', order: 5, enabled: true },
+  { systemId: 'gis', toolId: 'search-coordinates', order: 6, enabled: true },
+  { systemId: 'gis', toolId: 'analysis-buffer', order: 7, enabled: true },
+  { systemId: 'gis', toolId: 'analysis-overlay', order: 8, enabled: true },
+  { systemId: 'gis', toolId: 'print-map', order: 9, enabled: true },
+  { systemId: 'gis', toolId: 'print-report', order: 10, enabled: true },
+  { systemId: 'gis', toolId: 'edit-feature', order: 11, enabled: true },
+  { systemId: 'gis', toolId: 'edit-attribute', order: 12, enabled: true },
+  { systemId: 'gis', toolId: 'bookmark', order: 13, enabled: true },
+  { systemId: 'gis', toolId: 'screenshot', order: 14, enabled: true },
+]
+
+// === 레이어 ===
+export const mockLayers: Layer[] = [
+  // 상수도
+  { id: 'water-pipe-layer', systemId: 'water', name: '상수관로', type: 'line', order: 1 },
+  { id: 'water-valve-layer', systemId: 'water', name: '제수밸브', type: 'point', order: 2 },
+  { id: 'water-hydrant-layer', systemId: 'water', name: '소화전', type: 'point', order: 3 },
+  { id: 'water-meter-layer', systemId: 'water', name: '계량기', type: 'point', order: 4 },
+  { id: 'water-facility-layer', systemId: 'water', name: '정수시설', type: 'polygon', order: 5 },
+  { id: 'water-zone-layer', systemId: 'water', name: '급수구역', type: 'polygon', order: 6 },
+  // 하수도
+  { id: 'sewer-pipe-layer', systemId: 'sewage', name: '하수관거', type: 'line', order: 1 },
+  { id: 'sewer-manhole-layer', systemId: 'sewage', name: '맨홀', type: 'point', order: 2 },
+  { id: 'sewer-pump-layer', systemId: 'sewage', name: '펌프장', type: 'point', order: 3 },
+  { id: 'sewer-treatment-layer', systemId: 'sewage', name: '처리장', type: 'polygon', order: 4 },
+  { id: 'sewer-zone-layer', systemId: 'sewage', name: '배수구역', type: 'polygon', order: 5 },
+  // 공간정보
+  { id: 'gis-parcel-layer', systemId: 'gis', name: '지적도', type: 'polygon', order: 1 },
+  { id: 'gis-building-layer', systemId: 'gis', name: '건물', type: 'polygon', order: 2 },
+  { id: 'gis-road-layer', systemId: 'gis', name: '도로', type: 'line', order: 3 },
+  { id: 'gis-contour-layer', systemId: 'gis', name: '등고선', type: 'line', order: 4 },
+  { id: 'gis-satellite-layer', systemId: 'gis', name: '위성영상', type: 'raster', order: 5 },
+]
+
+// === 시스템 권한 역할 ===
+export const mockSystemRoles: SystemRole[] = [
+  // 상수도 역할
+  {
+    id: 'water-default',
+    systemId: 'water',
+    name: '기본 역할',
+    description: '시스템 접근 시 자동 부여되는 기본 권한',
+    isDefault: true,
+    permissions: {
+      menus: { 'water-pipe': 'allow', 'water-meter': 'allow' },
+      layers: {
+        'water-pipe-layer': { view: 'allow', edit: 'deny', delete: 'deny', export: 'inherit' },
+        'water-valve-layer': { view: 'allow', edit: 'deny', delete: 'deny', export: 'inherit' },
+      },
+      tools: { 'measure-distance': 'allow', 'search-address': 'allow' },
+    },
+  },
+  {
+    id: 'water-viewer',
+    systemId: 'water',
+    name: '상수도 조회자',
+    description: '상수도 데이터 조회만 가능',
+    permissions: {
+      menus: { 'water-pipe': 'allow', 'water-meter': 'allow', 'water-facility': 'allow', 'water-quality': 'allow', 'water-leak': 'allow' },
+      layers: {
+        'water-pipe-layer': { view: 'allow', edit: 'deny', delete: 'deny', export: 'allow' },
+        'water-valve-layer': { view: 'allow', edit: 'deny', delete: 'deny', export: 'allow' },
+        'water-hydrant-layer': { view: 'allow', edit: 'deny', delete: 'deny', export: 'inherit' },
+        'water-meter-layer': { view: 'allow', edit: 'deny', delete: 'deny', export: 'inherit' },
+        'water-facility-layer': { view: 'allow', edit: 'deny', delete: 'deny', export: 'inherit' },
+        'water-zone-layer': { view: 'allow', edit: 'deny', delete: 'deny', export: 'inherit' },
+      },
+      tools: { 'measure-distance': 'allow', 'measure-area': 'allow', 'search-address': 'allow', 'print-map': 'allow', 'edit-feature': 'deny', 'edit-attribute': 'deny' },
+    },
+  },
+  {
+    id: 'water-editor',
+    systemId: 'water',
+    name: '상수도 편집자',
+    description: '상수도 데이터 편집 가능',
+    permissions: {
+      menus: { 'water-pipe': 'allow', 'water-meter': 'allow', 'water-facility': 'allow', 'water-quality': 'allow', 'water-leak': 'allow' },
+      layers: {
+        'water-pipe-layer': { view: 'allow', edit: 'allow', delete: 'inherit', export: 'allow' },
+        'water-valve-layer': { view: 'allow', edit: 'allow', delete: 'inherit', export: 'allow' },
+        'water-hydrant-layer': { view: 'allow', edit: 'allow', delete: 'inherit', export: 'allow' },
+        'water-meter-layer': { view: 'allow', edit: 'allow', delete: 'inherit', export: 'allow' },
+        'water-facility-layer': { view: 'allow', edit: 'allow', delete: 'inherit', export: 'allow' },
+        'water-zone-layer': { view: 'allow', edit: 'inherit', delete: 'deny', export: 'allow' },
+      },
+      tools: { 'measure-distance': 'allow', 'measure-area': 'allow', 'search-address': 'allow', 'analysis-buffer': 'allow', 'print-map': 'allow', 'edit-feature': 'allow', 'edit-attribute': 'allow' },
+    },
+  },
+  // 하수도 역할
+  {
+    id: 'sewage-default',
+    systemId: 'sewage',
+    name: '기본 역할',
+    description: '시스템 접근 시 자동 부여되는 기본 권한',
+    isDefault: true,
+    permissions: {
+      menus: { 'sewer-pipe': 'allow', 'sewer-manhole': 'allow' },
+      layers: {
+        'sewer-pipe-layer': { view: 'allow', edit: 'deny', delete: 'deny', export: 'inherit' },
+      },
+      tools: { 'measure-distance': 'allow', 'search-address': 'allow' },
+    },
+  },
+  {
+    id: 'sewage-viewer',
+    systemId: 'sewage',
+    name: '하수도 조회자',
+    description: '하수도 데이터 조회만 가능',
+    permissions: {
+      menus: { 'sewer-pipe': 'allow', 'sewer-manhole': 'allow', 'sewer-pump': 'allow', 'sewer-treatment': 'allow', 'sewer-cctv': 'allow' },
+      layers: {
+        'sewer-pipe-layer': { view: 'allow', edit: 'deny', delete: 'deny', export: 'allow' },
+        'sewer-manhole-layer': { view: 'allow', edit: 'deny', delete: 'deny', export: 'allow' },
+        'sewer-pump-layer': { view: 'allow', edit: 'deny', delete: 'deny', export: 'inherit' },
+        'sewer-treatment-layer': { view: 'allow', edit: 'deny', delete: 'deny', export: 'inherit' },
+        'sewer-zone-layer': { view: 'allow', edit: 'deny', delete: 'deny', export: 'inherit' },
+      },
+      tools: { 'measure-distance': 'allow', 'search-address': 'allow', 'print-map': 'allow' },
+    },
+  },
+  // 공간정보 역할
+  {
+    id: 'gis-default',
+    systemId: 'gis',
+    name: '기본 역할',
+    description: '시스템 접근 시 자동 부여되는 기본 권한',
+    isDefault: true,
+    permissions: {
+      menus: { 'gis-map': 'allow' },
+      layers: {
+        'gis-parcel-layer': { view: 'allow', edit: 'deny', delete: 'deny', export: 'inherit' },
+      },
+      tools: { 'measure-distance': 'allow', 'search-address': 'allow' },
+    },
+  },
+  {
+    id: 'gis-admin',
+    systemId: 'gis',
+    name: 'GIS 관리자',
+    description: '공간정보 전체 관리 권한',
+    permissions: {
+      menus: { 'gis-map': 'allow', 'gis-layer': 'allow', 'gis-data': 'allow', 'gis-analysis': 'allow', 'gis-print': 'allow' },
+      layers: {
+        'gis-parcel-layer': { view: 'allow', edit: 'allow', delete: 'allow', export: 'allow' },
+        'gis-building-layer': { view: 'allow', edit: 'allow', delete: 'allow', export: 'allow' },
+        'gis-road-layer': { view: 'allow', edit: 'allow', delete: 'allow', export: 'allow' },
+        'gis-contour-layer': { view: 'allow', edit: 'allow', delete: 'allow', export: 'allow' },
+        'gis-satellite-layer': { view: 'allow', edit: 'inherit', delete: 'deny', export: 'allow' },
+      },
+      tools: { 'measure-distance': 'allow', 'measure-area': 'allow', 'measure-coordinates': 'allow', 'search-address': 'allow', 'search-parcel': 'allow', 'search-coordinates': 'allow', 'analysis-buffer': 'allow', 'analysis-overlay': 'allow', 'print-map': 'allow', 'print-report': 'allow', 'edit-feature': 'allow', 'edit-attribute': 'allow', 'bookmark': 'allow', 'screenshot': 'allow' },
+    },
+  },
+]
+
+// === 사용자별 역할 배정 ===
+export const mockUserRoleAssignments: UserRoleAssignment[] = [
+  { userId: 'user', systemId: 'water', roleIds: ['water-viewer'] },
+  { userId: 'user2', systemId: 'water', roleIds: ['water-viewer', 'water-editor'] },
+  { userId: 'user3', systemId: 'sewage', roleIds: ['sewage-viewer'] },
+  { userId: 'admin', systemId: 'water', roleIds: ['water-editor'] },
+  { userId: 'admin', systemId: 'sewage', roleIds: ['sewage-viewer'] },
+  { userId: 'admin', systemId: 'gis', roleIds: ['gis-admin'] },
 ]

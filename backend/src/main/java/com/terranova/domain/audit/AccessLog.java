@@ -1,4 +1,4 @@
-﻿package com.terranova.domain.audit;
+package com.terranova.domain.audit;
 
 import com.terranova.common.BaseEntity;
 import jakarta.persistence.*;

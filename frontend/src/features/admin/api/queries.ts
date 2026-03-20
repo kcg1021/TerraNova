@@ -39,3 +39,40 @@ export function useAdminNotifications(options?: { enabled?: boolean }) {
     enabled: options?.enabled,
   })
 }
+
+export function useTools() {
+  return useQuery({ queryKey: ['tools'], queryFn: api.fetchTools })
+}
+
+export function useSystemTools(systemId?: string) {
+  return useQuery({
+    queryKey: ['systemTools', systemId],
+    queryFn: () => api.fetchSystemTools(systemId),
+  })
+}
+
+export function useLayers(systemId?: string) {
+  return useQuery({
+    queryKey: ['layers', systemId],
+    queryFn: () => api.fetchLayers(systemId),
+  })
+}
+
+export function useUsers() {
+  return useQuery({ queryKey: ['users'], queryFn: api.fetchUsers })
+}
+
+export function useSystemRoles(systemId?: string) {
+  return useQuery({
+    queryKey: ['systemRoles', systemId],
+    queryFn: () => api.fetchSystemRoles(systemId),
+  })
+}
+
+export function useUserRoleAssignments(userId?: string) {
+  return useQuery({
+    queryKey: ['userRoleAssignments', userId],
+    queryFn: () => api.fetchUserRoleAssignments(userId),
+    enabled: !!userId,
+  })
+}

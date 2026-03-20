@@ -1,4 +1,4 @@
-﻿package com.terranova.config;
+package com.terranova.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;

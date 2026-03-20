@@ -163,7 +163,7 @@ export default function Header() {
           <div className="relative" ref={menuRef}>
             <button
               onClick={() => setUserMenuOpen(prev => !prev)}
-              className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg border transition-all duration-150 cursor-pointer ${
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg border whitespace-nowrap transition-all duration-150 cursor-pointer ${
                 userMenuOpen
                   ? 'text-[var(--color-primary)] dark:text-white bg-[var(--color-primary)]/5 dark:bg-white/10 border-[var(--color-primary)]/30 dark:border-white/30'
                   : 'text-gray-700 dark:text-gray-200 bg-transparent border-gray-200 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500 hover:text-gray-900 dark:hover:text-white'

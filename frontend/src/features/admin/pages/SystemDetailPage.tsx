@@ -7,6 +7,9 @@ import SystemMenuSidebar from '../components/SystemMenuSidebar'
 import SystemAccessChart from '../components/SystemAccessChart'
 import MenuUsageChart from '../components/MenuUsageChart'
 import MenuManagementPlaceholder from '../components/MenuManagementPlaceholder'
+import SystemSettingsPanel from '../components/SystemSettingsPanel'
+import ToolManagementPanel from '../components/ToolManagementPanel'
+import UserManagementPanel from '../components/UserManagementPanel'
 import SystemFilterDropdown from '../components/SystemFilterDropdown'
 
 const ALL_SYSTEM_IDS = ['integrated', 'hr', 'budget', 'civil', 'approval', 'asset', 'monitor']
@@ -65,7 +68,7 @@ export default function SystemDetailPage() {
     <div className="flex flex-1 min-h-0">
       <SystemMenuSidebar systemId={systemId} />
 
-      <main className={`flex-1 flex flex-col p-4 md:p-6 pb-16 md:pb-6 bg-gray-50 dark:bg-gray-950 min-w-0 ${isDashboard ? 'overflow-hidden' : 'overflow-y-auto overflow-x-hidden'}`}>
+      <main className="flex-1 flex flex-col p-4 md:p-6 pb-16 md:pb-6 bg-gray-50 dark:bg-gray-950 min-w-0 overflow-y-auto overflow-x-hidden md:overflow-hidden">
         {/* 페이지 헤더 */}
         {isDashboard && (
           <div className="flex items-center justify-between shrink-0 mb-4 md:mb-5">
@@ -88,7 +91,7 @@ export default function SystemDetailPage() {
             menuCount={menus.length}
           />
         ) : (
-          <MenuManagementPlaceholder systemId={systemId} menuId={menuId!} />
+          <MenuContent systemId={systemId} menuId={menuId!} />
         )}
       </main>
     </div>
@@ -154,4 +157,24 @@ function DashboardView({
       </div>
     </div>
   )
+}
+
+function MenuContent({ systemId, menuId }: { systemId: string; menuId: string }) {
+  // 통합관리의 시스템 설정
+  if (systemId === 'integrated' && menuId === 'system-settings') {
+    return <SystemSettingsPanel />
+  }
+
+  // 통합관리의 도구 관리
+  if (systemId === 'integrated' && menuId === 'tool-mgmt') {
+    return <ToolManagementPanel />
+  }
+
+  // 통합관리의 사용자 관리
+  if (systemId === 'integrated' && menuId === 'user-mgmt') {
+    return <UserManagementPanel />
+  }
+
+  // 그 외 메뉴는 Placeholder
+  return <MenuManagementPlaceholder systemId={systemId} menuId={menuId} />
 }
