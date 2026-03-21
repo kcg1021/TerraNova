@@ -60,24 +60,24 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
         </Button>
 
         {/* 하단 링크 */}
-        <div className="flex items-center justify-center gap-4 text-sm text-gray-500 dark:text-gray-400 pt-2">
+        <div className="flex items-center justify-center gap-4 text-sm text-slate-500 dark:text-slate-400 pt-2">
           <button
             type="button"
             onClick={() => setShowFindIdModal(true)}
-            className="hover:text-gray-900 dark:hover:text-white cursor-pointer"
+            className="hover:text-slate-900 dark:hover:text-white cursor-pointer"
           >
             아이디 찾기
           </button>
-          <span className="text-gray-300 dark:text-gray-600">|</span>
+          <span className="text-slate-300 dark:text-slate-600">|</span>
           <button
             type="button"
             onClick={() => setShowFindPasswordModal(true)}
-            className="hover:text-gray-900 dark:hover:text-white cursor-pointer"
+            className="hover:text-slate-900 dark:hover:text-white cursor-pointer"
           >
             비밀번호 찾기
           </button>
-          <span className="text-gray-300 dark:text-gray-600">|</span>
-          <Link to="/signup" className="hover:text-gray-900 dark:hover:text-white">
+          <span className="text-slate-300 dark:text-slate-600">|</span>
+          <Link to="/signup" className="hover:text-slate-900 dark:hover:text-white">
             회원가입
           </Link>
         </div>

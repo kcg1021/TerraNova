@@ -1,6 +1,6 @@
 import { useState, useMemo, useCallback } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { FloatingInput, Button, IconBadge, Icons } from '@/shared/components/ui-kit'
+import { Input, Button, IconBadge, Icons } from '@/shared/components/ui-kit'
 
 // Mock: 실제로는 API에서 약관 목록을 가져옴
 interface Term {
@@ -193,30 +193,30 @@ export default function SignupPage() {
   // 성공 화면
   if (step === 'success') {
     return (
-      <div className="flex-1 flex items-center justify-center bg-gray-50 dark:bg-gray-950 p-6">
+      <div className="flex-1 flex items-center justify-center bg-slate-50 dark:bg-slate-950 p-6">
         <div className="w-full max-w-lg">
-          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden shadow-lg">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-lg">
             <div className="p-12 text-center">
               <div className="flex justify-center mb-6">
                 <IconBadge icon={Icons.check} color="emerald" animate />
               </div>
 
-              <h1 className="text-2xl font-semibold text-gray-900 dark:text-white tracking-tight">
+              <h1 className="text-2xl font-semibold text-slate-900 dark:text-white tracking-tight">
                 가입이 완료되었습니다
               </h1>
-              <p className="mt-3 text-gray-500 dark:text-gray-400 leading-relaxed">
+              <p className="mt-3 text-slate-500 dark:text-slate-400 leading-relaxed">
                 환영합니다, {form.name}님.<br />
                 지금 바로 로그인하여 서비스를 이용해보세요.
               </p>
 
-              <div className="mt-8 p-4 bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-xl text-left">
-                <div className="flex justify-between py-2 border-b border-gray-100 dark:border-gray-700">
-                  <span className="text-sm text-gray-500 dark:text-gray-400">아이디</span>
-                  <span className="text-sm font-medium text-gray-900 dark:text-white">{form.id}</span>
+              <div className="mt-8 p-4 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-left">
+                <div className="flex justify-between py-2 border-b border-slate-100 dark:border-slate-700">
+                  <span className="text-sm text-slate-500 dark:text-slate-400">아이디</span>
+                  <span className="text-sm font-medium text-slate-900 dark:text-white">{form.id}</span>
                 </div>
                 <div className="flex justify-between py-2">
-                  <span className="text-sm text-gray-500 dark:text-gray-400">이메일</span>
-                  <span className="text-sm font-medium text-gray-900 dark:text-white">{form.email}</span>
+                  <span className="text-sm text-slate-500 dark:text-slate-400">이메일</span>
+                  <span className="text-sm font-medium text-slate-900 dark:text-white">{form.email}</span>
                 </div>
               </div>
 
@@ -233,25 +233,25 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="flex-1 flex bg-gray-50 dark:bg-gray-950">
+    <div className="flex-1 flex bg-slate-50 dark:bg-slate-950">
       {/* 폼 영역 */}
-      <div className="w-full flex items-center justify-center p-6 lg:p-12 bg-white dark:bg-gray-900">
+      <div className="w-full flex items-center justify-center p-6 lg:p-12 bg-white dark:bg-slate-900">
         <div className="w-full max-w-md">
           {/* 헤더 */}
           <div className="mb-12">
             <Link
               to="/"
-              className="inline-flex items-center gap-2 text-sm text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors mb-8"
+              className="inline-flex items-center gap-2 text-sm text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors mb-8"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
               </svg>
               돌아가기
             </Link>
-            <h1 className="text-3xl font-semibold text-gray-900 dark:text-white tracking-tight">
+            <h1 className="text-3xl font-semibold text-slate-900 dark:text-white tracking-tight">
               회원가입
             </h1>
-            <p className="mt-2 text-gray-500 dark:text-gray-400">
+            <p className="mt-2 text-slate-500 dark:text-slate-400">
               {step === 'terms' ? '서비스 이용을 위한 약관에 동의해주세요' : '서비스 이용을 위한 정보를 입력해주세요'}
             </p>
           </div>
@@ -262,31 +262,31 @@ export default function SignupPage() {
               {/* 전체 동의 */}
               <div
                 onClick={handleToggleAll}
-                className={`flex items-center gap-4 p-5 bg-gray-100 dark:bg-gray-800 border-2 transition-colors cursor-pointer ${
+                className={`flex items-center gap-4 p-5 bg-slate-100 dark:bg-slate-800 border-2 transition-colors cursor-pointer ${
                   allRead
-                    ? 'border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500'
-                    : 'border-gray-200 dark:border-gray-700'
+                    ? 'border-slate-300 dark:border-slate-600 hover:border-slate-400 dark:hover:border-slate-500'
+                    : 'border-slate-200 dark:border-slate-700'
                 }`}
               >
                 <div className={`
                   w-6 h-6 border-2 rounded flex items-center justify-center flex-shrink-0 transition-colors
                   ${allAgreed
-                    ? 'bg-gray-900 dark:bg-white border-gray-900 dark:border-white'
+                    ? 'bg-slate-900 dark:bg-white border-slate-900 dark:border-white'
                     : allRead
-                      ? 'border-gray-400 dark:border-gray-400 bg-white dark:bg-gray-900'
-                      : 'border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-800'
+                      ? 'border-slate-400 dark:border-slate-400 bg-white dark:bg-slate-900'
+                      : 'border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-800'
                   }
                 `}>
                   {allAgreed && (
-                    <svg className="w-4 h-4 text-white dark:text-gray-900" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                    <svg className="w-4 h-4 text-white dark:text-slate-900" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                     </svg>
                   )}
                 </div>
                 <div className="flex-1">
-                  <span className="font-semibold text-gray-900 dark:text-white">전체 동의</span>
+                  <span className="font-semibold text-slate-900 dark:text-white">전체 동의</span>
                   {!allRead && (
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">모든 약관을 읽어주세요</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">모든 약관을 읽어주세요</p>
                   )}
                 </div>
               </div>
@@ -296,7 +296,7 @@ export default function SignupPage() {
                 {mockTerms.map(term => (
                   <div
                     key={term.id}
-                    className="border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 overflow-hidden"
+                    className="border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 overflow-hidden"
                   >
                     {/* 약관 헤더 */}
                     <div className="flex items-center justify-between p-4">
@@ -307,20 +307,20 @@ export default function SignupPage() {
                         <div className={`
                           w-5 h-5 border-2 rounded flex items-center justify-center flex-shrink-0 transition-colors
                           ${agreedTerms[term.id]
-                            ? 'bg-gray-900 dark:bg-white border-gray-900 dark:border-white'
+                            ? 'bg-slate-900 dark:bg-white border-slate-900 dark:border-white'
                             : readTerms[term.id]
-                              ? 'border-gray-400 dark:border-gray-400 bg-white dark:bg-gray-900'
-                              : 'border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-800'
+                              ? 'border-slate-400 dark:border-slate-400 bg-white dark:bg-slate-900'
+                              : 'border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-800'
                           }
                         `}>
                           {agreedTerms[term.id] && (
-                            <svg className="w-3 h-3 text-white dark:text-gray-900" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                            <svg className="w-3 h-3 text-white dark:text-slate-900" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                             </svg>
                           )}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <span className="text-sm text-gray-900 dark:text-white">
+                          <span className="text-sm text-slate-900 dark:text-white">
                             {term.title}
                             {term.required && (
                               <span className="ml-1.5 text-red-500 dark:text-red-400 font-medium">(필수)</span>
@@ -334,7 +334,7 @@ export default function SignupPage() {
                       <button
                         type="button"
                         onClick={() => handleToggleExpand(term.id)}
-                        className="p-1.5 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors cursor-pointer"
+                        className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
                       >
                         <svg
                           className={`w-5 h-5 transition-transform ${expandedTerms.includes(term.id) ? 'rotate-180' : ''}`}
@@ -354,7 +354,7 @@ export default function SignupPage() {
                         <div
                           ref={(el) => handleContentRef(term.id, el)}
                           onScroll={(e) => handleScroll(term.id, e)}
-                          className="p-4 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-sm text-gray-600 dark:text-gray-400 leading-relaxed whitespace-pre-wrap max-h-48 lg:max-h-60 overflow-y-auto scrollbar-thin"
+                          className="p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm text-slate-600 dark:text-slate-400 leading-relaxed whitespace-pre-wrap max-h-48 lg:max-h-60 overflow-y-auto scrollbar-thin"
                         >
                           {term.content}
                         </div>
@@ -401,11 +401,12 @@ export default function SignupPage() {
             <form onSubmit={handleSubmit} className="space-y-10">
               {/* 계정 정보 섹션 */}
               <div>
-                <h2 className="text-xs font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-6">
+                <h2 className="text-xs font-medium text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-6">
                   계정 정보
                 </h2>
                 <div className="space-y-8">
-                  <FloatingInput
+                  <Input
+                    variant="floating"
                     label="아이디"
                     type="text"
                     value={form.id}
@@ -413,7 +414,8 @@ export default function SignupPage() {
                     placeholder="4자 이상"
                     error={errors.id}
                   />
-                  <FloatingInput
+                  <Input
+                    variant="floating"
                     label="비밀번호"
                     type="password"
                     value={form.password}
@@ -421,7 +423,8 @@ export default function SignupPage() {
                     placeholder="8자 이상"
                     error={errors.password}
                   />
-                  <FloatingInput
+                  <Input
+                    variant="floating"
                     label="비밀번호 확인"
                     type="password"
                     value={form.passwordConfirm}
@@ -433,18 +436,20 @@ export default function SignupPage() {
 
               {/* 개인 정보 섹션 */}
               <div>
-                <h2 className="text-xs font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-6">
+                <h2 className="text-xs font-medium text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-6">
                   개인 정보
                 </h2>
                 <div className="space-y-8">
-                  <FloatingInput
+                  <Input
+                    variant="floating"
                     label="이름"
                     type="text"
                     value={form.name}
                     onChange={e => handleChange('name', e.target.value)}
                     error={errors.name}
                   />
-                  <FloatingInput
+                  <Input
+                    variant="floating"
                     label="이메일"
                     type="email"
                     value={form.email}
@@ -452,7 +457,8 @@ export default function SignupPage() {
                     placeholder="example@email.com"
                     error={errors.email}
                   />
-                  <FloatingInput
+                  <Input
+                    variant="floating"
                     label="연락처"
                     type="tel"
                     value={form.phone}

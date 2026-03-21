@@ -101,36 +101,29 @@ export default function SystemMenuSidebar({ systemId }: Props) {
 
       </aside>
 
-      {/* 모바일: 하단 고정 바 */}
-      <div className="fixed bottom-0 left-0 right-0 z-30 md:hidden bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 px-3 py-2 flex gap-1.5 overflow-x-auto">
-        {/* 대시보드 */}
+      {/* 모바일: 하단 탭 바 */}
+      <div className="order-last shrink-0 md:hidden bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 px-1 flex overflow-x-auto scrollbar-thin">
         <button
           onClick={() => navigate(`/admin/system/${systemId}`)}
-          className={`flex-shrink-0 flex flex-col items-center gap-0.5 px-3 py-1 rounded-lg transition-colors cursor-pointer ${
+          className={`flex-shrink-0 px-3 py-2.5 text-xs font-medium transition-colors cursor-pointer border-b-2 ${
             isDashboard
-              ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/30'
-              : 'text-slate-500 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/30'
+              ? 'text-emerald-600 dark:text-emerald-400 border-emerald-500'
+              : 'text-slate-400 dark:text-slate-500 border-transparent'
           }`}
         >
-          <Icon name="dashboard" className="w-4 h-4" />
-          <span className="text-xs font-medium whitespace-nowrap">대시보드</span>
+          대시보드
         </button>
-
-        {/* 메뉴 항목들 */}
         {menus.map(menu => (
           <button
             key={menu.id}
             onClick={() => navigate(`/admin/system/${systemId}/${menu.id}`)}
-            className={`flex-shrink-0 flex flex-col items-center gap-0.5 px-3 py-1 rounded-lg transition-colors cursor-pointer ${
+            className={`flex-shrink-0 px-3 py-2.5 text-xs font-medium transition-colors cursor-pointer border-b-2 ${
               menuId === menu.id
-                ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/30'
-                : 'text-slate-500 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/30'
+                ? 'text-emerald-600 dark:text-emerald-400 border-emerald-500'
+                : 'text-slate-400 dark:text-slate-500 border-transparent'
             }`}
           >
-            <span className={`w-4 h-4 rounded-full border-2 ${
-              menuId === menu.id ? 'border-emerald-500 bg-emerald-500' : 'border-slate-300 dark:border-slate-600'
-            }`} />
-            <span className="text-xs font-medium whitespace-nowrap">{menu.name}</span>
+            {menu.name}
           </button>
         ))}
       </div>

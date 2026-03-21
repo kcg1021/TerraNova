@@ -15,7 +15,7 @@ export default function PostDetailPage() {
   if (postLoading) {
     return (
       <div className="flex items-center justify-center h-[calc(100vh-3rem)] md:h-[calc(100vh-3.5rem)]">
-        <div className="text-sm text-gray-400 dark:text-gray-500">불러오는 중...</div>
+        <div className="text-sm text-slate-400 dark:text-slate-500">불러오는 중...</div>
       </div>
     )
   }
@@ -25,8 +25,8 @@ export default function PostDetailPage() {
     return (
       <div className="flex items-center justify-center h-[calc(100vh-3rem)] md:h-[calc(100vh-3.5rem)]">
         <div className="text-center">
-          <p className="text-lg font-medium text-gray-900 dark:text-white mb-2">게시글을 찾을 수 없습니다</p>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">삭제되었거나 존재하지 않는 게시글입니다.</p>
+          <p className="text-lg font-medium text-slate-900 dark:text-white mb-2">게시글을 찾을 수 없습니다</p>
+          <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">삭제되었거나 존재하지 않는 게시글입니다.</p>
           <button
             onClick={() => navigate('/')}
             className="text-sm text-[var(--color-primary)] dark:text-sky-400 hover:underline cursor-pointer"
@@ -44,36 +44,36 @@ export default function PostDetailPage() {
   }
 
   return (
-    <div className="flex-1 flex justify-center bg-gray-50 dark:bg-gray-950 overflow-y-auto overflow-x-hidden">
+    <div className="flex-1 flex justify-center bg-slate-50 dark:bg-slate-950 overflow-y-auto overflow-x-hidden">
       {/* 고정 너비 컨테이너 */}
       <div className="w-full max-w-3xl p-4 sm:p-6 lg:p-12">
         {/* 뒤로가기 */}
         <button
           onClick={() => navigate(`/?board=${boardId}`)}
-          className="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-[var(--color-primary)] dark:hover:text-sky-400 transition-colors mb-4 cursor-pointer"
+          className="inline-flex items-center gap-1.5 text-sm text-slate-500 dark:text-slate-400 hover:text-[var(--color-primary)] dark:hover:text-sky-400 transition-colors mb-4 cursor-pointer"
         >
           <Icon name="chevronLeft" className="w-4 h-4" />
           목록으로
         </button>
 
         {/* 게시글 카드 */}
-        <article className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden shadow-sm">
+        <article className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg overflow-hidden shadow-sm">
           {/* 헤더 */}
-          <header className="px-5 sm:px-6 py-5 border-b border-gray-100 dark:border-gray-800">
+          <header className="px-5 sm:px-6 py-5 border-b border-slate-100 dark:border-slate-800">
             <div className="flex items-center gap-2 mb-3">
               <span className="text-xs px-2.5 py-1 rounded-full bg-[var(--color-primary)]/10 dark:bg-sky-400/10 text-[var(--color-primary)] dark:text-sky-400 font-medium">
                 {board.name}
               </span>
               {post.isPublic && (
-                <span className="text-xs px-2.5 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 font-medium">
+                <span className="text-xs px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 font-medium">
                   공개
                 </span>
               )}
             </div>
-            <h1 className="text-lg font-semibold text-gray-900 dark:text-white leading-snug">
+            <h1 className="text-lg font-semibold text-slate-900 dark:text-white leading-snug">
               {post.title}
             </h1>
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-3 text-xs text-gray-400 dark:text-gray-500">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-3 text-xs text-slate-400 dark:text-slate-500">
               <span>{post.author}</span>
               <span>{post.createdAt}</span>
               <span>조회 {post.views.toLocaleString()}</span>
@@ -88,7 +88,7 @@ export default function PostDetailPage() {
 
           {/* 본문 */}
           <div className="px-5 sm:px-6 py-6 min-h-[200px]">
-            <div className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
+            <div className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-line">
               {post.content ?? '본문 내용이 없습니다.'}
             </div>
           </div>

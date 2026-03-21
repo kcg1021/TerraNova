@@ -1,7 +1,7 @@
 import type { BoardPost } from '../types/index.ts'
 import { formatDate } from '@/shared/utils/format.ts'
 import Modal from '@/shared/components/Modal.tsx'
-import { Button, IconBadge, Icons, FileList, Icon } from '@/shared/components/ui-kit'
+import { Button, IconBadge, Icons, FileList, Icon, Badge } from '@/shared/components/ui-kit'
 
 interface NoticeDetailModalProps {
   isOpen: boolean
@@ -80,12 +80,7 @@ export default function NoticeDetailModal({ isOpen, onClose, post, onViewList }:
             조회 {post.views.toLocaleString()}
           </div>
 
-          {/* N 배지 */}
-          {post.isNew && (
-            <span className="ml-auto px-1.5 py-0.5 text-xs font-bold text-white bg-red-500 rounded">
-              N
-            </span>
-          )}
+          {post.isNew && <Badge color="new" className="ml-auto">N</Badge>}
         </div>
 
         {/* 본문 내용 */}

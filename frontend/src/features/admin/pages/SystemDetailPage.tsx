@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react'
 import { Navigate, useParams } from 'react-router-dom'
-import { LoadingState } from '@/shared/components/ui-kit'
+import { EmptyState } from '@/shared/components/ui-kit'
 import { useAuth } from '@/shared/contexts/AuthContext'
 import { isAdminRole, isSuperAdminRole } from '@/shared/utils/auth'
 import { useAdminSystems, useAdminPermissions, useSystemDailyAccess, useSystemMenus } from '../api/queries'
@@ -36,7 +36,7 @@ export default function SystemDetailPage() {
   }
 
   if (systemsLoading || permsLoading) {
-    return <LoadingState />
+    return <EmptyState loading message="불러오는 중..." />
   }
 
   const isIntegrated = systemId === 'integrated'
@@ -64,22 +64,17 @@ export default function SystemDetailPage() {
   const chartSystemIds = isIntegrated ? selectedSystems : [systemId]
 
   return (
-    <div className="flex flex-1 min-h-0">
+    <div className="flex flex-col md:flex-row flex-1 min-h-0 overflow-hidden">
       <SystemMenuSidebar systemId={systemId} />
 
-      <main className="flex-1 flex flex-col p-4 md:p-6 pb-16 md:pb-6 bg-slate-50 dark:bg-slate-950 min-w-0 overflow-y-auto overflow-x-hidden md:overflow-hidden">
-        {/* 페이지 헤더 */}
-        {isDashboard && (
-          <div className="flex items-center justify-between shrink-0 mb-4 md:mb-5">
-            <p className="text-sm text-slate-500 dark:text-slate-400">
-              {system.description}
-            </p>
-            {isIntegrated && (
-              <SystemFilterDropdown
-                selectedSystems={selectedSystems}
-                onChange={setSelectedSystems}
-              />
-            )}
+      <main className="flex-1 flex flex-col p-4 md:p-6 bg-slate-50 dark:bg-slate-950 min-w-0 min-h-0 overflow-y-auto scrollbar-thin">
+        {/* 시스템 필터 (통합관리 전용) */}
+        {isDashboard && isIntegrated && (
+          <div className="flex justify-end shrink-0 mb-4 md:mb-5">
+            <SystemFilterDropdown
+              selectedSystems={selectedSystems}
+              onChange={setSelectedSystems}
+            />
           </div>
         )}
 
@@ -150,7 +145,7 @@ function DashboardView({
       </div>
 
       {/* 차트 영역 */}
-      <div className="flex-1 flex flex-col gap-3 md:gap-4 min-h-0 min-w-0">
+      <div className="flex flex-col gap-3 md:gap-4 pb-4 md:pb-0 md:flex-1 md:min-h-0">
         <SystemAccessChart systemIds={chartSystemIds} />
         <MenuUsageChart systemIds={chartSystemIds} />
       </div>

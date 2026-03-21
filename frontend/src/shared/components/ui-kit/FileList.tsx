@@ -12,7 +12,7 @@ const FILE_ICON_COLORS: Record<ReturnType<typeof getFileIcon>, string> = {
   pdf: 'text-red-500',
   document: 'text-blue-500',
   spreadsheet: 'text-green-500',
-  file: 'text-gray-400',
+  file: 'text-slate-400',
 }
 
 function FileIcon({ type }: { type: ReturnType<typeof getFileIcon> }) {

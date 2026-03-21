@@ -6,10 +6,11 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  ResponsiveContainer,
 } from 'recharts'
 import { useTheme } from '@/shared/contexts/ThemeContext'
 import { useDailyAccess, useSystemDailyAccess } from '../api/queries'
+import { Select } from '@/shared/components/ui-kit'
+import { useContainerSize } from '@/shared/hooks/useContainerSize'
 import { SYSTEM_COLORS } from '../constants/systems'
 
 type Period = 7 | 14 | 30
@@ -70,9 +71,10 @@ export default function SystemAccessChart({ systemIds }: Props) {
 
   const gridColor = isDark ? '#374151' : '#e5e7eb'
   const textColor = isDark ? '#9ca3af' : '#6b7280'
+  const { ref: chartRef, width: chartWidth, height: chartHeight } = useContainerSize()
 
   return (
-    <div className="flex-1 min-h-0 flex flex-col bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-xl p-4 md:p-5 overflow-hidden">
+    <div className="flex-1 flex flex-col bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-xl p-4 md:p-5 min-h-[350px] md:min-h-0 overflow-hidden">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-sm font-semibold text-slate-900 dark:text-white">시스템 접속현황</h3>
         <div className="flex items-center gap-2">
@@ -89,21 +91,23 @@ export default function SystemAccessChart({ systemIds }: Props) {
               합산만
             </button>
           )}
-          <select
+          <Select
             value={period}
-            onChange={e => setPeriod(Number(e.target.value) as Period)}
-            className="text-xs px-2 py-1 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 cursor-pointer focus:outline-none focus:ring-1 focus:ring-emerald-500"
-          >
-            <option value={7}>7일</option>
-            <option value={14}>14일</option>
-            <option value={30}>30일</option>
-          </select>
+            onChange={v => setPeriod(Number(v) as Period)}
+            size="xs"
+            accentColor="emerald"
+            options={[
+              { value: 7, label: '7일' },
+              { value: 14, label: '14일' },
+              { value: 30, label: '30일' },
+            ]}
+          />
         </div>
       </div>
 
-      <div className="flex-1 min-h-0">
-        <ResponsiveContainer width="100%" height="100%" debounce={400}>
-          <LineChart data={data} margin={{ top: 5, right: 10, left: -10, bottom: 0 }}>
+      <div ref={chartRef} className="flex-1 min-h-0">
+        {chartWidth > 0 && (
+          <LineChart data={data} width={chartWidth} height={Math.max(chartHeight, 180)} margin={{ top: 5, right: 10, left: -10, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
             <XAxis
               dataKey="date"
@@ -179,7 +183,7 @@ export default function SystemAccessChart({ systemIds }: Props) {
               </>
             )}
           </LineChart>
-        </ResponsiveContainer>
+        )}
       </div>
 
       {/* 범례 */}

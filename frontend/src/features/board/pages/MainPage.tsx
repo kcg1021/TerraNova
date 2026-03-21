@@ -10,6 +10,7 @@ import NoticeDetailModal from '../components/NoticeDetailModal.tsx'
 import NoticeListModal from '../components/NoticeListModal.tsx'
 import type { BoardPost } from '../types/index.ts'
 import { Icon } from '@/shared/components/ui-kit'
+import PostCard from '../components/PostCard.tsx'
 
 export default function MainPage() {
   const { user, login } = useAuth()
@@ -65,18 +66,18 @@ export default function MainPage() {
   // 비로그인: SaaS 스타일 로그인 페이지 + 공지사항
   if (!user) {
     return (
-      <div className="flex-1 flex bg-gray-50 dark:bg-gray-950">
+      <div className="flex-1 flex bg-slate-50 dark:bg-slate-950">
         {/* 좌측: 공지사항 영역 */}
-        <div className="hidden lg:flex flex-1 flex-col p-12 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800">
+        <div className="hidden lg:flex flex-1 flex-col p-12 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800">
           <div className="flex-1">
             {/* 공지사항 헤더 */}
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+              <h2 className="text-lg font-semibold text-slate-900 dark:text-white">
                 공지사항
               </h2>
               <button
                 onClick={handleViewAllClick}
-                className="text-sm text-gray-500 dark:text-gray-400 hover:text-[var(--color-primary)] dark:hover:text-sky-400 cursor-pointer transition-colors flex items-center gap-1"
+                className="text-sm text-slate-500 dark:text-slate-400 hover:text-[var(--color-primary)] dark:hover:text-sky-400 cursor-pointer transition-colors flex items-center gap-1"
               >
                 전체보기
                 <Icon name="chevronRight" className="w-4 h-4" />
@@ -86,45 +87,26 @@ export default function MainPage() {
             {/* 공지사항 리스트 */}
             <div className="space-y-3">
               {noticePreview.map(post => (
-                <div
+                <PostCard
                   key={post.id}
+                  post={post}
                   onClick={() => handlePostClick(post)}
-                  className="group p-4 bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-800 rounded-lg hover:border-[var(--color-primary)]/40 dark:hover:border-[var(--color-primary)]/40 hover:shadow-md hover:shadow-[var(--color-primary)]/5 cursor-pointer transition-all duration-200"
-                >
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex-1 min-w-0">
-                      <h3 className="text-sm font-medium text-gray-900 dark:text-white truncate group-hover:text-[var(--color-primary)] dark:group-hover:text-sky-400 transition-colors">
-                        {post.title}
-                        {post.isNew && (
-                          <span className="ml-2 inline-block px-1.5 py-0.5 text-xs font-bold text-white bg-red-500 rounded">
-                            N
-                          </span>
-                        )}
-                        {post.attachments && post.attachments.length > 0 && (
-                          <Icon name="paperclip" className="inline-block ml-1.5 w-3.5 h-3.5 text-gray-300 dark:text-gray-600" />
-                        )}
-                      </h3>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        {post.author} · {post.createdAt}
-                      </p>
-                    </div>
-                    <Icon name="chevronRight" className="w-4 h-4 text-gray-300 dark:text-gray-600 group-hover:text-[var(--color-primary)] dark:group-hover:text-sky-400 group-hover:translate-x-1 transition-all flex-shrink-0 mt-0.5" />
-                  </div>
-                </div>
+                  className="bg-slate-50 dark:bg-slate-800/50"
+                />
               ))}
             </div>
           </div>
         </div>
 
         {/* 우측: 로그인 영역 */}
-        <div className="w-full lg:w-[480px] flex-shrink-0 flex items-center justify-center p-6 lg:p-12 bg-white dark:bg-gray-900">
+        <div className="w-full lg:w-[480px] flex-shrink-0 flex items-center justify-center p-6 lg:p-12 bg-white dark:bg-slate-900">
           <div className="w-full max-w-sm">
             {/* 타이틀 */}
             <div className="mb-8">
-              <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
+              <h1 className="text-2xl font-semibold text-slate-900 dark:text-white">
                 로그인
               </h1>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+              <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
                 계정에 로그인하여 서비스를 이용하세요
               </p>
             </div>
@@ -133,7 +115,7 @@ export default function MainPage() {
             <LoginForm />
 
             {/* 빠른 로그인 */}
-            <div className="mt-4 flex items-center justify-center gap-1 text-xs text-gray-400 dark:text-gray-500">
+            <div className="mt-4 flex items-center justify-center gap-1 text-xs text-slate-400 dark:text-slate-500">
               <button onClick={() => login('super', 'super1234')} className="hover:text-[var(--color-primary)] cursor-pointer transition-colors">Super</button>
               <span>·</span>
               <button onClick={() => login('admin', 'admin1234')} className="hover:text-[var(--color-primary)] cursor-pointer transition-colors">Admin</button>
@@ -142,7 +124,7 @@ export default function MainPage() {
             </div>
 
             {/* 푸터 */}
-            <div className="mt-12 pt-6 border-t border-gray-100 dark:border-gray-800 text-xs text-gray-400 dark:text-gray-600">
+            <div className="mt-12 pt-6 border-t border-slate-100 dark:border-slate-800 text-xs text-slate-400 dark:text-slate-600">
               <p>문의: 000-0000-0000 (평일 09:30~18:30)</p>
             </div>
           </div>
@@ -168,7 +150,7 @@ export default function MainPage() {
 
   // 로그인 후: 대시보드 레이아웃
   return (
-    <div className="flex-1 flex bg-gray-50 dark:bg-gray-950">
+    <div className="flex-1 flex bg-slate-50 dark:bg-slate-950">
       <Sidebar systems={systems} />
 
       <div className="flex-1 min-w-0 pb-16 md:pb-0 overflow-y-auto overflow-x-hidden flex flex-col p-6 lg:p-12">

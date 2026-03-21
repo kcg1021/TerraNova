@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Icon, Button, Input, Badge, Tabs, EmptyState, PanelHeader } from '@/shared/components/ui-kit'
+import { Icon, Button, Input, Badge, Tabs, SaveBar, EmptyState, PanelHeader, ListDetailLayout } from '@/shared/components/ui-kit'
 import { useSystemRoles, useSystemMenus, useLayers, useTools, useSystemTools } from '../api/queries'
 import type { SystemRole, PermissionLevel } from '../types/index'
 
@@ -38,43 +38,36 @@ export default function SystemRolePanel({ systemId }: Props) {
         }
       />
 
-      <div className="flex gap-4 flex-1 min-h-0">
-        {/* 좌측: 역할 목록 */}
-        <div className="w-72 shrink-0 flex flex-col bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-xl overflow-hidden">
-          <div className="flex-1 overflow-y-auto scrollbar-thin">
-            {roles.map(role => (
-              <button
-                key={role.id}
-                onClick={() => { setSelectedRoleId(role.id); setShowCreateForm(false) }}
-                className={`w-full px-4 py-3 text-left border-b border-slate-50 dark:border-slate-800/50 last:border-b-0 transition-colors cursor-pointer ${
-                  selectedRoleId === role.id ? 'bg-emerald-50 dark:bg-emerald-950/20' : 'hover:bg-slate-50 dark:hover:bg-slate-800/30'
-                }`}
-              >
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-slate-900 dark:text-white">{role.name}</span>
-                  {role.isDefault && (
-                    <Badge color="emerald">기본</Badge>
-                  )}
-                </div>
-                {role.description && (
-                  <div className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">{role.description}</div>
-                )}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* 우측: 역할 상세 */}
-        <div className="flex-1 min-w-0">
-          {showCreateForm ? (
-            <RoleCreateForm onClose={() => setShowCreateForm(false)} />
-          ) : selectedRole ? (
-            <RoleDetailPanel role={selectedRole} systemId={systemId} />
-          ) : (
-            <EmptyState icon="user" message="좌측에서 역할을 선택하세요" />
-          )}
-        </div>
-      </div>
+      <ListDetailLayout
+        itemCount={roles.length}
+        listItems={roles.map(role => (
+          <button
+            key={role.id}
+            onClick={() => { setSelectedRoleId(role.id); setShowCreateForm(false) }}
+            className={`w-full px-4 py-3 text-left border-b border-slate-50 dark:border-slate-800/50 last:border-b-0 transition-colors cursor-pointer ${
+              selectedRoleId === role.id ? 'bg-emerald-50 dark:bg-emerald-950/20' : 'hover:bg-slate-50 dark:hover:bg-slate-800/30'
+            }`}
+          >
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-medium text-slate-900 dark:text-white">{role.name}</span>
+              {role.isDefault && (
+                <Badge color="emerald">기본</Badge>
+              )}
+            </div>
+            {role.description && (
+              <div className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">{role.description}</div>
+            )}
+          </button>
+        ))}
+      >
+        {showCreateForm ? (
+          <RoleCreateForm onClose={() => setShowCreateForm(false)} />
+        ) : selectedRole ? (
+          <RoleDetailPanel role={selectedRole} systemId={systemId} />
+        ) : (
+          <EmptyState icon="user" message="좌측에서 역할을 선택하세요" />
+        )}
+      </ListDetailLayout>
     </div>
   )
 }
@@ -196,10 +189,7 @@ function RoleDetailPanel({ role, systemId }: { role: SystemRole; systemId: strin
         )}
       </div>
 
-      {/* 저장 */}
-      <div className="px-5 py-3 border-t border-slate-100 dark:border-slate-800 shrink-0 flex justify-end">
-        <Button color="emerald" size="sm">권한 저장</Button>
-      </div>
+      <SaveBar isDirty onSave={() => {}} saveLabel="권한 저장" />
     </div>
   )
 }

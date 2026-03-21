@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react'
 import type { BoardPost } from '../types/index.ts'
-import { Input, Button, IconBadge, Icons, Pagination, Icon } from '@/shared/components/ui-kit'
+import Modal from '@/shared/components/Modal.tsx'
+import { Input, Button, IconBadge, Icons, Pagination, Icon, Badge } from '@/shared/components/ui-kit'
 
 interface NoticeListModalProps {
   isOpen: boolean
@@ -49,122 +50,88 @@ export default function NoticeListModal({ isOpen, onClose, posts, onSelectPost }
     onClose()
   }
 
-  if (!isOpen) return null
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay">
-      {/* 배경 오버레이 */}
-      <div
-        className="absolute inset-0 bg-slate-900/50 backdrop-blur-sm"
-        onClick={handleClose}
-      />
+    <Modal
+      isOpen={isOpen}
+      onClose={handleClose}
+      title="공지사항"
+      subtitle={`총 ${filteredPosts.length}건의 공지사항이 있습니다`}
+      icon={<IconBadge icon={Icons.list} color="blue" />}
+      size="lg"
+    >
+      {/* 검색 바 */}
+      <div className="pb-4">
+        <Input
+          type="text"
+          value={searchTerm}
+          onChange={e => handleSearch(e.target.value)}
+          placeholder="제목 또는 작성자로 검색..."
+          icon={Icons.search}
+          size="md"
+        />
+      </div>
 
-      {/* 모달 컨테이너 */}
-      <div className="relative w-full max-w-2xl overflow-hidden modal-content">
-        <div className="relative bg-white dark:bg-slate-900 rounded-2xl shadow-2xl shadow-slate-900/20 dark:shadow-black/40 border border-slate-200/50 dark:border-slate-700/50 overflow-hidden">
+      {/* 공지사항 목록 */}
+      <div className="space-y-2 max-h-[320px] overflow-y-auto pr-1 scrollbar-thin">
+        {paginatedPosts.length > 0 ? (
+          paginatedPosts.map((post, index) => (
+            <div
+              key={post.id}
+              onClick={() => onSelectPost(post)}
+              className="group p-4 bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-[var(--color-primary)]/30 rounded-lg cursor-pointer transition-all duration-200"
+              style={{ animationDelay: `${index * 50}ms` }}
+            >
+              <div className="flex items-start gap-4">
+                {/* 내용 */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1">
+                    <h3 className="text-sm font-medium text-slate-800 dark:text-white truncate group-hover:text-[var(--color-primary)] dark:group-hover:text-sky-400 transition-colors">
+                      {post.title}
+                    </h3>
+                    {post.isNew && <Badge color="new" className="flex-shrink-0">N</Badge>}
+                    {post.attachments && post.attachments.length > 0 && (
+                      <Icon name="paperclip" className="w-4 h-4 text-slate-400 flex-shrink-0" strokeWidth={1.5} />
+                    )}
+                  </div>
+                  <div className="flex items-center gap-3 text-xs text-slate-500 dark:text-slate-400">
+                    <span>{post.author}</span>
+                    <span className="text-slate-300 dark:text-slate-600">|</span>
+                    <span>{post.createdAt}</span>
+                    <span className="text-slate-300 dark:text-slate-600">|</span>
+                    <span>조회 {post.views.toLocaleString()}</span>
+                  </div>
+                </div>
 
-          {/* 닫기 버튼 */}
-          <button
-            onClick={handleClose}
-            className="absolute top-4 right-4 z-10 p-2 rounded-full text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-200 cursor-pointer"
-          >
-            <Icon name="close" className="w-5 h-5" />
-          </button>
-
-          {/* 헤더 */}
-          <div className="px-8 pt-8 pb-4">
-            <div className="flex justify-center mb-4">
-              <IconBadge icon={Icons.list} color="blue" />
+                {/* 화살표 */}
+                <Icon name="chevronRight" className="w-5 h-5 text-slate-300 dark:text-slate-600 group-hover:text-[var(--color-primary)] dark:group-hover:text-sky-400 group-hover:translate-x-1 transition-all flex-shrink-0" />
+              </div>
             </div>
-            <h2 className="text-xl font-semibold text-slate-800 dark:text-white text-center">
-              공지사항
-            </h2>
-            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400 text-center">
-              총 {filteredPosts.length}건의 공지사항이 있습니다
+          ))
+        ) : (
+          <div className="py-12 text-center">
+            <Icon name="search" className="w-12 h-12 mx-auto text-slate-300 dark:text-slate-600 mb-3" strokeWidth={1} />
+            <p className="text-sm text-slate-500 dark:text-slate-400">
+              검색 결과가 없습니다
             </p>
           </div>
-
-          {/* 검색 바 */}
-          <div className="px-8 pb-4">
-            <Input
-              type="text"
-              value={searchTerm}
-              onChange={e => handleSearch(e.target.value)}
-              placeholder="제목 또는 작성자로 검색..."
-              icon={Icons.search}
-              size="md"
-            />
-          </div>
-
-          {/* 공지사항 목록 */}
-          <div className="px-8 pb-4">
-            <div className="space-y-2 max-h-[320px] overflow-y-auto pr-1 scrollbar-thin">
-              {paginatedPosts.length > 0 ? (
-                paginatedPosts.map((post, index) => (
-                  <div
-                    key={post.id}
-                    onClick={() => onSelectPost(post)}
-                    className="group p-4 bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-[var(--color-primary)]/30 rounded-xl cursor-pointer transition-all duration-200"
-                    style={{ animationDelay: `${index * 50}ms` }}
-                  >
-                    <div className="flex items-start gap-4">
-                      {/* 내용 */}
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                          <h3 className="text-sm font-medium text-slate-800 dark:text-white truncate group-hover:text-[var(--color-primary)] dark:group-hover:text-sky-400 transition-colors">
-                            {post.title}
-                          </h3>
-                          {post.isNew && (
-                            <span className="flex-shrink-0 px-1.5 py-0.5 text-xs font-bold text-white bg-red-500 rounded">
-                              N
-                            </span>
-                          )}
-                          {post.attachments && post.attachments.length > 0 && (
-                            <Icon name="paperclip" className="w-4 h-4 text-slate-400 flex-shrink-0" strokeWidth={1.5} />
-                          )}
-                        </div>
-                        <div className="flex items-center gap-3 text-xs text-slate-500 dark:text-slate-400">
-                          <span>{post.author}</span>
-                          <span className="text-slate-300 dark:text-slate-600">|</span>
-                          <span>{post.createdAt}</span>
-                          <span className="text-slate-300 dark:text-slate-600">|</span>
-                          <span>조회 {post.views.toLocaleString()}</span>
-                        </div>
-                      </div>
-
-                      {/* 화살표 */}
-                      <Icon name="chevronRight" className="w-5 h-5 text-slate-300 dark:text-slate-600 group-hover:text-[var(--color-primary)] dark:group-hover:text-sky-400 group-hover:translate-x-1 transition-all flex-shrink-0" />
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div className="py-12 text-center">
-                  <Icon name="search" className="w-12 h-12 mx-auto text-slate-300 dark:text-slate-600 mb-3" strokeWidth={1} />
-                  <p className="text-sm text-slate-500 dark:text-slate-400">
-                    검색 결과가 없습니다
-                  </p>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* 페이지네이션 */}
-          <div className="px-8 pb-4">
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={setCurrentPage}
-            />
-          </div>
-
-          {/* 하단 버튼 */}
-          <div className="px-8 pb-8">
-            <Button onClick={handleClose} fullWidth>
-              닫기
-            </Button>
-          </div>
-        </div>
+        )}
       </div>
-    </div>
+
+      {/* 페이지네이션 */}
+      <div className="pt-4">
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
+      </div>
+
+      {/* 하단 버튼 */}
+      <div className="pt-4">
+        <Button onClick={handleClose} fullWidth>
+          닫기
+        </Button>
+      </div>
+    </Modal>
   )
 }

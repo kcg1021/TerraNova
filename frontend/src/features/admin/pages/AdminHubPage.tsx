@@ -1,5 +1,5 @@
 import { Navigate, useNavigate } from 'react-router-dom'
-import { Icon, LoadingState } from '@/shared/components/ui-kit'
+import { Icon, EmptyState } from '@/shared/components/ui-kit'
 import { useAuth } from '@/shared/contexts/AuthContext'
 import { isAdminRole, isSuperAdminRole } from '@/shared/utils/auth'
 import { useAdminSystems, useAdminPermissions } from '../api/queries'
@@ -16,7 +16,7 @@ export default function AdminHubPage() {
   }
 
   if (systemsLoading || permsLoading) {
-    return <LoadingState />
+    return <EmptyState loading message="불러오는 중..." />
   }
 
   const isSuperAdmin = isSuperAdminRole(user.role)

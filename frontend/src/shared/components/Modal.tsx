@@ -1,5 +1,12 @@
 import { useEffect, useRef, type ReactNode } from 'react'
 
+const sizeClasses = {
+  sm: 'max-w-sm',
+  md: 'max-w-md',
+  lg: 'max-w-2xl',
+  xl: 'max-w-4xl',
+}
+
 interface ModalProps {
   isOpen: boolean
   onClose: () => void
@@ -7,9 +14,10 @@ interface ModalProps {
   subtitle?: string
   icon?: ReactNode
   children: ReactNode
+  size?: 'sm' | 'md' | 'lg' | 'xl'
 }
 
-export default function Modal({ isOpen, onClose, title, subtitle, icon, children }: ModalProps) {
+export default function Modal({ isOpen, onClose, title, subtitle, icon, children, size = 'md' }: ModalProps) {
   const overlayRef = useRef<HTMLDivElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
 
@@ -47,7 +55,7 @@ export default function Modal({ isOpen, onClose, title, subtitle, icon, children
       {/* 모달 컨테이너 */}
       <div
         ref={contentRef}
-        className="relative w-full max-w-md overflow-hidden modal-content"
+        className={`relative w-full ${sizeClasses[size]} overflow-hidden modal-content`}
       >
         {/* 글래스모피즘 효과의 모달 본체 */}
         <div className="relative bg-white dark:bg-slate-900 rounded-2xl shadow-2xl shadow-slate-900/20 dark:shadow-black/40 border border-slate-200/50 dark:border-slate-700/50 overflow-hidden">

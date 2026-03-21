@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { Icon, Input, Avatar, Badge, Pagination, SaveBar, EmptyState, PanelHeader } from '@/shared/components/ui-kit'
+import { Avatar, Badge, SaveBar, EmptyState, PanelHeader, ListDetailLayout } from '@/shared/components/ui-kit'
 import Toast from '@/shared/components/Toast'
 import { useToast } from '@/shared/hooks/useToast'
 import { useUsers, useSystemRoles, useUserRoleAssignments } from '../api/queries'
@@ -46,65 +46,43 @@ export default function SystemUserPanel({ systemId }: Props) {
         subtitle={`이 시스템에 접근 가능한 사용자의 역할을 관리합니다 · ${systemUsers.length}명`}
       />
 
-      <div className="flex gap-4 flex-1 min-h-0">
-        {/* 좌측: 사용자 목록 */}
-        <div className="w-72 shrink-0 flex flex-col bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-xl overflow-hidden">
-          <div className="p-3 border-b border-slate-100 dark:border-slate-800">
-            <Input
-              icon={<Icon name="search" className="w-4 h-4" />}
-              value={search}
-              onChange={e => { setSearch(e.target.value); setCurrentPage(1) }}
-              placeholder="사용자 검색..."
-              accentColor="emerald"
-              size="sm"
-            />
-          </div>
-
-          <div className="flex-1 overflow-y-auto scrollbar-thin">
-            {paginatedUsers.map(user => {
-              const assignment = systemAssignments.find(a => a.userId === user.id)
-              const roleCount = assignment?.roleIds.length ?? 0
-              return (
-                <button
-                  key={user.id}
-                  onClick={() => setSelectedUserId(user.id)}
-                  className={`w-full flex items-center gap-3 px-4 py-3 text-left border-b border-slate-50 dark:border-slate-800/50 last:border-b-0 transition-colors cursor-pointer ${
-                    selectedUserId === user.id ? 'bg-emerald-50 dark:bg-emerald-950/20' : 'hover:bg-slate-50 dark:hover:bg-slate-800/30'
-                  }`}
-                >
-                  <Avatar name={user.name} />
-                  <div className="min-w-0 flex-1">
-                    <div className="text-sm font-medium text-slate-900 dark:text-white truncate">{user.name}</div>
-                    <div className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">
-                      {roleCount > 0 ? `${roleCount}개 역할` : '기본 역할만'}
-                    </div>
-                  </div>
-                </button>
-              )
-            })}
-            {paginatedUsers.length === 0 && (
-              <div className="px-4 py-8 text-center text-sm text-slate-400 dark:text-slate-500">
-                {systemUsers.length === 0 ? '접근 권한이 부여된 사용자가 없습니다' : '검색 결과가 없습니다'}
+      <ListDetailLayout
+        search={{
+          value: search,
+          onChange: v => { setSearch(v); setCurrentPage(1) },
+          placeholder: '사용자 검색...',
+        }}
+        pagination={{ currentPage, totalPages, onPageChange: setCurrentPage }}
+        itemCount={paginatedUsers.length}
+        emptyMessage={systemUsers.length === 0 ? '접근 권한이 부여된 사용자가 없습니다' : '검색 결과가 없습니다'}
+        listItems={paginatedUsers.map(user => {
+          const assignment = systemAssignments.find(a => a.userId === user.id)
+          const roleCount = assignment?.roleIds.length ?? 0
+          return (
+            <button
+              key={user.id}
+              onClick={() => setSelectedUserId(user.id)}
+              className={`w-full flex items-center gap-3 px-4 py-3 text-left border-b border-slate-50 dark:border-slate-800/50 last:border-b-0 transition-colors cursor-pointer ${
+                selectedUserId === user.id ? 'bg-emerald-50 dark:bg-emerald-950/20' : 'hover:bg-slate-50 dark:hover:bg-slate-800/30'
+              }`}
+            >
+              <Avatar name={user.name} />
+              <div className="min-w-0 flex-1">
+                <div className="text-sm font-medium text-slate-900 dark:text-white truncate">{user.name}</div>
+                <div className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">
+                  {roleCount > 0 ? `${roleCount}개 역할` : '기본 역할만'}
+                </div>
               </div>
-            )}
-          </div>
-
-          {totalPages > 1 && (
-            <div className="p-3 border-t border-slate-100 dark:border-slate-800">
-              <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
-            </div>
-          )}
-        </div>
-
-        {/* 우측: 역할 배정 */}
-        <div className="flex-1 min-w-0">
-          {selectedUser ? (
-            <UserRoleEditor user={selectedUser} roles={roles} assignedRoleIds={selectedAssignment?.roleIds ?? []} />
-          ) : (
-            <EmptyState icon="user" message="좌측에서 사용자를 선택하세요" />
-          )}
-        </div>
-      </div>
+            </button>
+          )
+        })}
+      >
+        {selectedUser ? (
+          <UserRoleEditor user={selectedUser} roles={roles} assignedRoleIds={selectedAssignment?.roleIds ?? []} />
+        ) : (
+          <EmptyState icon="user" message="좌측에서 사용자를 선택하세요" />
+        )}
+      </ListDetailLayout>
     </div>
   )
 }

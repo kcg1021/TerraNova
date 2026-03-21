@@ -1,5 +1,5 @@
 import { useState, useMemo, useRef } from 'react'
-import { Icon, Button, Input, Avatar, Badge, Pagination, SaveBar, EmptyState, PanelHeader } from '@/shared/components/ui-kit'
+import { Icon, Button, Input, Select, Avatar, Badge, SaveBar, EmptyState, PanelHeader, ListDetailLayout } from '@/shared/components/ui-kit'
 import Toast from '@/shared/components/Toast'
 import { useClickOutside } from '@/shared/hooks/useClickOutside'
 import { useToast } from '@/shared/hooks/useToast'
@@ -77,75 +77,56 @@ export default function UserManagementPanel() {
         }
       />
 
-      <div className="flex gap-4 flex-1 min-h-0">
-        {/* 좌측: 사용자 목록 */}
-        <div className="w-80 shrink-0 flex flex-col bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-xl overflow-hidden">
-          <div className="p-3 border-b border-slate-100 dark:border-slate-800">
-            <Input
-              icon={<Icon name="search" className="w-4 h-4" />}
-              value={search}
-              onChange={e => { setSearch(e.target.value); setCurrentPage(1) }}
-              placeholder="이름, 아이디, 부서 검색..."
-              accentColor="emerald"
-              size="sm"
-            />
-          </div>
-
-          <div className="flex-1 overflow-y-auto scrollbar-thin">
-            {paginatedUsers.map(user => (
-              <button
-                key={user.id}
-                onClick={() => { setSelectedUserId(user.id); setShowAddForm(false) }}
-                className={`w-full flex items-center gap-3 px-4 py-3 text-left border-b border-slate-50 dark:border-slate-800/50 last:border-b-0 transition-colors cursor-pointer ${
-                  selectedUserId === user.id
-                    ? 'bg-emerald-50 dark:bg-emerald-950/20'
-                    : 'hover:bg-slate-50 dark:hover:bg-slate-800/30'
-                }`}
-              >
-                <Avatar name={user.name} />
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium text-slate-900 dark:text-white truncate">{user.name}</span>
-                    <Badge color={ROLE_BADGE_COLORS[user.role]} className="shrink-0">
-                      {ROLE_LABELS[user.role]}
-                    </Badge>
-                  </div>
-                  <div className="text-xs text-slate-400 dark:text-slate-500 mt-0.5 truncate">
-                    {getOrgName(user.orgId)} · {user.id}
-                  </div>
-                </div>
-              </button>
-            ))}
-            {paginatedUsers.length === 0 && (
-              <div className="px-4 py-8 text-center text-sm text-slate-400 dark:text-slate-500">검색 결과가 없습니다</div>
-            )}
-          </div>
-
-          {totalPages > 1 && (
-            <div className="p-3 border-t border-slate-100 dark:border-slate-800">
-              <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+      <ListDetailLayout
+        listWidth="w-80"
+        search={{
+          value: search,
+          onChange: v => { setSearch(v); setCurrentPage(1) },
+          placeholder: '이름, 아이디, 부서 검색...',
+        }}
+        pagination={{ currentPage, totalPages, onPageChange: setCurrentPage }}
+        itemCount={paginatedUsers.length}
+        emptyMessage="검색 결과가 없습니다"
+        listItems={paginatedUsers.map(user => (
+          <button
+            key={user.id}
+            onClick={() => { setSelectedUserId(user.id); setShowAddForm(false) }}
+            className={`w-full flex items-center gap-3 px-4 py-3 text-left border-b border-slate-50 dark:border-slate-800/50 last:border-b-0 transition-colors cursor-pointer ${
+              selectedUserId === user.id
+                ? 'bg-emerald-50 dark:bg-emerald-950/20'
+                : 'hover:bg-slate-50 dark:hover:bg-slate-800/30'
+            }`}
+          >
+            <Avatar name={user.name} />
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium text-slate-900 dark:text-white truncate">{user.name}</span>
+                <Badge color={ROLE_BADGE_COLORS[user.role]} className="shrink-0">
+                  {ROLE_LABELS[user.role]}
+                </Badge>
+              </div>
+              <div className="text-xs text-slate-400 dark:text-slate-500 mt-0.5 truncate">
+                {getOrgName(user.orgId)} · {user.id}
+              </div>
             </div>
-          )}
-        </div>
-
-        {/* 우측 */}
-        <div className="flex-1 min-w-0">
-          {showAddForm ? (
-            <UserAddForm onClose={() => setShowAddForm(false)} />
-          ) : selectedUser ? (
-            <UserDetailPanel user={selectedUser} systems={systems} permissions={permissions} />
-          ) : (
-            <EmptyState icon="user" message="좌측에서 사용자를 선택하세요" />
-          )}
-        </div>
-      </div>
+          </button>
+        ))}
+      >
+        {showAddForm ? (
+          <UserAddForm onClose={() => setShowAddForm(false)} />
+        ) : selectedUser ? (
+          <UserDetailPanel user={selectedUser} systems={systems} permissions={permissions} />
+        ) : (
+          <EmptyState icon="user" message="좌측에서 사용자를 선택하세요" />
+        )}
+      </ListDetailLayout>
     </div>
   )
 }
 
-// ─── 조직 트리 선택 드롭다운 ─────────────────────────────────
+// ─── 트리 선택 드롭다운 ──────────────────────────────────────
 
-function OrgTreeSelect({ value, onChange }: { value?: string; onChange: (id: string) => void }) {
+function TreeSelect({ label, value, onChange }: { label?: string; value?: string; onChange: (id: string) => void }) {
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
 
@@ -155,6 +136,12 @@ function OrgTreeSelect({ value, onChange }: { value?: string; onChange: (id: str
   const selectedName = value ? getOrgPath(value, mockOrganization) : undefined
 
   return (
+    <div className="space-y-2">
+      {label && (
+        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+          {label}
+        </label>
+      )}
     <div ref={ref} className="relative">
       <button
         type="button"
@@ -174,15 +161,16 @@ function OrgTreeSelect({ value, onChange }: { value?: string; onChange: (id: str
       {open && (
         <div className="absolute z-50 top-full left-0 right-0 mt-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-lg shadow-black/10 dark:shadow-black/30 max-h-64 overflow-y-auto scrollbar-thin py-1">
           {roots.map(root => (
-            <OrgTreeNode key={root.id} node={root} depth={0} selectedId={value} onSelect={id => { onChange(id); setOpen(false) }} />
+            <TreeNode key={root.id} node={root} depth={0} selectedId={value} onSelect={id => { onChange(id); setOpen(false) }} />
           ))}
         </div>
       )}
     </div>
+    </div>
   )
 }
 
-function OrgTreeNode({ node, depth, selectedId, onSelect }: { node: OrgUnit; depth: number; selectedId?: string; onSelect: (id: string) => void }) {
+function TreeNode({ node, depth, selectedId, onSelect }: { node: OrgUnit; depth: number; selectedId?: string; onSelect: (id: string) => void }) {
   const children = mockOrganization.filter(o => o.parentId === node.id)
   const isSelected = selectedId === node.id
 
@@ -206,15 +194,17 @@ function OrgTreeNode({ node, depth, selectedId, onSelect }: { node: OrgUnit; dep
         {node.name}
       </button>
       {children.map(child => (
-        <OrgTreeNode key={child.id} node={child} depth={depth + 1} selectedId={selectedId} onSelect={onSelect} />
+        <TreeNode key={child.id} node={child} depth={depth + 1} selectedId={selectedId} onSelect={onSelect} />
       ))}
     </>
   )
 }
 
-// ─── 폼 필드 ─────────────────────────────────────────────────
-
-const selectClass = 'w-full px-4 py-3 text-sm bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all cursor-pointer'
+const ROLE_OPTIONS = [
+  { value: 'USER', label: '일반 사용자' },
+  { value: 'SYSTEM_ADMIN', label: '시스템 관리자' },
+  { value: 'SUPER_ADMIN', label: '슈퍼 관리자' },
+]
 
 // ─── 사용자 추가 폼 ─────────────────────────────────────────
 
@@ -236,21 +226,9 @@ function UserAddForm({ onClose }: { onClose: () => void }) {
             <Input label="이름" placeholder="사용자 이름" variant="default" accentColor="emerald" />
           </div>
           <Input label="이메일" type="email" placeholder="example@email.com" variant="default" accentColor="emerald" />
-          <div>
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">소속 부서</label>
-            <div className="mt-2">
-              <OrgTreeSelect value={orgId} onChange={setOrgId} />
-            </div>
-          </div>
+          <TreeSelect label="소속 부서" value={orgId} onChange={setOrgId} />
           <Input label="초기 비밀번호" type="password" placeholder="초기 비밀번호 지정" variant="default" accentColor="emerald" />
-          <div>
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">역할</label>
-            <select defaultValue="USER" className={selectClass}>
-              <option value="USER">일반 사용자</option>
-              <option value="SYSTEM_ADMIN">시스템 관리자</option>
-              <option value="SUPER_ADMIN">슈퍼 관리자</option>
-            </select>
-          </div>
+          <Select label="역할" defaultValue="USER" options={ROLE_OPTIONS} accentColor="emerald" />
           <div className="flex gap-3 pt-3">
             <Button color="emerald" size="sm">사용자 등록</Button>
             <Button variant="secondary" size="sm" onClick={onClose}>취소</Button>
@@ -274,6 +252,8 @@ function UserDetailPanel({
 }) {
   const [editing, setEditing] = useState(false)
   const [editOrgId, setEditOrgId] = useState(user.orgId)
+  const [infoDirty, setInfoDirty] = useState(false)
+  const [formResetKey, setFormResetKey] = useState(0)
   const { toast, showToast, hideToast } = useToast()
 
   const userPerm = permissions.find(p => p.userId === user.id)
@@ -281,19 +261,30 @@ function UserDetailPanel({
   const [checkedSystems, setCheckedSystems] = useState(initialSystemIds)
   const [dirty, setDirty] = useState(false)
 
+  const setsEqual = (a: Set<string>, b: Set<string>) => a.size === b.size && [...a].every(v => b.has(v))
+
   const toggleSystem = (sysId: string) => {
     setCheckedSystems(prev => {
       const next = new Set(prev)
       if (next.has(sysId)) next.delete(sysId)
       else next.add(sysId)
+      setDirty(!setsEqual(next, initialSystemIds))
       return next
     })
-    setDirty(true)
   }
 
   const handleSave = () => {
     showToast('변경사항이 저장되었습니다')
     setDirty(false)
+    setInfoDirty(false)
+  }
+
+  const handleReset = () => {
+    setEditOrgId(user.orgId)
+    setCheckedSystems(new Set(userPerm?.systemIds ?? []))
+    setFormResetKey(k => k + 1)
+    setDirty(false)
+    setInfoDirty(false)
   }
 
   return (
@@ -328,24 +319,14 @@ function UserDetailPanel({
         </div>
 
         {editing && (
-          <div className="mt-4 space-y-3">
+          <div key={formResetKey} className="mt-4 space-y-3">
             <div className="grid grid-cols-2 gap-3">
-              <Input label="이름" defaultValue={user.name} variant="default" accentColor="emerald" size="sm" />
-              <Input label="이메일" type="email" defaultValue={user.email} variant="default" accentColor="emerald" size="sm" />
+              <Input label="이름" defaultValue={user.name} variant="default" accentColor="emerald" size="sm" onChange={() => setInfoDirty(true)} />
+              <Input label="이메일" type="email" defaultValue={user.email} variant="default" accentColor="emerald" size="sm" onChange={() => setInfoDirty(true)} />
             </div>
             <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">소속 부서</label>
-                <OrgTreeSelect value={editOrgId} onChange={setEditOrgId} />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">역할</label>
-                <select defaultValue={user.role} className={selectClass}>
-                  <option value="USER">일반 사용자</option>
-                  <option value="SYSTEM_ADMIN">시스템 관리자</option>
-                  <option value="SUPER_ADMIN">슈퍼 관리자</option>
-                </select>
-              </div>
+              <TreeSelect label="소속 부서" value={editOrgId} onChange={id => { setEditOrgId(id); setInfoDirty(true) }} />
+              <Select label="역할" defaultValue={user.role} options={ROLE_OPTIONS} accentColor="emerald" size="sm" onChange={() => setInfoDirty(true)} />
             </div>
           </div>
         )}
@@ -394,7 +375,7 @@ function UserDetailPanel({
       </div>
 
       {/* 저장 버튼 */}
-      <SaveBar isDirty={dirty} onSave={handleSave} />
+      <SaveBar isDirty={dirty || infoDirty} onSave={handleSave} onReset={handleReset} />
 
       {toast && <Toast message={toast.message} type={toast.type} onClose={hideToast} />}
     </div>

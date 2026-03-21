@@ -6,10 +6,11 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  ResponsiveContainer,
   Cell,
 } from 'recharts'
 import { useTheme } from '@/shared/contexts/ThemeContext'
+import { Select } from '@/shared/components/ui-kit'
+import { useContainerSize } from '@/shared/hooks/useContainerSize'
 import { useMenuUsage } from '../api/queries'
 
 type TopN = 5 | 10 | 15
@@ -33,26 +34,31 @@ export default function MenuUsageChart({ systemIds }: Props) {
 
   const gridColor = isDark ? '#374151' : '#e5e7eb'
   const textColor = isDark ? '#9ca3af' : '#6b7280'
+  const { ref: chartRef, width: chartWidth, height: chartHeight } = useContainerSize()
 
   return (
-    <div className="flex-1 min-h-0 flex flex-col bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-xl p-4 md:p-5 overflow-hidden">
+    <div className="flex-1 flex flex-col bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-xl p-4 md:p-5 min-h-[350px] md:min-h-0 overflow-hidden">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-sm font-semibold text-slate-900 dark:text-white">메뉴이용현황</h3>
-        <select
+        <Select
           value={topN}
-          onChange={e => setTopN(Number(e.target.value) as TopN)}
-          className="text-xs px-2 py-1 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 cursor-pointer focus:outline-none focus:ring-1 focus:ring-emerald-500"
-        >
-          <option value={5}>상위 5개</option>
-          <option value={10}>상위 10개</option>
-          <option value={15}>상위 15개</option>
-        </select>
+          onChange={v => setTopN(Number(v) as TopN)}
+          size="xs"
+          accentColor="emerald"
+          options={[
+            { value: 5, label: '상위 5개' },
+            { value: 10, label: '상위 10개' },
+            { value: 15, label: '상위 15개' },
+          ]}
+        />
       </div>
 
-      <div className="flex-1 min-h-0">
-        <ResponsiveContainer width="100%" height="100%" debounce={400}>
+      <div ref={chartRef} className="flex-1 min-h-0">
+        {chartWidth > 0 && (
           <BarChart
             data={data}
+            width={chartWidth}
+            height={Math.max(chartHeight, 180)}
             layout="vertical"
             margin={{ top: 0, right: 10, left: 0, bottom: 0 }}
           >
@@ -93,7 +99,7 @@ export default function MenuUsageChart({ systemIds }: Props) {
               ))}
             </Bar>
           </BarChart>
-        </ResponsiveContainer>
+        )}
       </div>
 
       {/* 범례 */}

@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { Icon, Button, Input, Tabs, SaveBar, EmptyState, PanelHeader } from '@/shared/components/ui-kit'
+import { Icon, Button, Input, Tabs, SaveBar, EmptyState, PanelHeader, ListDetailLayout } from '@/shared/components/ui-kit'
 import Toast from '@/shared/components/Toast'
 import { useClickOutside } from '@/shared/hooks/useClickOutside'
 import { useToast } from '@/shared/hooks/useToast'
@@ -32,44 +32,35 @@ export default function SystemSettingsPanel() {
         }
       />
 
-      <div className="flex gap-4 flex-1 min-h-0">
-        {/* 좌측: 시스템 목록 */}
-        <div className="w-72 shrink-0 flex flex-col bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-xl overflow-hidden">
-          <div className="flex-1 overflow-y-auto scrollbar-thin">
-            {systems.map(sys => (
-              <button
-                key={sys.id}
-                onClick={() => { setSelectedId(sys.id); setShowAddForm(false) }}
-                className={`w-full flex items-center gap-3 px-4 py-3 text-left border-b border-slate-50 dark:border-slate-800/50 last:border-b-0 transition-colors cursor-pointer ${
-                  selectedId === sys.id
-                    ? 'bg-emerald-50 dark:bg-emerald-950/20'
-                    : 'hover:bg-slate-50 dark:hover:bg-slate-800/30'
-                }`}
-              >
-                <span className="w-4 h-4 rounded-full shrink-0" style={{ backgroundColor: sys.color }} />
-                <div className="min-w-0 flex-1">
-                  <div className="text-sm font-medium text-slate-900 dark:text-white truncate">{sys.name}</div>
-                  <div className="text-xs text-slate-400 dark:text-slate-500 mt-0.5 truncate">{sys.description}</div>
-                </div>
-              </button>
-            ))}
-            {systems.length === 0 && (
-              <div className="px-4 py-8 text-center text-sm text-slate-400 dark:text-slate-500">등록된 시스템이 없습니다</div>
-            )}
-          </div>
-        </div>
-
-        {/* 우측 */}
-        <div className="flex-1 min-w-0">
-          {showAddForm ? (
-            <SystemAddForm onClose={() => setShowAddForm(false)} />
-          ) : selectedSystem ? (
-            <SystemDetailForm system={selectedSystem} />
-          ) : (
-            <EmptyState icon="settings" message="좌측에서 시스템을 선택하세요" />
-          )}
-        </div>
-      </div>
+      <ListDetailLayout
+        itemCount={systems.length}
+        emptyMessage="등록된 시스템이 없습니다"
+        listItems={systems.map(sys => (
+          <button
+            key={sys.id}
+            onClick={() => { setSelectedId(sys.id); setShowAddForm(false) }}
+            className={`w-full flex items-center gap-3 px-4 py-3 text-left border-b border-slate-50 dark:border-slate-800/50 last:border-b-0 transition-colors cursor-pointer ${
+              selectedId === sys.id
+                ? 'bg-emerald-50 dark:bg-emerald-950/20'
+                : 'hover:bg-slate-50 dark:hover:bg-slate-800/30'
+            }`}
+          >
+            <span className="w-4 h-4 rounded-full shrink-0" style={{ backgroundColor: sys.color }} />
+            <div className="min-w-0 flex-1">
+              <div className="text-sm font-medium text-slate-900 dark:text-white truncate">{sys.name}</div>
+              <div className="text-xs text-slate-400 dark:text-slate-500 mt-0.5 truncate">{sys.description}</div>
+            </div>
+          </button>
+        ))}
+      >
+        {showAddForm ? (
+          <SystemAddForm onClose={() => setShowAddForm(false)} />
+        ) : selectedSystem ? (
+          <SystemDetailForm system={selectedSystem} />
+        ) : (
+          <EmptyState icon="settings" message="좌측에서 시스템을 선택하세요" />
+        )}
+      </ListDetailLayout>
     </div>
   )
 }
