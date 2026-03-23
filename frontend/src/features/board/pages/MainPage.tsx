@@ -8,9 +8,8 @@ import BoardSection from '../components/BoardSection.tsx'
 import LoginForm from '@/features/auth/components/LoginForm.tsx'
 import NoticeDetailModal from '../components/NoticeDetailModal.tsx'
 import NoticeListModal from '../components/NoticeListModal.tsx'
-import RoleRequestModal from '../components/RoleRequestModal.tsx'
 import type { BoardPost } from '../types/index.ts'
-import { Icon, Button } from '@/shared/components/ui-kit'
+import { Icon } from '@/shared/components/ui-kit'
 import PostCard from '../components/PostCard.tsx'
 
 export default function MainPage() {
@@ -27,8 +26,6 @@ export default function MainPage() {
   const [selectedPost, setSelectedPost] = useState<BoardPost | null>(null)
   const [showDetailModal, setShowDetailModal] = useState(false)
   const [showListModal, setShowListModal] = useState(false)
-  const [showRoleRequest, setShowRoleRequest] = useState(false)
-
   const visibleBoards = useMemo(() => {
     const notice = boards.filter(b => b.type === 'notice')
     if (!user) return notice
@@ -156,15 +153,6 @@ export default function MainPage() {
       <Sidebar systems={systems} />
 
       <div className="flex-1 min-w-0 pb-16 md:pb-0 overflow-y-auto overflow-x-hidden flex flex-col p-6 lg:p-12">
-        {/* 권한 신청 버튼 */}
-        {user && user.status === 'active' && (
-          <div className="flex justify-end mb-4">
-            <Button color="emerald" size="sm" onClick={() => setShowRoleRequest(true)}>
-              <Icon name="shield" className="w-4 h-4" />
-              권한 신청
-            </Button>
-          </div>
-        )}
 
         {/* 게시판 섹션 */}
         <div className="flex-1 min-h-0">
@@ -172,8 +160,6 @@ export default function MainPage() {
         </div>
       </div>
 
-      {/* 권한 신청 모달 */}
-      <RoleRequestModal isOpen={showRoleRequest} onClose={() => setShowRoleRequest(false)} />
     </div>
   )
 }

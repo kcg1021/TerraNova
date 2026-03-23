@@ -6,6 +6,7 @@ import { useTheme } from '@/shared/contexts/ThemeContext.tsx'
 import { useClickOutside } from '@/shared/hooks/useClickOutside'
 import { isAdminRole, isSuperAdminRole, getRoleLabel } from '@/shared/utils/auth.ts'
 import { Icon } from '@/shared/components/ui-kit'
+import RoleRequestModal from '@/features/board/components/RoleRequestModal'
 import Logo from './Logo.tsx'
 import NotificationBell from '@/features/admin/components/NotificationBell.tsx'
 import { useAdminSystems } from '@/features/admin/api/queries.ts'
@@ -18,6 +19,7 @@ export default function Header() {
   const location = useLocation()
   const [userMenuOpen, setUserMenuOpen] = useState(false)
   const [themeMenuOpen, setThemeMenuOpen] = useState(false)
+  const [showRoleRequest, setShowRoleRequest] = useState(false)
   const [remainingTime, setRemainingTime] = useState('')
   const menuRef = useRef<HTMLDivElement>(null)
   const themeMenuRef = useRef<HTMLDivElement>(null)
@@ -70,6 +72,7 @@ export default function Header() {
   const currentThemeIcon = themeOptions.find(o => o.value === theme)?.icon ?? themeOptions[2].icon
 
   return (
+    <>
     <header className="sticky top-0 z-40 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200/60 dark:border-slate-700/60 px-3 md:px-6 h-12 md:h-14 flex items-center justify-between shadow-sm">
       {/* 좌측: 로고 + 브레드크럼 */}
       {isAdminRoute ? (
@@ -197,12 +200,13 @@ export default function Header() {
                       <div className="mx-3 border-t border-slate-100 dark:border-slate-700" />
                     </>
                   )}
-                  {!isSuperAdmin && (
-                    <button className="w-full flex items-center gap-2.5 text-left px-4 py-2.5 text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors duration-150 cursor-pointer">
-                      <Icon name="shield" className="w-4 h-4 text-slate-400 dark:text-slate-400" />
-                      권한 신청
-                    </button>
-                  )}
+                  <button
+                    onClick={() => { setShowRoleRequest(true); setUserMenuOpen(false) }}
+                    className="w-full flex items-center gap-2.5 text-left px-4 py-2.5 text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors duration-150 cursor-pointer"
+                  >
+                    <Icon name="shield" className="w-4 h-4 text-slate-400 dark:text-slate-400" />
+                    권한 신청
+                  </button>
                   <button className="w-full flex items-center gap-2.5 text-left px-4 py-2.5 text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors duration-150 cursor-pointer">
                     <Icon name="userSimple" className="w-4 h-4 text-slate-400 dark:text-slate-400" />
                     회원정보 수정
@@ -225,6 +229,10 @@ export default function Header() {
         )}
       </div>
     </header>
+
+    {/* 권한 신청 모달 */}
+    <RoleRequestModal isOpen={showRoleRequest} onClose={() => setShowRoleRequest(false)} />
+    </>
   )
 }
 
