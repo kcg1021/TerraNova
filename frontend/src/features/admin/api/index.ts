@@ -11,6 +11,7 @@ import {
   mockLayers,
   mockSystemRoles,
   mockUserRoleAssignments,
+  mockRoleRequests,
 } from '../mocks/adminData.ts'
 import { mockAccounts } from '@/shared/mocks/accounts.ts'
 import type { MockAccount } from '@/shared/mocks/accounts.ts'
@@ -26,6 +27,7 @@ import type {
   Layer,
   SystemRole,
   UserRoleAssignment,
+  RoleRequest,
 } from '../types/index.ts'
 
 export async function fetchAdminSystems(): Promise<AdminSystem[]> {
@@ -83,4 +85,9 @@ export async function fetchSystemRoles(systemId?: string): Promise<SystemRole[]>
 export async function fetchUserRoleAssignments(userId?: string): Promise<UserRoleAssignment[]> {
   if (userId) return mockUserRoleAssignments.filter(a => a.userId === userId)
   return mockUserRoleAssignments
+}
+
+export async function fetchRoleRequests(systemId?: string): Promise<RoleRequest[]> {
+  if (systemId) return mockRoleRequests.filter(r => r.systemId === systemId)
+  return mockRoleRequests
 }

@@ -75,3 +75,10 @@ export function useUserRoleAssignments(userId?: string) {
     queryFn: () => api.fetchUserRoleAssignments(userId),
   })
 }
+
+export function useRoleRequests(systemId?: string) {
+  return useQuery({
+    queryKey: ['admin', 'roleRequests', systemId],
+    queryFn: () => api.fetchRoleRequests(systemId),
+  })
+}
