@@ -8,6 +8,8 @@ import { useAuth } from '@/shared/contexts/AuthContext'
 import { mockOrganization, type OrgUnit } from '@/shared/mocks/organization'
 import { mockAccounts } from '@/shared/mocks/accounts'
 import { useUsers, useAdminSystems, useAdminPermissions } from '../api/queries'
+import { mockUserRoleAssignments } from '../mocks/adminData'
+import UserDeleteModal from './UserDeleteModal'
 import type { AdminSystem } from '../types/index'
 import type { MockAccount } from '@/shared/mocks/accounts'
 import type { UserStatus } from '@/shared/types/auth'
@@ -317,8 +319,7 @@ function UserDetailPanel({
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [showPasswordResetModal, setShowPasswordResetModal] = useState(false)
 
-  // suppress unused variable warnings — these will be wired to modals in Tasks 7-8
-  void showDeleteModal
+  // suppress unused variable warnings — will be wired to modal in Task 8
   void showPasswordResetModal
 
   const userPerm = permissions.find(p => p.userId === user.id)
@@ -516,6 +517,26 @@ function UserDetailPanel({
       <SaveBar isDirty={dirty || infoDirty} onSave={handleSave} onReset={handleReset} />
 
       {toast && <Toast message={toast.message} type={toast.type} onClose={hideToast} />}
+
+      <UserDeleteModal
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        userName={user.name}
+        onConfirm={() => {
+          const account = mockAccounts.find(a => a.id === user.id)
+          if (account) {
+            account.status = 'deleted'
+            // 시스템 접근 권한 비활성화
+            for (let i = mockUserRoleAssignments.length - 1; i >= 0; i--) {
+              if (mockUserRoleAssignments[i].userId === user.id) {
+                mockUserRoleAssignments.splice(i, 1)
+              }
+            }
+            invalidateUsers()
+            showToast('사용자를 삭제했습니다')
+          }
+        }}
+      />
     </div>
   )
 }
