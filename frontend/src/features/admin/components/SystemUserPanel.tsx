@@ -1,9 +1,13 @@
 import { useState, useMemo } from 'react'
-import { Avatar, Badge, SaveBar, EmptyState, PanelHeader, ListDetailLayout } from '@/shared/components/ui-kit'
+import { useQueryClient } from '@tanstack/react-query'
+import { Avatar, Badge, Button, Checkbox, Input, SaveBar, EmptyState, PanelHeader, ListDetailLayout } from '@/shared/components/ui-kit'
 import Toast from '@/shared/components/Toast'
 import { useToast } from '@/shared/hooks/useToast'
-import { useUsers, useSystemRoles, useUserRoleAssignments } from '../api/queries'
+import { useAuth } from '@/shared/contexts/AuthContext'
+import { useUsers, useSystemRoles, useUserRoleAssignments, useRoleRequests, useAdminPermissions } from '../api/queries'
+import { mockRoleRequests, mockUserRoleAssignments } from '../mocks/adminData'
 import type { MockAccount } from '@/shared/mocks/accounts'
+import type { RoleRequest, SystemRole } from '../types/index'
 
 const PAGE_SIZE = 10
 
@@ -12,12 +16,18 @@ interface Props {
 }
 
 export default function SystemUserPanel({ systemId }: Props) {
+  const queryClient = useQueryClient()
   const { data: allUsers = [] } = useUsers()
   const { data: roles = [] } = useSystemRoles(systemId)
   const { data: allAssignments = [] } = useUserRoleAssignments()
+  const { data: roleRequests = [] } = useRoleRequests(systemId)
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null)
+  const [selectedType, setSelectedType] = useState<'user' | 'request'>('user')
+  const [selectedRequestId, setSelectedRequestId] = useState<string | null>(null)
   const [search, setSearch] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
+
+  const pendingRequests = roleRequests.filter(r => r.status === 'pending')
 
   // 이 시스템에 접근 권한이 있는 사용자만 필터
   const systemAssignments = allAssignments.filter(a => a.systemId === systemId)
@@ -39,6 +49,9 @@ export default function SystemUserPanel({ systemId }: Props) {
   const selectedUser = selectedUserId ? allUsers.find(u => u.id === selectedUserId) : null
   const selectedAssignment = selectedUserId ? systemAssignments.find(a => a.userId === selectedUserId) : null
 
+  const selectedRequest = selectedRequestId ? roleRequests.find(r => r.id === selectedRequestId) : null
+  const requestUser = selectedRequest ? allUsers.find(u => u.id === selectedRequest.userId) : null
+
   return (
     <div className="flex flex-col gap-4 h-full">
       <PanelHeader
@@ -53,36 +66,240 @@ export default function SystemUserPanel({ systemId }: Props) {
           placeholder: '사용자 검색...',
         }}
         pagination={{ currentPage, totalPages, onPageChange: setCurrentPage }}
-        itemCount={paginatedUsers.length}
+        accentColor="emerald"
+        itemCount={paginatedUsers.length + pendingRequests.length}
         emptyMessage={systemUsers.length === 0 ? '접근 권한이 부여된 사용자가 없습니다' : '검색 결과가 없습니다'}
-        listItems={paginatedUsers.map(user => {
-          const assignment = systemAssignments.find(a => a.userId === user.id)
-          const roleCount = assignment?.roleIds.length ?? 0
-          return (
-            <button
-              key={user.id}
-              onClick={() => setSelectedUserId(user.id)}
-              className={`w-full flex items-center gap-3 px-4 py-3 text-left border-b border-slate-50 dark:border-slate-800/50 last:border-b-0 transition-colors cursor-pointer ${
-                selectedUserId === user.id ? 'bg-emerald-50 dark:bg-emerald-950/20' : 'hover:bg-slate-50 dark:hover:bg-slate-800/30'
-              }`}
-            >
-              <Avatar name={user.name} />
-              <div className="min-w-0 flex-1">
-                <div className="text-sm font-medium text-slate-900 dark:text-white truncate">{user.name}</div>
-                <div className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">
-                  {roleCount > 0 ? `${roleCount}개 역할` : '기본 역할만'}
+        hasSelection={!!selectedUserId || !!selectedRequestId}
+        onBack={() => { setSelectedUserId(null); setSelectedRequestId(null); setSelectedType('user') }}
+        listItems={
+          <>
+            {pendingRequests.length > 0 && (
+              <>
+                <div className="px-4 py-2 text-xs font-medium text-amber-600 dark:text-amber-400 bg-amber-50/50 dark:bg-amber-950/20">
+                  권한 요청 {pendingRequests.length}건
                 </div>
-              </div>
-            </button>
-          )
-        })}
+                {pendingRequests.map(req => {
+                  const reqUser = allUsers.find(u => u.id === req.userId)
+                  if (!reqUser) return null
+                  return (
+                    <button
+                      key={req.id}
+                      onClick={() => { setSelectedType('request'); setSelectedRequestId(req.id); setSelectedUserId(null) }}
+                      className={`w-full flex items-center gap-3 px-4 py-3 text-left border-b border-slate-50 dark:border-slate-800/50 last:border-b-0 transition-colors cursor-pointer ${
+                        selectedRequestId === req.id ? 'bg-emerald-50 dark:bg-emerald-950/20' : 'hover:bg-slate-50 dark:hover:bg-slate-800/30'
+                      }`}
+                    >
+                      <Avatar name={reqUser.name} />
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-medium text-slate-900 dark:text-white truncate">{reqUser.name}</span>
+                          <Badge color="amber">요청</Badge>
+                        </div>
+                        <div className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">
+                          {req.roleIds.length}개 역할 · {req.requestedAt}
+                        </div>
+                      </div>
+                    </button>
+                  )
+                })}
+              </>
+            )}
+            {paginatedUsers.map(user => {
+              const assignment = systemAssignments.find(a => a.userId === user.id)
+              const roleCount = assignment?.roleIds.length ?? 0
+              return (
+                <button
+                  key={user.id}
+                  onClick={() => { setSelectedType('user'); setSelectedUserId(user.id); setSelectedRequestId(null) }}
+                  className={`w-full flex items-center gap-3 px-4 py-3 text-left border-b border-slate-50 dark:border-slate-800/50 last:border-b-0 transition-colors cursor-pointer ${
+                    selectedUserId === user.id ? 'bg-emerald-50 dark:bg-emerald-950/20' : 'hover:bg-slate-50 dark:hover:bg-slate-800/30'
+                  }`}
+                >
+                  <Avatar name={user.name} />
+                  <div className="min-w-0 flex-1">
+                    <div className="text-sm font-medium text-slate-900 dark:text-white truncate">{user.name}</div>
+                    <div className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">
+                      {roleCount > 0 ? `${roleCount}개 역할` : '기본 역할만'}
+                    </div>
+                  </div>
+                </button>
+              )
+            })}
+          </>
+        }
       >
-        {selectedUser ? (
+        {selectedType === 'request' && selectedRequest && requestUser ? (
+          <RoleRequestDetail request={selectedRequest} user={requestUser} systemId={systemId} roles={roles} />
+        ) : selectedUser ? (
           <UserRoleEditor user={selectedUser} roles={roles} assignedRoleIds={selectedAssignment?.roleIds ?? []} />
         ) : (
           <EmptyState icon="user" message="좌측에서 사용자를 선택하세요" />
         )}
       </ListDetailLayout>
+    </div>
+  )
+}
+
+function RoleRequestDetail({
+  request,
+  user,
+  systemId,
+  roles,
+}: {
+  request: RoleRequest
+  user: MockAccount
+  systemId: string
+  roles: SystemRole[]
+}) {
+  const queryClient = useQueryClient()
+  const { user: currentUser } = useAuth()
+  const { data: adminPerms = [] } = useAdminPermissions()
+  const { toast, showToast, hideToast } = useToast()
+  const [rejecting, setRejecting] = useState(false)
+  const [rejectionReason, setRejectionReason] = useState('')
+
+  // 권한 확인: SUPER_ADMIN은 모두 가능, SYSTEM_ADMIN은 자기 시스템만
+  const canProcess = (() => {
+    if (!currentUser) return false
+    if (currentUser.role === 'SUPER_ADMIN') return true
+    if (currentUser.role === 'SYSTEM_ADMIN') {
+      const perm = adminPerms.find(p => p.userId === currentUser.id)
+      return perm ? perm.systemIds.includes(systemId) : false
+    }
+    return false
+  })()
+
+  const requestedRoleNames = request.roleIds
+    .map(rid => roles.find(r => r.id === rid)?.name ?? rid)
+
+  const handleApprove = () => {
+    if (!currentUser) return
+    // mock 데이터 직접 변경
+    const target = mockRoleRequests.find(r => r.id === request.id)
+    if (target) {
+      target.status = 'approved'
+      target.processedAt = new Date().toISOString().slice(0, 10)
+      target.processedBy = currentUser.id
+    }
+
+    // 역할 배정 추가
+    const existing = mockUserRoleAssignments.find(
+      a => a.userId === request.userId && a.systemId === request.systemId
+    )
+    if (existing) {
+      const newRoleIds = new Set([...existing.roleIds, ...request.roleIds])
+      existing.roleIds = Array.from(newRoleIds)
+    } else {
+      mockUserRoleAssignments.push({
+        userId: request.userId,
+        systemId: request.systemId,
+        roleIds: [...request.roleIds],
+      })
+    }
+
+    queryClient.invalidateQueries({ queryKey: ['admin', 'roleRequests'] })
+    queryClient.invalidateQueries({ queryKey: ['userRoleAssignments'] })
+    showToast('권한 요청을 승인했습니다')
+  }
+
+  const handleReject = () => {
+    if (!currentUser) return
+    const target = mockRoleRequests.find(r => r.id === request.id)
+    if (target) {
+      target.status = 'rejected'
+      target.rejectionReason = rejectionReason || undefined
+      target.processedAt = new Date().toISOString().slice(0, 10)
+      target.processedBy = currentUser.id
+    }
+
+    queryClient.invalidateQueries({ queryKey: ['admin', 'roleRequests'] })
+    queryClient.invalidateQueries({ queryKey: ['userRoleAssignments'] })
+    setRejecting(false)
+    setRejectionReason('')
+    showToast('권한 요청을 반려했습니다')
+  }
+
+  return (
+    <div className="h-full flex flex-col bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-xl overflow-hidden">
+      {/* 헤더 */}
+      <div className="px-5 py-4 border-b border-slate-100 dark:border-slate-800 shrink-0">
+        <div className="flex items-center gap-3">
+          <Avatar name={user.name} size="md" />
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-semibold text-slate-900 dark:text-white">{user.name}</span>
+              <Badge color="amber">권한 요청</Badge>
+            </div>
+            <div className="text-xs text-slate-400 dark:text-slate-500">{user.id} · {user.email}</div>
+          </div>
+        </div>
+      </div>
+
+      {/* 요청 정보 */}
+      <div className="flex-1 overflow-y-auto scrollbar-thin p-5">
+        <div className="space-y-4">
+          {/* 요청일 */}
+          <div>
+            <h4 className="text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">요청일</h4>
+            <p className="text-sm text-slate-900 dark:text-white">{request.requestedAt}</p>
+          </div>
+
+          {/* 요청 역할 */}
+          <div>
+            <h4 className="text-xs font-medium text-slate-500 dark:text-slate-400 mb-2">요청 역할</h4>
+            <div className="space-y-1.5">
+              {requestedRoleNames.map((name, i) => (
+                <div key={i} className="flex items-center gap-2 px-3 py-2 rounded-lg border border-amber-200 dark:border-amber-800 bg-amber-50/50 dark:bg-amber-950/20">
+                  <span className="text-sm text-slate-900 dark:text-white">{name}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 요청 사유 */}
+          {request.reason && (
+            <div>
+              <h4 className="text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">요청 사유</h4>
+              <p className="text-sm text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800/50 rounded-lg px-3 py-2">{request.reason}</p>
+            </div>
+          )}
+
+          {/* 승인/반려 액션 */}
+          {canProcess && request.status === 'pending' && (
+            <div className="pt-4 border-t border-slate-100 dark:border-slate-800">
+              {rejecting ? (
+                <div className="space-y-3">
+                  <h4 className="text-xs font-medium text-slate-500 dark:text-slate-400">반려 사유 (선택)</h4>
+                  <Input
+                    value={rejectionReason}
+                    onChange={e => setRejectionReason(e.target.value)}
+                    placeholder="반려 사유를 입력하세요..."
+                    size="sm"
+                  />
+                  <div className="flex gap-2">
+                    <Button color="red" size="sm" onClick={handleReject}>반려 확인</Button>
+                    <Button variant="ghost" color="gray" size="sm" onClick={() => { setRejecting(false); setRejectionReason('') }}>취소</Button>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex gap-2">
+                  <Button color="emerald" size="sm" onClick={handleApprove}>승인</Button>
+                  <Button color="red" variant="secondary" size="sm" onClick={() => setRejecting(true)}>반려</Button>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* 권한 없음 안내 */}
+          {!canProcess && request.status === 'pending' && (
+            <div className="pt-4 border-t border-slate-100 dark:border-slate-800">
+              <p className="text-xs text-slate-400 dark:text-slate-500">이 시스템의 권한 요청을 처리할 권한이 없습니다.</p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {toast && <Toast message={toast.message} type={toast.type} onClose={hideToast} />}
     </div>
   )
 }
@@ -132,7 +349,7 @@ function UserRoleEditor({
         {defaultRole && (
           <div className="mb-3">
             <div className="flex items-start gap-3 p-3 rounded-lg border border-emerald-200 dark:border-emerald-800 bg-emerald-50/50 dark:bg-emerald-950/20">
-              <input type="checkbox" checked disabled className="h-4 w-4 rounded border-slate-300 text-emerald-600 mt-0.5 cursor-not-allowed" />
+              <Checkbox checked disabled accentColor="emerald" className="mt-0.5" />
               <div className="flex-1">
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium text-slate-900 dark:text-white">{defaultRole.name}</span>
@@ -162,11 +379,11 @@ function UserRoleEditor({
                       : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:border-slate-300 dark:hover:border-slate-600'
                   }`}
                 >
-                  <input
-                    type="checkbox"
+                  <Checkbox
                     checked={isChecked}
                     onChange={() => toggleRole(role.id)}
-                    className="h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 dark:border-slate-600 cursor-pointer mt-0.5"
+                    accentColor="emerald"
+                    className="mt-0.5"
                   />
                   <div className="flex-1">
                     <div className="text-sm font-medium text-slate-900 dark:text-white">{role.name}</div>
