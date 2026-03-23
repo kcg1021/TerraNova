@@ -1,13 +1,8 @@
 import { createContext, useContext, useState, useCallback, type ReactNode } from 'react'
-import type { User, AuthState } from '@/shared/types/auth.ts'
+import type { User, AuthState, LoginResult } from '@/shared/types/auth.ts'
 import { mockAccounts } from '@/shared/mocks/accounts.ts'
 
 const SESSION_DURATION_MS = 30 * 60 * 1000 // 30분
-
-interface LoginResult {
-  success: boolean
-  error?: string
-}
 
 interface AuthContextType extends AuthState {
   login: (id: string, password: string) => LoginResult
@@ -26,9 +21,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!account) {
       return { success: false, error: '아이디 또는 비밀번호가 일치하지 않습니다.' }
     }
-    setUser({ id: account.id, name: account.name, role: account.role })
+
+    // 상태 검증: active가 아닌 사용자는 로그인 차단
+    if (account.status !== 'active') {
+      return { success: false, blockedReason: account.status as 'pending' | 'rejected' | 'deleted' }
+    }
+
+    setUser({
+      id: account.id,
+      name: account.name,
+      role: account.role,
+      email: account.email,
+      status: account.status,
+      requirePasswordChange: account.requirePasswordChange,
+    })
     setSessionExpiry(new Date(Date.now() + SESSION_DURATION_MS))
-    return { success: true }
+
+    return {
+      success: true,
+      requirePasswordChange: account.requirePasswordChange,
+    }
   }, [])
 
   const logout = useCallback(() => {
