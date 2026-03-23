@@ -10,6 +10,7 @@ import { mockAccounts } from '@/shared/mocks/accounts'
 import { useUsers, useAdminSystems, useAdminPermissions } from '../api/queries'
 import { mockUserRoleAssignments } from '../mocks/adminData'
 import UserDeleteModal from './UserDeleteModal'
+import PasswordResetModal from './PasswordResetModal'
 import type { AdminSystem } from '../types/index'
 import type { MockAccount } from '@/shared/mocks/accounts'
 import type { UserStatus } from '@/shared/types/auth'
@@ -319,9 +320,6 @@ function UserDetailPanel({
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [showPasswordResetModal, setShowPasswordResetModal] = useState(false)
 
-  // suppress unused variable warnings — will be wired to modal in Task 8
-  void showPasswordResetModal
-
   const userPerm = permissions.find(p => p.userId === user.id)
   const initialSystemIds = new Set(userPerm?.systemIds ?? [])
   const [checkedSystems, setCheckedSystems] = useState(initialSystemIds)
@@ -534,6 +532,21 @@ function UserDetailPanel({
             }
             invalidateUsers()
             showToast('사용자를 삭제했습니다')
+          }
+        }}
+      />
+
+      <PasswordResetModal
+        isOpen={showPasswordResetModal}
+        onClose={() => setShowPasswordResetModal(false)}
+        userName={user.name}
+        userEmail={user.email}
+        onConfirm={(password, sendEmail) => {
+          const account = mockAccounts.find(a => a.id === user.id)
+          if (account) {
+            account.password = password
+            account.requirePasswordChange = true
+            showToast(sendEmail ? '비밀번호가 초기화되었습니다. 이메일이 발송되었습니다.' : '비밀번호가 초기화되었습니다.')
           }
         }}
       />
