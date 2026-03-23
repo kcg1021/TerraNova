@@ -2,6 +2,8 @@ import { useState } from 'react'
 import Modal from '@/shared/components/Modal.tsx'
 import { Input, Button, Alert, IconBadge, Icons } from '@/shared/components/ui-kit'
 import { useFormModal } from '../hooks/useFormModal.ts'
+import { generateTempPassword } from '@/shared/utils/password'
+import { mockAccounts } from '@/shared/mocks/accounts'
 
 interface FindPasswordModalProps {
   isOpen: boolean
@@ -11,7 +13,7 @@ interface FindPasswordModalProps {
 export default function FindPasswordModal({ isOpen, onClose }: FindPasswordModalProps) {
   const [id, setId] = useState('')
   const [email, setEmail] = useState('')
-  const { result: sent, error, isLoading, setError, handleClose, submit } = useFormModal<boolean>(() => {
+  const { result: tempPassword, error, isLoading, setError, handleClose, submit } = useFormModal<string>(() => {
     setId('')
     setEmail('')
     onClose()
@@ -26,42 +28,43 @@ export default function FindPasswordModal({ isOpen, onClose }: FindPasswordModal
 
     submit(async () => {
       await new Promise(resolve => setTimeout(resolve, 1000))
-      if ((id === 'admin' && email === 'admin@test.com') || (id === 'user' && email === 'user@test.com')) {
-        return true
+      const account = mockAccounts.find(
+        a => a.id === id.trim() && a.email === email.trim() && a.status === 'active'
+      )
+      if (!account) {
+        throw new Error('해당 계정을 찾을 수 없습니다.')
       }
-      throw new Error('일치하는 정보를 찾을 수 없습니다.')
+      const newPassword = generateTempPassword()
+      account.password = newPassword
+      account.requirePasswordChange = true
+      return newPassword
     })
   }
 
-  // 이메일 발송 완료 화면
-  if (sent) {
+  // 임시 비밀번호 발급 완료 화면
+  if (tempPassword) {
     return (
       <Modal
         isOpen={isOpen}
         onClose={handleClose}
-        title="이메일이 발송되었습니다"
-        icon={<IconBadge icon={Icons.email} color="blue" animate />}
+        title="임시 비밀번호가 발급되었습니다"
+        icon={<IconBadge icon={Icons.lock} color="blue" animate />}
       >
         <div className="text-center">
           <div className="relative mb-6">
-            <div className="py-4 px-6 bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700">
-              <p className="text-sm text-slate-500 dark:text-slate-400 mb-1">발송된 주소</p>
+            <div className="bg-slate-100 dark:bg-slate-800 rounded-lg p-3 font-mono text-center">
+              <p className="text-sm text-slate-500 dark:text-slate-400 mb-1">임시 비밀번호</p>
               <span className="text-lg font-semibold text-slate-800 dark:text-white">
-                {email}
+                {tempPassword}
               </span>
             </div>
           </div>
 
-          <Alert type="info" title="이메일을 확인해주세요" className="mb-6 text-left">
+          <Alert type="info" title="안내" className="mb-6 text-left">
             <p className="text-xs">
-              비밀번호 재설정 링크가 포함된 이메일을 발송했습니다.
-              링크는 24시간 동안 유효합니다.
+              임시 비밀번호로 로그인 후 새 비밀번호를 설정해주세요.
             </p>
           </Alert>
-
-          <p className="text-xs text-slate-400 dark:text-slate-500 mb-6">
-            이메일이 도착하지 않으면 스팸 폴더를 확인해주세요.
-          </p>
 
           <Button onClick={handleClose} fullWidth>
             확인
@@ -77,7 +80,7 @@ export default function FindPasswordModal({ isOpen, onClose }: FindPasswordModal
       isOpen={isOpen}
       onClose={handleClose}
       title="비밀번호 찾기"
-      subtitle="비밀번호 재설정 링크를 이메일로 보내드립니다"
+      subtitle="임시 비밀번호를 발급해드립니다"
       icon={<IconBadge icon={Icons.lock} color="amber" />}
     >
       <form onSubmit={handleFormSubmit} className="space-y-5">
@@ -118,16 +121,12 @@ export default function FindPasswordModal({ isOpen, onClose }: FindPasswordModal
             type="submit"
             color="amber"
             loading={isLoading}
-            loadingText="발송 중..."
+            loadingText="발급 중..."
             className="flex-1"
           >
-            이메일 발송
+            임시 비밀번호 발급
           </Button>
         </div>
-
-        <p className="text-xs text-center text-slate-400 dark:text-slate-500 pt-2">
-          테스트: 아이디 "admin" / 이메일 "admin@test.com"
-        </p>
       </form>
     </Modal>
   )
