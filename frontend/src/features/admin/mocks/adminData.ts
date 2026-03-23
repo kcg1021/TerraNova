@@ -128,10 +128,10 @@ function generateMenuUsage(): MenuUsageRankItem[] {
 export const mockMenuUsage: MenuUsageRankItem[] = generateMenuUsage()
 
 export const mockAdminNotifications: AdminNotification[] = [
-  { id: '1', type: 'permission_request', systemId: 'water', systemName: '상수도', count: 2, message: '상수도 시스템 권한신청 2건이 있습니다' },
-  { id: '2', type: 'permission_request', systemId: 'sewage', systemName: '하수도', count: 1, message: '하수도 시스템 권한신청 1건이 있습니다' },
-  { id: '3', type: 'permission_request', systemId: 'gis', systemName: '공간정보', count: 3, message: '공간정보 시스템 권한신청 3건이 있습니다' },
-  { id: '4', type: 'permission_request', systemId: 'facility', systemName: '시설물', count: 1, message: '시설물 시스템 권한신청 1건이 있습니다' },
+  { id: '1', type: 'permission_request', systemId: 'water', systemName: '상수도', count: 2, message: '상수도 시스템 역할 요청 2건이 있습니다' },
+  { id: '2', type: 'permission_request', systemId: 'sewage', systemName: '하수도', count: 1, message: '하수도 시스템 역할 요청 1건이 있습니다' },
+  { id: '3', type: 'permission_request', systemId: 'gis', systemName: '공간정보', count: 3, message: '공간정보 시스템 역할 요청 3건이 있습니다' },
+  { id: '4', type: 'permission_request', systemId: 'facility', systemName: '시설물', count: 1, message: '시설물 시스템 역할 요청 1건이 있습니다' },
 ]
 
 // === 공통 도구 풀 ===

@@ -67,7 +67,7 @@ export default function NotificationBell() {
                 <button
                   key={n.id}
                   onClick={() => {
-                    navigate(`/admin/permissions/${n.systemId}`)
+                    navigate(`/admin/system/${n.systemId}/${n.systemId}-user-mgmt`)
                     setOpen(false)
                   }}
                   className="w-full flex items-start gap-3 px-4 py-3 text-left hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors duration-150 cursor-pointer border-b border-slate-50 dark:border-slate-700/50 last:border-b-0"
@@ -75,7 +75,7 @@ export default function NotificationBell() {
                   <span className="flex-shrink-0 mt-0.5 w-2 h-2 rounded-full bg-red-500" />
                   <div className="min-w-0 flex-1">
                     <div className="text-sm text-slate-700 dark:text-slate-200">{n.message}</div>
-                    <div className="text-xs text-slate-400 dark:text-slate-500 mt-1">권한 관리 →</div>
+                    <div className="text-xs text-slate-400 dark:text-slate-500 mt-1">역할 관리 →</div>
                   </div>
                   <span className="flex-shrink-0 text-xs font-semibold text-red-500 bg-red-50 dark:bg-red-950/50 px-1.5 py-0.5 rounded-md">
                     {n.count}건
