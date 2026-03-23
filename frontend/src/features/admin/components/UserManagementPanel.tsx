@@ -1,12 +1,16 @@
 import { useState, useMemo, useRef } from 'react'
-import { Icon, Button, Input, Select, Avatar, Badge, SaveBar, EmptyState, PanelHeader, ListDetailLayout } from '@/shared/components/ui-kit'
+import { useQueryClient } from '@tanstack/react-query'
+import { Icon, Button, Input, Select, Avatar, Badge, Checkbox, SaveBar, EmptyState, PanelHeader, ListDetailLayout } from '@/shared/components/ui-kit'
 import Toast from '@/shared/components/Toast'
 import { useClickOutside } from '@/shared/hooks/useClickOutside'
 import { useToast } from '@/shared/hooks/useToast'
+import { useAuth } from '@/shared/contexts/AuthContext'
 import { mockOrganization, type OrgUnit } from '@/shared/mocks/organization'
+import { mockAccounts } from '@/shared/mocks/accounts'
 import { useUsers, useAdminSystems, useAdminPermissions } from '../api/queries'
 import type { AdminSystem } from '../types/index'
 import type { MockAccount } from '@/shared/mocks/accounts'
+import type { UserStatus } from '@/shared/types/auth'
 
 const ROLE_LABELS: Record<string, string> = {
   SUPER_ADMIN: '슈퍼 관리자',
@@ -18,6 +22,21 @@ const ROLE_BADGE_COLORS: Record<string, 'red' | 'emerald' | 'slate'> = {
   SUPER_ADMIN: 'red',
   SYSTEM_ADMIN: 'emerald',
   USER: 'slate',
+}
+
+const STATUS_FILTERS = [
+  { value: 'all' as const, label: '전체' },
+  { value: 'pending' as const, label: '대기 중' },
+  { value: 'active' as const, label: '활성' },
+  { value: 'rejected' as const, label: '거절' },
+  { value: 'deleted' as const, label: '삭제됨' },
+] as const
+
+const STATUS_BADGE_MAP: Record<UserStatus, { color: 'amber' | 'emerald' | 'red' | 'slate'; label: string }> = {
+  pending: { color: 'amber', label: '대기 중' },
+  active: { color: 'emerald', label: '활성' },
+  rejected: { color: 'red', label: '거절' },
+  deleted: { color: 'slate', label: '삭제됨' },
 }
 
 const PAGE_SIZE = 10
@@ -46,16 +65,23 @@ export default function UserManagementPanel() {
   const [search, setSearch] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
   const [showAddForm, setShowAddForm] = useState(false)
+  const [statusFilter, setStatusFilter] = useState<UserStatus | 'all'>('all')
 
   const filteredUsers = useMemo(() => {
-    if (!search) return users
-    const term = search.toLowerCase()
-    return users.filter(u =>
-      u.name.toLowerCase().includes(term) ||
-      u.id.toLowerCase().includes(term) ||
-      getOrgName(u.orgId).toLowerCase().includes(term)
-    )
-  }, [users, search])
+    let result = users
+    if (statusFilter !== 'all') {
+      result = result.filter(u => u.status === statusFilter)
+    }
+    if (search) {
+      const term = search.toLowerCase()
+      result = result.filter(u =>
+        u.name.toLowerCase().includes(term) ||
+        u.id.toLowerCase().includes(term) ||
+        getOrgName(u.orgId).toLowerCase().includes(term)
+      )
+    }
+    return result
+  }, [users, search, statusFilter])
 
   const totalPages = Math.ceil(filteredUsers.length / PAGE_SIZE)
   const paginatedUsers = useMemo(() => {
@@ -77,21 +103,46 @@ export default function UserManagementPanel() {
         }
       />
 
+      <div className="flex gap-1.5 flex-wrap">
+        {STATUS_FILTERS.map(f => (
+          <button
+            key={f.value}
+            onClick={() => { setStatusFilter(f.value); setCurrentPage(1) }}
+            className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
+              statusFilter === f.value
+                ? 'bg-emerald-500 text-white'
+                : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
+            }`}
+          >
+            {f.label}
+            {f.value !== 'all' && (() => {
+              const count = users.filter(u => u.status === f.value).length
+              return count > 0 ? ` (${count})` : ''
+            })()}
+          </button>
+        ))}
+      </div>
+
       <ListDetailLayout
-        listWidth="w-80"
+        listWidth="md:w-64"
         search={{
           value: search,
           onChange: v => { setSearch(v); setCurrentPage(1) },
           placeholder: '이름, 아이디, 부서 검색...',
         }}
         pagination={{ currentPage, totalPages, onPageChange: setCurrentPage }}
+        accentColor="emerald"
         itemCount={paginatedUsers.length}
         emptyMessage="검색 결과가 없습니다"
+        hasSelection={!!selectedUserId || showAddForm}
+        onBack={() => { setSelectedUserId(null); setShowAddForm(false) }}
         listItems={paginatedUsers.map(user => (
           <button
             key={user.id}
             onClick={() => { setSelectedUserId(user.id); setShowAddForm(false) }}
             className={`w-full flex items-center gap-3 px-4 py-3 text-left border-b border-slate-50 dark:border-slate-800/50 last:border-b-0 transition-colors cursor-pointer ${
+              user.status === 'deleted' ? 'opacity-50' : ''
+            } ${
               selectedUserId === user.id
                 ? 'bg-emerald-50 dark:bg-emerald-950/20'
                 : 'hover:bg-slate-50 dark:hover:bg-slate-800/30'
@@ -103,6 +154,9 @@ export default function UserManagementPanel() {
                 <span className="text-sm font-medium text-slate-900 dark:text-white truncate">{user.name}</span>
                 <Badge color={ROLE_BADGE_COLORS[user.role]} className="shrink-0">
                   {ROLE_LABELS[user.role]}
+                </Badge>
+                <Badge color={STATUS_BADGE_MAP[user.status].color} className="shrink-0">
+                  {STATUS_BADGE_MAP[user.status].label}
                 </Badge>
               </div>
               <div className="text-xs text-slate-400 dark:text-slate-500 mt-0.5 truncate">
@@ -250,11 +304,22 @@ function UserDetailPanel({
   systems: AdminSystem[]
   permissions: { userId: string; systemIds: string[] }[]
 }) {
+  const queryClient = useQueryClient()
+  const { user: currentUser } = useAuth()
+  const isSuperAdmin = currentUser?.role === 'SUPER_ADMIN'
+
   const [editing, setEditing] = useState(false)
   const [editOrgId, setEditOrgId] = useState(user.orgId)
   const [infoDirty, setInfoDirty] = useState(false)
   const [formResetKey, setFormResetKey] = useState(0)
   const { toast, showToast, hideToast } = useToast()
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [showPasswordResetModal, setShowPasswordResetModal] = useState(false)
+
+  // suppress unused variable warnings — these will be wired to modals in Tasks 7-8
+  void showDeleteModal
+  void showPasswordResetModal
 
   const userPerm = permissions.find(p => p.userId === user.id)
   const initialSystemIds = new Set(userPerm?.systemIds ?? [])
@@ -287,6 +352,39 @@ function UserDetailPanel({
     setInfoDirty(false)
   }
 
+  const invalidateUsers = () => {
+    queryClient.invalidateQueries({ queryKey: ['users'] })
+  }
+
+  const handleApprove = () => {
+    const account = mockAccounts.find(a => a.id === user.id)
+    if (account) {
+      account.status = 'active'
+      invalidateUsers()
+      showToast('사용자를 승인했습니다')
+    }
+  }
+
+  const handleReject = () => {
+    const account = mockAccounts.find(a => a.id === user.id)
+    if (account) {
+      account.status = 'rejected'
+      invalidateUsers()
+      showToast('가입을 거절했습니다')
+    }
+  }
+
+  const handleRecover = () => {
+    const account = mockAccounts.find(a => a.id === user.id)
+    if (account) {
+      account.status = 'active'
+      invalidateUsers()
+      showToast('계정을 복구했습니다')
+    }
+  }
+
+  const statusBadge = STATUS_BADGE_MAP[user.status]
+
   return (
     <div className="h-full flex flex-col bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-xl overflow-hidden">
       {/* 사용자 정보 헤더 */}
@@ -300,22 +398,63 @@ function UserDetailPanel({
                 <Badge color={ROLE_BADGE_COLORS[user.role]}>
                   {ROLE_LABELS[user.role]}
                 </Badge>
+                <Badge color={statusBadge.color}>
+                  {statusBadge.label}
+                </Badge>
               </div>
               <div className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">
                 {getOrgPath(user.orgId, mockOrganization)} · {user.email}
               </div>
             </div>
           </div>
-          <button
-            onClick={() => { setEditing(!editing); setEditOrgId(user.orgId) }}
-            className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-all cursor-pointer ${
-              editing
-                ? 'text-emerald-600 dark:text-emerald-400 border-emerald-300 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-950/30'
-                : 'text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'
-            }`}
-          >
-            {editing ? '접기' : '정보 수정'}
-          </button>
+          <div className="flex items-center gap-2">
+            {isSuperAdmin && user.status === 'pending' && (
+              <>
+                <Button color="emerald" size="sm" onClick={handleApprove}>승인</Button>
+                <Button variant="ghost" size="sm" onClick={handleReject} className="!text-red-500 dark:!text-red-400">거절</Button>
+                <Button variant="ghost" size="sm" onClick={() => {
+                  const account = mockAccounts.find(a => a.id === user.id)
+                  if (account) {
+                    account.status = 'deleted'
+                    invalidateUsers()
+                    showToast('사용자를 삭제했습니다')
+                  }
+                }} className="!text-red-500 dark:!text-red-400">삭제</Button>
+              </>
+            )}
+            {isSuperAdmin && user.status === 'active' && (
+              <>
+                <Button variant="ghost" size="sm" onClick={() => setShowDeleteModal(true)} className="!text-red-500 dark:!text-red-400">사용자 삭제</Button>
+                <Button variant="ghost" size="sm" onClick={() => setShowPasswordResetModal(true)}>비밀번호 초기화</Button>
+              </>
+            )}
+            {isSuperAdmin && user.status === 'rejected' && (
+              <>
+                <Button color="emerald" size="sm" onClick={handleRecover}>계정 복구</Button>
+                <Button variant="ghost" size="sm" onClick={() => {
+                  const account = mockAccounts.find(a => a.id === user.id)
+                  if (account) {
+                    account.status = 'deleted'
+                    invalidateUsers()
+                    showToast('사용자를 삭제했습니다')
+                  }
+                }} className="!text-red-500 dark:!text-red-400">삭제</Button>
+              </>
+            )}
+            {isSuperAdmin && user.status === 'deleted' && (
+              <Button color="emerald" size="sm" onClick={handleRecover}>계정 복구</Button>
+            )}
+            <button
+              onClick={() => { setEditing(!editing); setEditOrgId(user.orgId) }}
+              className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-all cursor-pointer ${
+                editing
+                  ? 'text-emerald-600 dark:text-emerald-400 border-emerald-300 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-950/30'
+                  : 'text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'
+              }`}
+            >
+              {editing ? '접기' : '정보 수정'}
+            </button>
+          </div>
         </div>
 
         {editing && (
@@ -351,11 +490,10 @@ function UserDetailPanel({
                       : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
                   }`}
                 >
-                  <input
-                    type="checkbox"
+                  <Checkbox
                     checked={isChecked}
                     onChange={() => toggleSystem(sys.id)}
-                    className="h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 dark:border-slate-600 cursor-pointer"
+                    accentColor="emerald"
                   />
                   <span className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: sys.color }} />
                   <div className="flex-1">
