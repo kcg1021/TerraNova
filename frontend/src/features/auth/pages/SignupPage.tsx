@@ -1,6 +1,7 @@
 import { useState, useMemo, useCallback } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Input, Button, IconBadge, Icons } from '@/shared/components/ui-kit'
+import { mockAccounts } from '@/shared/mocks/accounts'
 
 // Mock: 실제로는 API에서 약관 목록을 가져옴
 interface Term {
@@ -181,10 +182,22 @@ export default function SignupPage() {
     e.preventDefault()
     if (!validateForm()) return
 
-    if (form.id === 'admin' || form.id === 'user') {
+    if (mockAccounts.some(a => a.id === form.id)) {
       setErrors({ id: '이미 사용 중인 아이디입니다.' })
       return
     }
+
+    mockAccounts.push({
+      id: form.id,
+      password: form.password,
+      name: form.name,
+      role: 'USER' as const,
+      email: form.email,
+      phone: form.phone,
+      orgId: undefined,
+      status: 'pending',
+      registeredAt: new Date().toISOString().slice(0, 10),
+    })
 
     setStep('success')
   }
@@ -202,11 +215,10 @@ export default function SignupPage() {
               </div>
 
               <h1 className="text-2xl font-semibold text-slate-900 dark:text-white tracking-tight">
-                가입이 완료되었습니다
+                가입 신청이 완료되었습니다
               </h1>
               <p className="mt-3 text-slate-500 dark:text-slate-400 leading-relaxed">
-                환영합니다, {form.name}님.<br />
-                지금 바로 로그인하여 서비스를 이용해보세요.
+                관리자 승인 후 로그인이 가능합니다.
               </p>
 
               <div className="mt-8 p-4 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-left">
