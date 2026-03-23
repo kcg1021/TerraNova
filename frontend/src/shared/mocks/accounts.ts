@@ -10,6 +10,7 @@ export interface MockAccount {
   status: UserStatus
   registeredAt: string
   phone?: string
+  requirePasswordChange?: boolean
 }
 
 export const mockAccounts: MockAccount[] = [

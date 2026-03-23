@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/shared/contexts/AuthContext.tsx'
-import { Input, Button, Alert, Icons } from '@/shared/components/ui-kit'
+import { Input, Button, Alert, IconBadge, Icons } from '@/shared/components/ui-kit'
+import Modal from '@/shared/components/Modal.tsx'
 import FindIdModal from './FindIdModal.tsx'
 import FindPasswordModal from './FindPasswordModal.tsx'
 
@@ -9,11 +10,19 @@ interface LoginFormProps {
   onSuccess?: () => void
 }
 
+const blockedMessages: Record<'pending' | 'rejected' | 'deleted', { title: string; message: string; color: 'amber' | 'red' }> = {
+  pending: { title: '가입 승인 대기 중', message: '관리자 승인 후 로그인이 가능합니다.', color: 'amber' },
+  rejected: { title: '가입이 거절되었습니다', message: '관리자에게 문의해주세요.', color: 'red' },
+  deleted: { title: '삭제된 계정입니다', message: '관리자에게 문의해주세요.', color: 'red' },
+}
+
 export default function LoginForm({ onSuccess }: LoginFormProps) {
   const { login } = useAuth()
+  const navigate = useNavigate()
   const [id, setId] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const [blockedReason, setBlockedReason] = useState<'pending' | 'rejected' | 'deleted' | null>(null)
   const [showFindIdModal, setShowFindIdModal] = useState(false)
   const [showFindPasswordModal, setShowFindPasswordModal] = useState(false)
 
@@ -22,9 +31,15 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
     if (!id.trim() || !password) return
 
     const result = login(id.trim(), password)
-    if (result.success) {
+    if (result.blockedReason) {
+      setBlockedReason(result.blockedReason)
+    } else if (result.success) {
       setError('')
-      onSuccess?.()
+      if (result.requirePasswordChange) {
+        navigate('/change-password')
+      } else {
+        onSuccess?.()
+      }
     } else {
       setError(result.error ?? '로그인에 실패했습니다.')
     }
@@ -92,6 +107,33 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
         isOpen={showFindPasswordModal}
         onClose={() => setShowFindPasswordModal(false)}
       />
+
+      {/* 로그인 차단 모달 */}
+      {blockedReason && (
+        <Modal
+          isOpen={!!blockedReason}
+          onClose={() => setBlockedReason(null)}
+          title={blockedMessages[blockedReason].title}
+          icon={
+            <IconBadge
+              icon={Icons.lock}
+              color={blockedMessages[blockedReason].color}
+            />
+          }
+          size="sm"
+        >
+          <p className="text-center text-slate-500 dark:text-slate-400 mb-6">
+            {blockedMessages[blockedReason].message}
+          </p>
+          <Button
+            onClick={() => setBlockedReason(null)}
+            color="gray"
+            fullWidth
+          >
+            확인
+          </Button>
+        </Modal>
+      )}
     </>
   )
 }
