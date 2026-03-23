@@ -84,6 +84,20 @@ export interface SystemAdminPermission {
   systemIds: string[]
 }
 
+// === 역할 권한 요청 ===
+export interface RoleRequest {
+  id: string
+  userId: string
+  systemId: string
+  roleIds: string[]
+  status: 'pending' | 'approved' | 'rejected'
+  reason?: string
+  requestedAt: string
+  processedAt?: string
+  processedBy?: string
+  rejectionReason?: string
+}
+
 // === 대시보드 통계 ===
 export interface DailyAccessSummary {
   date: string

@@ -10,6 +10,7 @@ import type {
   Layer,
   SystemRole,
   UserRoleAssignment,
+  RoleRequest,
 } from '../types/index'
 import { SYSTEM_COLORS } from '../constants/systems'
 
@@ -336,4 +337,13 @@ export const mockUserRoleAssignments: UserRoleAssignment[] = [
   { userId: 'admin', systemId: 'water', roleIds: ['water-editor'] },
   { userId: 'admin', systemId: 'sewage', roleIds: ['sewage-viewer'] },
   { userId: 'admin', systemId: 'gis', roleIds: ['gis-admin'] },
+]
+
+// === 역할 권한 요청 ===
+export const mockRoleRequests: RoleRequest[] = [
+  { id: 'rr-1', userId: 'user', systemId: 'water', roleIds: ['water-editor'], status: 'pending', reason: '상수도 데이터 편집 업무 배정', requestedAt: '2026-03-20' },
+  { id: 'rr-2', userId: 'user4', systemId: 'gis', roleIds: ['gis-viewer'], status: 'pending', reason: 'GIS 지도 조회 필요', requestedAt: '2026-03-21' },
+  { id: 'rr-3', userId: 'user2', systemId: 'facility', roleIds: ['facility-editor'], status: 'pending', requestedAt: '2026-03-22' },
+  { id: 'rr-4', userId: 'user3', systemId: 'water', roleIds: ['water-viewer'], status: 'approved', requestedAt: '2026-03-10', processedAt: '2026-03-11', processedBy: 'super' },
+  { id: 'rr-5', userId: 'user5', systemId: 'sewage', roleIds: ['sewage-editor'], status: 'rejected', reason: '하수도 편집 권한 요청', requestedAt: '2026-03-12', processedAt: '2026-03-13', processedBy: 'admin', rejectionReason: '해당 부서 업무가 아닙니다' },
 ]
