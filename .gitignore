@@ -35,4 +35,5 @@ agents/node_modules/
 CLAUDE.md
 .claude/settings.local.json
 .claude/settings.json
+.superpowers/
 nul
