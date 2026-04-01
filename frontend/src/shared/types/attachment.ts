@@ -4,6 +4,4 @@ export interface Attachment {
   fileSize: number
   mimeType: string
   url: string
-  thumbnailUrl?: string
-  previewUrl?: string
 }

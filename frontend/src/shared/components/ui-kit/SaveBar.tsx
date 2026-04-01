@@ -14,7 +14,7 @@ export default function SaveBar({ isDirty, onSave, onReset, message = '변경사
 
   return (
     <div className="px-5 py-3 border-t border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/30 shrink-0 flex items-center justify-between">
-      <p className="text-xs text-amber-600 dark:text-amber-400">{message}</p>
+      <p className="text-xs text-slate-500 dark:text-slate-400">{message}</p>
       <div className="flex items-center gap-2">
         {onReset && <Button size="sm" variant="secondary" onClick={onReset}>{resetLabel}</Button>}
         <Button size="sm" onClick={onSave}>{saveLabel}</Button>

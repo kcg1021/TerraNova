@@ -102,7 +102,7 @@ export default function SystemMenuSidebar({ systemId }: Props) {
       </aside>
 
       {/* 모바일: 하단 탭 바 */}
-      <div className="order-last shrink-0 md:hidden bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 px-1 flex overflow-x-auto scrollbar-thin">
+      <div className="order-last shrink-0 md:hidden bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 px-1 pb-[env(safe-area-inset-bottom)] flex overflow-x-auto scrollbar-thin">
         <button
           onClick={() => navigate(`/admin/system/${systemId}`)}
           className={`flex-shrink-0 px-3 py-2.5 text-xs font-medium transition-colors cursor-pointer border-b-2 ${

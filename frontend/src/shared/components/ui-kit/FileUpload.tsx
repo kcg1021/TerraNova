@@ -48,7 +48,6 @@ export default function FileUpload({
         fileSize: file.size,
         mimeType: file.type || 'application/octet-stream',
         url: URL.createObjectURL(file),
-        thumbnailUrl: file.type.startsWith('image/') ? URL.createObjectURL(file) : undefined,
       })
     }
 
@@ -120,12 +119,7 @@ export default function FileUpload({
               key={file.id}
               className="flex items-center gap-3 px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700"
             >
-              {/* 썸네일 or 아이콘 */}
-              {file.thumbnailUrl ? (
-                <img src={file.thumbnailUrl} alt="" className="w-8 h-8 rounded object-cover flex-shrink-0" />
-              ) : (
-                <Icon name="document" className="w-5 h-5 text-slate-400 flex-shrink-0" />
-              )}
+              <Icon name="document" className="w-5 h-5 text-slate-400 flex-shrink-0" />
 
               <div className="flex-1 min-w-0">
                 <p className="text-sm text-slate-700 dark:text-slate-300 truncate">{file.fileName}</p>

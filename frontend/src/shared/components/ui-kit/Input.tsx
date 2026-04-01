@@ -93,9 +93,9 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({
   }
 
   const accentClasses = {
-    primary: 'focus:ring-[var(--color-primary)]/50 focus:border-[var(--color-primary)]',
-    amber: 'focus:ring-amber-500/50 focus:border-amber-500',
-    emerald: 'focus:ring-emerald-500/50 focus:border-emerald-500',
+    primary: 'focus:ring-[var(--color-primary)]/30 focus:border-[var(--color-primary)]',
+    amber: 'focus:ring-amber-500/30 focus:border-amber-500',
+    emerald: 'focus:ring-emerald-500/30 focus:border-emerald-500',
   }
 
   const baseClasses = variant === 'filled'
@@ -128,7 +128,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({
             placeholder-slate-400 dark:placeholder-slate-500
             focus:outline-none focus:ring-2 ${accentClasses[accentColor]}
             transition-all duration-200
-            ${error ? 'border-red-500 focus:ring-red-500/50 focus:border-red-500' : ''}
+            ${error ? 'border-red-500 focus:ring-red-500/30 focus:border-red-500' : ''}
             ${className}
           `}
           {...props}

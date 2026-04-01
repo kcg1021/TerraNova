@@ -8,7 +8,7 @@ const mockAttachments: Record<string, Attachment[]> = {
   ],
   update: [
     { id: 'att-n3', fileName: '2026_1분기_업데이트_로드맵.pdf', fileSize: 3145728, mimeType: 'application/pdf', url: '#' },
-    { id: 'att-n4', fileName: '대시보드_개편_미리보기.png', fileSize: 1048576, mimeType: 'image/png', url: 'https://placehold.co/3000x2000/dbeafe/3b82f6?text=Dashboard+Preview', thumbnailUrl: 'https://placehold.co/200x150/dbeafe/3b82f6?text=Thumb', previewUrl: 'https://placehold.co/1200x900/dbeafe/3b82f6?text=Preview' },
+    { id: 'att-n4', fileName: '대시보드_개편_미리보기.png', fileSize: 1048576, mimeType: 'image/png', url: '#' },
   ],
   migration: [
     { id: 'att-n5', fileName: '데이터_이관_결과_보고서.xlsx', fileSize: 512000, mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', url: '#' },
@@ -19,7 +19,7 @@ const mockAttachments: Record<string, Attachment[]> = {
   ],
   project: [
     { id: 'att-3', fileName: '프로젝트_일정표.xlsx', fileSize: 89600, mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', url: '#' },
-    { id: 'att-4', fileName: '시스템_구성도.png', fileSize: 524288, mimeType: 'image/png', url: 'https://placehold.co/3000x2000/e2e8f0/64748b?text=Original', thumbnailUrl: 'https://placehold.co/200x150/e2e8f0/64748b?text=Thumb', previewUrl: 'https://placehold.co/1200x900/e2e8f0/64748b?text=Preview' },
+    { id: 'att-4', fileName: '시스템_구성도.png', fileSize: 524288, mimeType: 'image/png', url: '#' },
     { id: 'att-5', fileName: 'API_명세서.pdf', fileSize: 2097152, mimeType: 'application/pdf', url: '#' },
   ],
 }

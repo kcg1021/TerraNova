@@ -35,6 +35,8 @@ export default function SystemSettingsPanel() {
       <ListDetailLayout
         itemCount={systems.length}
         emptyMessage="등록된 시스템이 없습니다"
+        hasSelection={!!selectedId || showAddForm}
+        onBack={() => { setSelectedId(null); setShowAddForm(false) }}
         listItems={systems.map(sys => (
           <button
             key={sys.id}

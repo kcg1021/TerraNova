@@ -20,7 +20,7 @@ const colorClasses = {
 
 export default function Badge({ children, color = 'slate', icon, className = '' }: BadgeProps) {
   return (
-    <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 text-xs rounded ${colorClasses[color]} ${className}`}>
+    <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 text-xs rounded-lg ${colorClasses[color]} ${className}`}>
       {icon && <span className="[&>svg]:w-3 [&>svg]:h-3">{icon}</span>}
       {children}
     </span>

@@ -40,6 +40,8 @@ export default function SystemRolePanel({ systemId }: Props) {
 
       <ListDetailLayout
         itemCount={roles.length}
+        hasSelection={!!selectedRoleId || showCreateForm}
+        onBack={() => { setSelectedRoleId(null); setShowCreateForm(false) }}
         listItems={roles.map(role => (
           <button
             key={role.id}

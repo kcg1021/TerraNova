@@ -124,7 +124,7 @@ export default function SystemAccessChart({ systemIds }: Props) {
               contentStyle={{
                 backgroundColor: isDark ? '#1f2937' : '#ffffff',
                 border: `1px solid ${isDark ? '#374151' : '#e5e7eb'}`,
-                borderRadius: '8px',
+                borderRadius: '12px',
                 fontSize: '12px',
               }}
               labelStyle={{ color: isDark ? '#f3f4f6' : '#111827' }}

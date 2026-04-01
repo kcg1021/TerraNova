@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react'
-import { Icon } from '@/shared/components/ui-kit'
+import { Icon, Checkbox } from '@/shared/components/ui-kit'
 import { useClickOutside } from '@/shared/hooks/useClickOutside'
 import { SYSTEM_COLORS } from '../constants/systems'
 
@@ -62,12 +62,12 @@ export default function SystemFilterDropdown({ selectedSystems, onChange }: Prop
         <div className="absolute right-0 top-full mt-1 z-50 w-52 rounded-xl border border-slate-200 bg-white py-1 shadow-lg dark:border-slate-700 dark:bg-slate-800">
           {/* 전체 선택 */}
           <label className="flex items-center gap-2.5 px-3 py-1.5 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700">
-            <input
-              type="checkbox"
+            <Checkbox
               checked={allSelected}
-              ref={el => { if (el) el.indeterminate = someSelected }}
+              indeterminate={someSelected}
               onChange={toggleAll}
-              className="h-3.5 w-3.5 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 dark:border-slate-600 dark:bg-slate-600"
+              size="sm"
+              accentColor="emerald"
             />
             <span className="text-sm text-slate-700 dark:text-slate-200">전체</span>
           </label>
@@ -79,11 +79,11 @@ export default function SystemFilterDropdown({ selectedSystems, onChange }: Prop
               key={sys.id}
               className="flex items-center gap-2.5 px-3 py-1.5 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700"
             >
-              <input
-                type="checkbox"
+              <Checkbox
                 checked={selectedSystems.includes(sys.id)}
                 onChange={() => toggleSystem(sys.id)}
-                className="h-3.5 w-3.5 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 dark:border-slate-600 dark:bg-slate-600"
+                size="sm"
+                accentColor="emerald"
               />
               <span
                 className="w-2.5 h-2.5 rounded-full shrink-0"
